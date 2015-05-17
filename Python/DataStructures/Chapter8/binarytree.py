@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from tree import Tree
 
 class BinaryTree(Tree):
 	def left(self, p):

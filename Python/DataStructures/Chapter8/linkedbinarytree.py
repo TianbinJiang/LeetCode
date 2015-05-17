@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from binarytree import BinaryTree
 
 class LinkedBinaryTree(BinaryTree):
 	
@@ -21,17 +22,17 @@ class LinkedBinaryTree(BinaryTree):
 		def __eq__(self, other):
 			return type(other) is type(self) and other._node is self._node
 
-		def _validate(self, p):
-			if not isinstance(p, self.Position):
-				raise TypeError('p must be proper Position type')
-			if p._container is not self:
-				raise ValueError('p does not belong to this container')
-			if p._node._parent is p._node:
-				raise ValueError('p is no longer valid')
-			return p._node
+	def _validate(self, p):
+		if not isinstance(p, self.Position):
+			raise TypeError('p must be proper Position type')
+		if p._container is not self:
+			raise ValueError('p does not belong to this container')
+		if p._node._parent is p._node:
+			raise ValueError('p is no longer valid')
+		return p._node
 
-		def _make_position(self, node):
-			return self.Position(self, node) if node is not None else None
+	def _make_position(self, node):
+		return self.Position(self, node) if node is not None else None
 
 	def __init__(self):
 		self._root = None
@@ -56,7 +57,7 @@ class LinkedBinaryTree(BinaryTree):
 		return self._make_position(node._right)
 
 	def num_children(self, p):
-		node = self._validate(p):
+		node = self._validate(p)
 		count = 0
 		if node._left is not None:
 			count += 1
@@ -89,7 +90,7 @@ class LinkedBinaryTree(BinaryTree):
 		child = self._left if node._left else node._right
 		if child is not None:
 			child._parent = node._parent
-		if node is self._root
+		if node is self._root:
 			self._root = child
 		else:
 			parent = node._parent

@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 class Tree:
 	class Position:
 		def element(self):
@@ -30,7 +29,7 @@ class Tree:
 		return self.num_children(p) == 0
 
 	def is_empty(self):
-		raise len(self) == 0
+		return len(self) == 0
 
 	def _height(self, p):
 		if self.is_leaf(p):
@@ -56,13 +55,13 @@ class Tree:
 
 	def preorder(self):
 		if not self.is_empty():
-			for p in self._subtree_preorder(self):
+			for p in self._subtree_preorder(self.root()):
 				yield p
 
-	def _substree_preorder(self):
+	def _subtree_preorder(self,p):
 		yield p
 		for c in self.children(p):
-			for other in self._substree_preorder(c):
+			for other in self._subtree_preorder(c):
 				yield other	
 
 	def positions(self):
