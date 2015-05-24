@@ -61,6 +61,7 @@ class SortedTableMap(MapBase):
 			return None
 
 	def find_ge(self, k):
+		""" Return (key, value) pair with least key greater than or equal to k """
 		j = self._find_index(k, 0, len(self._table) - 1)
 		if j < len(self._table):
 			return (self._table[j]._key, self._table[j]._value)
@@ -68,6 +69,7 @@ class SortedTableMap(MapBase):
 			return None
 
 	def find_It(self, k):
+		"""Return (key, value) pair with greatest key strictly less than k. """
 		j = self._find_index(k, 0, len(self._table) - 1)
 		if j > 0:
 			return (self._table[j - 1]._key, self._table[j - 1]._value)
@@ -75,6 +77,7 @@ class SortedTableMap(MapBase):
 			return None
 
 	def find_gt(self, k):
+		"""Return (key, value) pair with least key strictly greater than k """
 		j = self._find_index(k, 0, len(self._table) - 1)
 		if j < len(self._table) and self._table[j]._key == k:
 			j += 1
@@ -84,6 +87,8 @@ class SortedTableMap(MapBase):
 			return None
 
 	def find_range(self, start, stop):
+		""" Iterate all (key, value) pairs such that start <= key < stop
+		"""
 		if start is None:
 			j = 0
 		else:
