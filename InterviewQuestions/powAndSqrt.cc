@@ -11,7 +11,7 @@ double pow(double x, int n){
 }
 
 int sqrt(int x) {
-	long long left = 0, right = x
+	long long left = 0, right = x;
 	while(left < right) {
 		long long mid = (left + right) / 2;
 		if(mid * mid < x && (mid + 1) * (mid + 1) > x)
