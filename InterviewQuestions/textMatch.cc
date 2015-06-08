@@ -54,10 +54,53 @@ int find_boyer_moore(string Text, string Pattern){
 				/* Use the Last function to find the next start index */
 				//ALERT ! Seems here is a bug, what if there is no match in PatternIndex */
 				int j = PatternIndex[Text[i]];
-				i += m - min(k, j + 1);
+				i += m - min(k, j + 1); // case analysis for jump step.
 				k = m - 1;
 			}
 	}
+	return -1;
+}
+
+/*Knuth - Morris - Pratt Methods */
+/* precompute the prefix*/
+vector<int> compute_kmp_fail(string Pattern){
+	int len = Pattern.size();
+	vector<int> fail(len);
+	int j = 1, k = 0;
+	while(j < len){
+		if(Pattern[j] == Pattern[k]){
+			fail[j] = k + 1;
+			j += 1;
+			k += 1;
+		} else if(k > 0){
+			// k follows a matching prefix
+			k = fail[k - 1];
+		} else {
+			j += 1;
+		}
+	}
+	return fail;
+}
+
+int find_kmp(string Text, string Pattern){
+	int m = Pattern.size();
+	int n = Text.size();
+	vector<int> fail = compute_kmp_fail(Pattern);
+	int j = 0, k = 0;
+	while(j < n){
+		if(Text[j] == Pattern[k]){
+			if(k == m - 1){
+				return j - m + 1;
+			}
+			j += 1;
+			k += 1;
+		} else if(k > 0){
+			k = fail[k - 1];
+		} else {
+			j += 1;
+		}
+	}
+	// if no match found
 	return -1;
 }
 
@@ -67,6 +110,7 @@ int main(void){
 	string Text = "jiji9ijkjkljkljklfsfghsdfhsfdsfhfhy";
 	string Pattern = "klj";
 	//int found_index = find_brute(Text, Pattern);
-	int found_index = find_boyer_moore(Text, Pattern);
+	//int found_index = find_boyer_moore(Text, Pattern);
+	int found_index = find_kmp(Text, Pattern);
 	printf("found_index:%d", found_index);
 }
