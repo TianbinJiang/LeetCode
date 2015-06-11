@@ -19,7 +19,6 @@ bool Circular_Check(string Text, string Pattern){
 	int n = Text.size();
 	int m = Pattern.size();
 	/* substring check */
-	
 	for(int i = 0; i < n - m + 1; ++i){
 		int k = 0;
 		while(k < m && Text[i + k] == Pattern[k]) {
@@ -27,7 +26,6 @@ bool Circular_Check(string Text, string Pattern){
 			if(k == m) return true;
 		}
 	}
-
 	/* suffix and prefix check */
 	int s = n - 1;
 	while(s > 0){
@@ -39,13 +37,14 @@ bool Circular_Check(string Text, string Pattern){
 				index++;
 			} else break;
 		}
-		while(index < m){
+		while(prefix < n && index < m){
 			if(Text[prefix] == Pattern[index]){
 				prefix++;
 				index++;
 			} else break;
 		}
-		if(index == m){
+		// suffix to the end and the whole string matched.
+		if(suffix == n && index == m){
 			return true;
 		}
 		s--;
@@ -53,11 +52,76 @@ bool Circular_Check(string Text, string Pattern){
 	return false;
 }
 
+// Brute Force method time complexity is O(m * n) 
+
+/* Since the question is asking for O(m + n) time complexity
+   we can adapt KMP method here */
+
+vector<int> compile_kmp_fail(string Pattern){
+	vector<int> result(Pattern.size());
+	int len = Pattern.size();
+	int j = 1, k = 0;
+	while(j < len){
+		if(Pattern[j] == Pattern[k]){
+			result[j] = k + 1;
+			++j;
+			++k;
+		} else if(k > 0) {
+			k = result[k - 1];
+		} else {
+			++j;
+		}
+	}
+	return result;
+}
+
+bool CircularCheckKMP(string Text, string Pattern){
+	vector<int> fail = compile_kmp_fail(Pattern);
+	int n = Text.size();
+	int m = Pattern.size();
+	int j = 0, k = 0;
+	while(j < n){
+		if(Text[j] == Pattern[k]){
+			if(k == m - 1) {
+				return true;
+			}
+			if(j == n - 1) {
+				j = 0;
+				++k;
+				while((k < m) && (Text[j] == Pattern[k])){
+					++j;
+					++k;
+					}
+					if(k == m) return true;
+					else return false;
+				}
+			++k;
+			++j;
+			} else if(k > 0) {
+			k = fail[k - 1];
+		} else {
+			j ++;
+		}
+	}
+	return false;
+}
+
 /* ------TEST--------*/
 int main(void){
-	string Text = "abcdefgd";
-	string Pattern_1 = "gdab";
+	string Text = "abcdefgde";
+	string Pattern_1 = "dei";
 	string Pattern_2 = "abc";
-	bool test = Circular_Check(Text, Pattern_2);
-	printf("%d\n", test);
+	string Pattern_3 = "deab";
+	bool test_0 = Circular_Check(Text, Pattern_1);
+	bool test_5 = CircularCheckKMP(Text, Pattern_1);
+	//bool test_5 = false;
+
+	bool test_1 = Circular_Check(Text, Pattern_2);
+	bool test_4 = CircularCheckKMP(Text, Pattern_2);
+
+	bool test_2 = Circular_Check(Text, Pattern_3);
+	bool test_3 = CircularCheckKMP(Text, Pattern_3);
+
+	printf("test_0: %d, test_5: %d, test_1: %d, test_4: %d, test_2:%d, test_3: %d\n", 
+				  test_0,     test_5,     test_1,     test_4,     test_2,    test_3);
 }
