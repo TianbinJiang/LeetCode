@@ -11,32 +11,6 @@
 #include <algorithm>
 using namespace std;
 
-void PrintString(string s){
-	int len = s.size();
-	for(int i = 0; i < len; ++i){
-		printf("%c", s[i]);
-	}
-	printf("\n");
-}
-/* use the c++ reverse method
-void swap(char *a, char *b){
-	char tmp = *a;
-	*a = *b;
-	*b = tmp;
-}
-
-void reverse(string &s){
-	int len =  s.size();
-	int begin = 0, end = len - 1;
-	while(begin < (len + 1) / 2){
-		swap(s[begin], s[end]);
-		begin++;
-		end --;
-	}
-}
-*/
-
-
 /* Use KMP to check the substring */
 vector<int> compile_kmp_fail(string Pattern){
 	vector<int> fail(Pattern.size());
@@ -100,12 +74,11 @@ int LongestPrefixinReverse(string s){
 /*-----TEST-----*/
 
 int main(void){
-	//string s = "abcde";
 	string s = "abcefghigdcba";
-	PrintString(s);
+	printf("%s\n",s.c_str());
 	string rev = s;
 	reverse(rev.begin(), rev.end());
-	PrintString(rev);
+	printf("%s\n",rev.c_str());
 	
 	int len = LongestPrefixinReverse(s);
 	printf("The longest prefix in reverse string is : %d\n", len);
