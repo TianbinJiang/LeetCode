@@ -82,6 +82,7 @@ bool CircularCheckKMP(string Text, string Pattern){
 	int j = 0, k = 0;
 	while(j < n){
 		if(Text[j] == Pattern[k]){
+			// if the pattern is just normal substring.
 			if(k == m - 1) {
 				return true;
 			}
@@ -96,6 +97,7 @@ bool CircularCheckKMP(string Text, string Pattern){
 					if(k == m) return true;
 					else return false;
 				}
+			// change KMP ends
 			++k;
 			++j;
 			} else if(k > 0) {
