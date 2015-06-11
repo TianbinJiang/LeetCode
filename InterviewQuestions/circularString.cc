@@ -85,6 +85,7 @@ bool CircularCheckKMP(string Text, string Pattern){
 			if(k == m - 1) {
 				return true;
 			}
+			// change KMP here.
 			if(j == n - 1) {
 				j = 0;
 				++k;
@@ -114,7 +115,6 @@ int main(void){
 	string Pattern_3 = "deab";
 	bool test_0 = Circular_Check(Text, Pattern_1);
 	bool test_5 = CircularCheckKMP(Text, Pattern_1);
-	//bool test_5 = false;
 
 	bool test_1 = Circular_Check(Text, Pattern_2);
 	bool test_4 = CircularCheckKMP(Text, Pattern_2);
