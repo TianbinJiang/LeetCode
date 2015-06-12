@@ -1,0 +1,5 @@
+This directory is to use trie to efficiently solve some competition problems.
+Trie sometimes is hard to implement in a short time, thus, here, we implement
+trie array
+
+1: Suffix Array
