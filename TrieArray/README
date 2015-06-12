@@ -2,4 +2,32 @@ This directory is to use trie to efficiently solve some competition problems.
 Trie sometimes is hard to implement in a short time, thus, here, we implement
 trie array
 
+"abac" --> "abac"; "ac"; "bac"; "c" (in sorted order)
+
+operations on this structure are very easily done:
+1: Checking whether a string W is a substring of A. It is enough to traverse the nodes starting from
+   the root and going through the edges labeled correspondingly to the characters in W. Time complexity
+   is O(W);
+2: Searching the Longest Common Prefix for two suffix of A (choose node u and v in the trie, corresponding
+   to the ends of two suffixes, then, with a LCA algorithm find the node corresponding to the end of searched
+   prefix). For example, for "abac" and "ac", the corresponding nodes are 5 and 6. Their least common ancestor
+   is 2, that gives the prefix "a".
+3: Find the k-th suffix in lexicographic order (time complexity is O(n), with a corresponding preprocessing)
+   for example, the 3rd suffix of "abac" is represented in the trie by the 3rd leaf.
+
+
+However, the implementation of string suffixes sometimes leads to time complexity of O(n * n). There is a 
+datastructure called suffix trie that can be built in linear time, which is a suffix trie where the chains containing
+only nodes with the out-degree equal to 1 were compressed into a single edge.
+for example: (2->3->4->5 and 1->7->8->9). Implementing the linear algorithm is scarcely impossible in a short time
+such as during a contest. This is why suffix array is introduced. 
+
 1: Suffix Array
+   Take "abac" for example. In ascending order.
+   abac = A_0
+   ac   = A_2
+   bac  = A_1
+   c    = A_3
+   To store the above strings, it is not necessary to keep a vector of strings. It is enough to maintain the index
+   of every suffix in the sorted array. We thus get the array P = (0, 2, 1, 3), this being the suffix array of the string
+   "abac".
