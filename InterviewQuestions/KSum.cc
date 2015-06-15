@@ -7,6 +7,7 @@ that k = a + b + c
 
 #include <stdio.h>
 #include <vector>
+#include <algorithm>
 using namespace std;
 
 
@@ -30,6 +31,33 @@ bool kSum(int K, vector<int> A, vector<int> B, vector<int> C){
 	return false;
 }
 
+/* This question is a bit similar with 2Sum question and just need
+   a bit change.
+*/
+
+bool kSum_2(int target, vector<int> A, vector<int> B, vector<int> C){
+	sort(A.begin(), A.end());
+	sort(B.begin(), B.end());
+	int A_len = A.size();
+	int B_len = B.size();
+	int C_len = C.size();
+	int i = 0, j = B_len - 1, k = 0;
+	while(k < C_len){
+		while(i < A_len && j >= 0) {
+			if(A[i] + B[j] == target - C[k]){
+				return true;
+			} else if (A[i] + B[j] > target - C[k]) {
+				j--; 
+			} else {
+				++i;
+			}
+		}
+		++k;
+	}
+	return false;
+}
+
+
 /*------TEST-------*/
 
 int main(void){
@@ -37,6 +65,6 @@ int main(void){
 	vector<int> A(array, array + 3);
 	vector<int> B(array, array + 3);
 	vector<int> C(array, array + 4);
-	bool found = kSum(3, A, B, C);
+	bool found = kSum_2(8, A, B, C);
 	printf("found: %d\n", found);
 }
