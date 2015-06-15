@@ -1,34 +1,34 @@
 //suffix array implementation. Time complexity: nlgn
-
+// It would be even better to use Radix sort instead of STL sort
 /* 
 Example: string BOBOCEL, len = 7
 
 step 0: sort based on 2 ** 0 characters.
-	 0 4 0 4 1 2 3
-         B O B O C E L
+				0 4 0 4 1 2 3
+				B O B O C E L
 
 step 1: sort based on 2 ** 1 characters.
-         0 4 0 4 1 2 3
-         B O B O C E L
-	 O B O C E L $  "$ is added to the end with low priority"
+				0 4 0 4 1 2 3
+				B O B O C E L
+				O B O C E L $  "$ is added to the end with low priority"
 
 step 2: sort based on 2 ** 2 characters.
-	 0 5 1 6 2 3 4
-         B O B O C E L
-         O B O C E L $
-         B O C E L $ $
-         O C E L $ $ $
+				0 5 1 6 2 3 4
+				B O B O C E L
+				O B O C E L $
+				B O C E L $ $
+				O C E L $ $ $
 
 step 3: sort based on 2 ** 3 characters
-	 0 5 1 6 2 3 4
-         B O B O C E L
-         O B O C E L $
-         B O C E L $ $
-         O C E L $ $ $
-         C E L $ $ $ $
-         E L $ $ $ $ $
-         L $ $ $ $ $ $
-         $ $ $ $ $ $ $
+				0 5 1 6 2 3 4
+				B O B O C E L
+				O B O C E L $
+				B O C E L $ $
+				O C E L $ $ $
+				C E L $ $ $ $
+				E L $ $ $ $ $
+				L $ $ $ $ $ $
+				$ $ $ $ $ $ $
 */
 
 #include <cstdio>
