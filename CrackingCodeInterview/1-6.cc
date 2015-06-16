@@ -23,8 +23,10 @@ void RotateMatrix(vector< vector<int> > &matrix){
 		}
 	}
 	// flipp matrix in len / 2 up-down order
-	for(int i = 0, j = len -i; i <= len; ++i){
-		swap(matrix[i][j], matrix[i][len - j]);
+	for(int i = 0; i <= len / 2; ++i){
+		for(int j = 0; j <= len / 2; ++j){
+			swap(matrix[i][j], matrix[len - i][j]);
+		}
 	}
 }
 
