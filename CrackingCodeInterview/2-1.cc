@@ -38,6 +38,7 @@ void RemoveDuplicates(LinkList *L){
 // If the inputs are numbers, we need to set two pointers.
 void RemoveDuplicates_1(LinkList* L){
 	if(!*L || !(*L)->next) return;
+	// set two pointers to track the new link node.
 	LinkList prev = *L, current = prev->next;
 	while(current != NULL){
 		LinkList runner = *L;
