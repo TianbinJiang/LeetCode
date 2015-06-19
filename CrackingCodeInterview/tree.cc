@@ -28,8 +28,3 @@ void PreOrderTraverse(BiTree T, int level){
 	}
 }
 
-int main(void){
-	BiTree T;
-	CreateBiTree(&T);
-	PreOrderTraverse(T, 0);
-}
