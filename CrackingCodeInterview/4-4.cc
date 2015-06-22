@@ -20,8 +20,10 @@ vector<LinkList> TraverseTreeToLinkedList(BiTree T){
 	deque<BiTNode*> nodes;
 	nodes.push_back(T);
 	while(!nodes.empty()){
+		// levelNodes tracks the number of nodes of each depth.
 		int levelNodes = nodes.size();
 		LinkList head = NULL;
+		// inner loop keeps adding the nodes of next depth level.
 		while(levelNodes > 0){
 			BiTNode* tmp = nodes.front();
 			Append(&head,tmp->data);
