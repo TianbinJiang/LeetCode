@@ -26,7 +26,7 @@ void PrintSingleLinkList(LinkList L){
 	if(!L) return;
 	LinkList head = L;
 	while(head){
-		printf("%d ", head->element);
+		printf("%c ", head->element);
 		head = head->next;
 	}
 	printf("\n");
@@ -47,14 +47,36 @@ LinkList DeleteNode(LinkList L, int target){
 	}
 }
 
+LinkList Append(LinkList *L, int data){
+	LinkList node = (LinkList)malloc(sizeof(LNode));
+	node->element = data;
+	node->next = NULL;
+	if(!*L){
+		*L = node;
+	}else{
+		LinkList prev = *L;
+		LinkList curr = prev->next;	
+		while(curr){
+			prev = curr;
+			curr = curr->next;
+		}
+		curr = node;
+		prev->next = curr;
+	}
+	return *L;
+}
+
 /* test
 
 int main(void){
-	int len = 3;
-	LinkList L = CreateSingleLinkList(3);
-	PrintSingleLinkList(L);
+	int len = 0;
+	printf("create a %d linked list\n", len);
+	//LinkList L = CreateSingleLinkList(len);
+	//PrintSingleLinkList(L);
+	LinkList L = NULL;
 	printf("\n");
-	DeleteNode(L, 5);
+	Append(&L, 2);
 	PrintSingleLinkList(L);
 }
+
 */
