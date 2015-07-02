@@ -10,6 +10,41 @@
 
 using namespace std;
 
+// Method 1
+
+LinkList SumofTwoLists_1(LinkList L, LinkList M){
+	if(!L) return M;
+	if(!M) return L;
+	LinkList LHead = L;
+	LinkList MHead = M;
+	LinkList list = NULL;
+	LinkList current = NULL;
+	int carry = 0;
+	while(LHead || MHead){
+		int sum = (LHead ? LHead->element : 0) + (MHead ? MHead->element : 0) + carry;
+		carry = sum / 10;
+		sum = sum % 10;
+		LinkList tmp = (LinkList)malloc(sizeof(LNode));
+		tmp->element = sum;
+		tmp->next = NULL;
+		if(!list) list = tmp;
+		else
+			current->next = tmp;
+		current = tmp;
+		if(LHead) LHead = LHead->next;
+		if(MHead) MHead = MHead->next;
+	}
+	if(carry){
+		LinkList tmp = (LinkList)malloc(sizeof(LNode));
+		tmp->next = NULL;
+		tmp->element = carry;
+		current->next = tmp;
+	}
+	return list;
+}
+
+
+// Method 2
 LinkList SumofTwoLists(LinkList *L, LinkList *M){
 	if(!*L) return *M;
 	if(!*M) return *L;
@@ -64,6 +99,6 @@ LinkList SumofTwoLists(LinkList *L, LinkList *M){
 int main(void){
 	LinkList L = CreateSingleLinkList(1);
 	LinkList M = CreateSingleLinkList(2);
-	LinkList Sum = SumofTwoLists(&L, &M);
+	LinkList Sum = SumofTwoLists_1(L, M);
 	PrintSingleLinkList(Sum);
 }
