@@ -3,14 +3,14 @@
 #include <stack>
 using namespace std;
 
-bool IsOPTR(char s){
-	if(s == '#' || s == '(' || s == ')' || s == '+' || s == '-' || s == '*' || s == '/') return true;
+bool IsOPTR(unsigned char s){
+	if(s == '#' || s == '(' || s == ')' || s == '+' || s == '-' || s == '*' || s == '/' || s == '\0') return true;
 	else return false;
 }
 
-char Precede(char a, char b){
+unsigned char Precede(unsigned char a, unsigned char b){
 	int i, j;
-	char pre[][7] = {
+	unsigned char pre[][7] = {
 		{'>', '>', '<', '<', '<', '>', '>'},
 		{'>', '>', '<', '<', '<', '>', '>'},
 		{'>', '>', '>', '>', '<', '>', '>'},
@@ -34,18 +34,19 @@ char Precede(char a, char b){
 		case '/': j = 3; break;
 		case '(': j = 4; break;
 		case ')': j = 5; break;
-		case '#': j = 6; break;
+		case '\0': j = 6; break;
 	}
 	return pre[i][j];
 }
 
-char Operate(char a, char theta, char b){
-	if(theta == '-') return char(int(a - '0') - int (b - '0') + '0');
-	else if(theta == '+') return char(int(a - '0') + int(b - '0') + '0');
-	else if(theta == '*') return char(int(a - '0') * int(b - '0') + '0');
-	else return char(int(a - '0') / int(b - '0') + '0');
+unsigned char Operate(unsigned char a, unsigned char theta, unsigned char b){
+	if(theta == '-') return unsigned char(int(a - '0') - int (b - '0') + '0');
+	else if(theta == '+') return unsigned char(int(a - '0') + int(b - '0') + '0');
+	else if(theta == '*') return unsigned char(int(a - '0') * int(b - '0') + '0');
+	else return unsigned char(int(a - '0') / int(b - '0') + '0');
 }
 
+// This method can only calcualte 1-9 numbers as input.
 int calculate(string s){
 	int len = s.size();
 	int i = 0;
@@ -59,16 +60,23 @@ int calculate(string s){
 		}
 	}
 */
-	stack<char> OPTR;
+	stack<unsigned char> OPTR;
 	OPTR.push('#');
-	stack<char> OPND;
-	char tmp = OPTR.top();
-	while(s[i] != '#' || (tmp != '#')){
+	stack<unsigned char> OPND;
+	unsigned char tmp = OPTR.top();
+	// here is or not add.....erh! neither equals to 1, it fails.
+	while(s[i] != '\0' || (tmp != '#')){
 		printf("i: %d\n", i);
-		//if(s[i] == ' ') {i++; continue;}
-		if(!IsOPTR(s[i])){
-			OPND.push(s[i]);
-			i++;
+		if(s[i] == ' ') {i++; continue;}
+    else if(!IsOPTR(s[i])){
+			int sum = int(s[i] - '0');
+			int j = i + 1;
+			while(s[j] != '\0' && s[j] != ' ' && !IsOPTR(s[j])){
+				sum = sum * 10 + int(s[j] - '0');
+				j++;
+			}
+			OPND.push(unsigned char(sum + '0'));
+			i = j;
 			continue;
 		} else {
 			switch(Precede(OPTR.top(), s[i])) {
@@ -81,13 +89,13 @@ int calculate(string s){
 					i++;
 					break;
 				case '>':
-					char theta = OPTR.top();
+					unsigned char theta = OPTR.top();
 					OPTR.pop();
 
-					char b = OPND.top();
+					unsigned char b = OPND.top();
 					OPND.pop();
 
-					char a = OPND.top();
+					unsigned char a = OPND.top();
 					OPND.pop();
 
 					OPND.push(Operate(a, theta, b));
@@ -104,6 +112,6 @@ int calculate(string s){
 }
 
 int main(void){
-	string test = "4*3#";
+	string test = "1 + 10*2";
 	printf("the total value is : %d\n", calculate(test));
 }
