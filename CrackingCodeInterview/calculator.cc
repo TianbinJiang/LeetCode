@@ -10,6 +10,7 @@ bool IsOPTR(unsigned char s){
 
 unsigned char Precede(unsigned char a, unsigned char b){
 	int i, j;
+	// set up a precedence table
 	unsigned char pre[][7] = {
 		{'>', '>', '<', '<', '<', '>', '>'},
 		{'>', '>', '<', '<', '<', '>', '>'},
@@ -39,43 +40,38 @@ unsigned char Precede(unsigned char a, unsigned char b){
 	return pre[i][j];
 }
 
-unsigned char Operate(unsigned char a, unsigned char theta, unsigned char b){
-	if(theta == '-') return unsigned char(int(a - '0') - int (b - '0') + '0');
-	else if(theta == '+') return unsigned char(int(a - '0') + int(b - '0') + '0');
-	else if(theta == '*') return unsigned char(int(a - '0') * int(b - '0') + '0');
-	else return unsigned char(int(a - '0') / int(b - '0') + '0');
+int Operate(int a, char theta, int b){
+	if(theta == '-') return (a - b);
+	else if(theta == '+') return (a + b);
+	else if(theta == '*') return (a * b);
+	else return (a / b);
 }
 
 // This method can only calcualte 1-9 numbers as input.
 int calculate(string s){
 	int len = s.size();
 	int i = 0;
-	// not start from space.
-/*
-	while(i < len){
-		if(s[i] == ' '){
-			i++;
-		} else {
-			break;
-		}
-	}
-*/
-	stack<unsigned char> OPTR;
+
+	// stack for Operators, use # to indicate the bottom of stack.
+	stack<char> OPTR;
 	OPTR.push('#');
-	stack<unsigned char> OPND;
-	unsigned char tmp = OPTR.top();
-	// here is or not add.....erh! neither equals to 1, it fails.
+
+	// we would want to store integers in OPND, since char type is way too small.
+	stack<int> OPND;
+	char tmp = OPTR.top();
 	while(s[i] != '\0' || (tmp != '#')){
 		printf("i: %d\n", i);
 		if(s[i] == ' ') {i++; continue;}
     else if(!IsOPTR(s[i])){
 			int sum = int(s[i] - '0');
 			int j = i + 1;
+
+			// what if the number is more than one digits.
 			while(s[j] != '\0' && s[j] != ' ' && !IsOPTR(s[j])){
 				sum = sum * 10 + int(s[j] - '0');
 				j++;
 			}
-			OPND.push(unsigned char(sum + '0'));
+			OPND.push(sum);
 			i = j;
 			continue;
 		} else {
@@ -89,26 +85,23 @@ int calculate(string s){
 					i++;
 					break;
 				case '>':
-					unsigned char theta = OPTR.top();
+					char theta = OPTR.top();
 					OPTR.pop();
 
-					unsigned char b = OPND.top();
+					int b = OPND.top();
 					OPND.pop();
 
-					unsigned char a = OPND.top();
+					int a = OPND.top();
 					OPND.pop();
 
 					OPND.push(Operate(a, theta, b));
 					break;
 			} // swith
 		} // else	 
-	printf("OPTR: %c\n", OPTR.top());
-	printf("OPND: %d\n", OPND.top() - '0');
 	tmp = OPTR.top();
 	} // while
 
-	printf("OPND: %d\n", OPND.top() - '0');
-	return int(OPND.top() - '0');
+	return OPND.top();
 }
 
 int main(void){
