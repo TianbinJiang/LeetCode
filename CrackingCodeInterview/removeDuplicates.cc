@@ -26,10 +26,27 @@ int removeDuplicates(vector<int>& nums){
 	return i;
 }
 
+int removeDuplicates_1(vector<int> &nums){
+	int len = nums.size() - 1;
+	if(len == 0) return len;
+	int occur = 1;
+	int index = 0;
+	for(int i = 1; i <=  len; i++){
+		if(nums[index] == nums[i]){
+			if(occur == 2){continue;}
+			occur++;
+		} else {
+			occur = 1;
+		}
+		nums[++index] = nums[i];
+	}
+	return index + 1;
+}
+
 int main(void){
 	int test[] = {1,1,1,2,2,3};
 	vector<int> data(test, test +sizeof(test)/sizeof(int));
-	int index = removeDuplicates(data);
+	int index = removeDuplicates_1(data);
 	for(int i = 0; i < index; ++i){
 		printf("%d ", data[i]);
 	}
