@@ -1,0 +1,859 @@
+58,133c58,134
+<         oTempAllocate = 14;
+<         oTempFree = 15;
+<         oOperandPushMode = 16; { (16) }
+<         oOperandChooseMode = 17; { >>16 }
+<         oOperandPushVariable = 18;
+<         oOperandPushInteger = 19;
+<         oOperandPushBoolean = 20;
+<         oOperandPushJumpCondition = 21; { (15) }
+<         oOperandChooseJumpCondition = 22; { >>15 }
+<         oOperandPushString = 23;
+<         oOperandPushProcedure = 24;
+<         oOperandPushTrap = 25;
+<         oOperandPushCaseLow = 26;
+<         oOperandPushCaseHigh = 27;
+<         oOperandPushArrayLowerBound = 28;
+<         oOperandPushArrayUpperBound = 29;
+<         oOperandPushCopy = 30;
+<         oOperandPushTemp = 31;
+<         oOperandSetMode = 32; { (16) }
+<         oOperandSetLength = 33; { (13) }
+<         oOperandSetRegnum = 34; { (13) }
+<         oOperandChooseLength = 35; { >>13 }
+<         oOperandSetValue = 36; { (13) }
+<         oOperandChooseValue = 37; { >>13 }
+<         oOperandChooseManifestValue = 38; { >>13 }
+<         oOperandIsValueNegative = 39; { >>14 }
+<         oOperandEnterValueFromCaseTableAddress = 40;
+<         oOperandEnterValueFromCodeAddress = 41;
+<         oOperandEnterValueFromStringLength = 42;
+<         oOperandEnterValueFromDataAreaSize = 43;
+<         oOperandCompareLeftAndRight = 44; { >>14 }
+<         oOperandCompareRightAndDest = 45; { >>14 }
+<         oOperandIsJumpCondition = 46; { >>14 }
+<         oOperandComplementJumpCondition = 47;
+<         oOperandAddManifestValues = 48;
+<         oOperandSubtractManifestValues = 49;
+<         oOperandMultiplyManifestValues = 50;
+<         oOperandNegateManifestValue = 51;
+<         oOperandCompareManifestValues = 52; { >>14 }
+<         oOperandMergeShuntsWithAddress = 53;
+<         oOperandMergeShunts = 54;
+<         oOperandFoldManifestSubscript = 55;
+<         oOperandSwap = 56;
+<         oOperandSwapRightAndDest = 57;
+<         oOperandSwapLeftAndDest = 58;
+<         oOperandPop = 59;
+<         oFixPushAddress = 60;
+<         oFixPushLastAddress = 61;
+<         oFixSwapAddresses = 62;
+<         oFixAndFreeShuntList = 63;
+<         oFixAndFreeFalseBranches = 64;
+<         oFixForwardBranch = 65;
+<         oFixPopAddress = 66;
+<         oEmitProcLabel = 67; { (16) }
+<         oEmitNone = 68; { (17) }
+<         oEmitSingle = 69; { (17) }
+<         oEmitDouble = 70; { (17) }
+<         oEmitString = 71;
+<         oEmitStringLength = 72;
+<         oEmitConditionalForwardBranch = 73;
+<         oEmitUnconditionalForwardBranch = 74;
+<         oEmitConditionalBackwardBranch = 75;
+<         oEmitUnconditionalBackwardBranch = 76;
+<         oEmitSourceCoordinate = 77;
+<         oEmitMergeSourceCoordinate = 78;
+<         oEmitCaseMergeBranch = 79;
+<         oEmitCaseBranchTable = 80;
+<         oCasePush = 81;
+<         oCasePop = 82;
+<         oCaseEnterTCodeAddress = 83;
+<         oCaseEnterVariantAddress = 84;
+<         oCaseEnterMergeAddress = 85;
+<         oCaseEnterAbortAddress = 86;
+<         oArrayEnterLowerBound = 87;
+<         oArrayEnterUpperBound = 88;
+<         oOptionTestChecking = 89; { >>14 }
+---
+> 	oTempAllocate = 14;
+> 	oTempFree = 15;
+> 	oOperandPushMode = 16; { (16) }
+> 	oOperandChooseMode = 17; { >>16 }
+> 	oOperandPushVariable = 18;
+> 	oOperandPushInteger = 19;
+> 	oOperandPushChar = 20;
+> 	oOperandPushBoolean = 21;
+> 	oOperandPushJumpCondition = 22; { (15) }
+> 	oOperandChooseJumpCondition = 23; { >>15 }
+> 	oOperandPushStringDescriptor = 24;
+> 	oOperandPushProcedure = 25;
+> 	oOperandPushTrap = 26;
+> 	oOperandPushCaseLow = 27;
+> 	oOperandPushCaseHigh = 28;
+> 	oOperandPushArrayLowerBound = 29;
+> 	oOperandPushArrayUpperBound = 30;
+> 	oOperandPushCopy = 31;
+> 	oOperandPushTemp = 32;
+> 	oOperandSetMode = 33; { (16) }
+> 	oOperandSetLength = 34; { (13) }
+> 	oOperandSetRegnum = 35; { (13) }
+> 	oOperandChooseLength = 36; { >>13 }
+> 	oOperandSetValue = 37; { (13) }
+> 	oOperandChooseValue = 38; { >>13 }
+> 	oOperandChooseManifestValue = 39; { >>13 }
+> 	oOperandIsValueNegative = 40; { >>14 }
+> 	oOperandEnterValueFromCaseTableAddress = 41;
+> 	oOperandEnterValueFromCodeAddress = 42;
+> 	oOperandEnterValueFromStringLength = 43;
+> 	oOperandEnterValueFromDataAreaSize = 44;
+> 	oOperandCompareLeftAndRight = 45; { >>14 }
+> 	oOperandCompareRightAndDest = 46; { >>14 }
+> 	oOperandIsJumpCondition = 47; { >>14 }
+> 	oOperandComplementJumpCondition = 48;
+> 	oOperandAddManifestValues = 49;
+> 	oOperandSubtractManifestValues = 50;
+> 	oOperandMultiplyManifestValues = 51;
+> 	oOperandNegateManifestValue = 52;
+> 	oOperandCompareManifestValues = 53; { >>14 }
+> 	oOperandMergeShuntsWithAddress = 54;
+> 	oOperandMergeShunts = 55;
+> 	oOperandFoldManifestSubscript = 56;
+> 	oOperandSwap = 57;
+> 	oOperandSwapRightAndDest = 58;
+> 	oOperandSwapLeftAndDest = 59;
+> 	oOperandPop = 60;
+> 	oFixPushAddress = 61;
+> 	oFixPushLastAddress = 62;
+> 	oFixSwapAddresses = 63;
+> 	oFixAndFreeShuntList = 64;
+> 	oFixAndFreeFalseBranches = 65;
+> 	oFixForwardBranch = 66;
+> 	oFixPopAddress = 67;
+> 	oEmitProcLabel = 68; { (16) }
+> 	oEmitNone = 69; { (17) }
+> 	oEmitSingle = 70; { (17) }
+> 	oEmitDouble = 71; { (17) }
+> 	oEmitString = 72;
+> 	oEmitStringLength = 73;
+> 	oEmitConditionalForwardBranch = 74;
+> 	oEmitUnconditionalForwardBranch = 75;
+> 	oEmitConditionalBackwardBranch = 76;
+> 	oEmitUnconditionalBackwardBranch = 77;
+> 	oEmitSourceCoordinate = 78;
+> 	oEmitMergeSourceCoordinate = 79;
+> 	oEmitCaseMergeBranch = 80;
+> 	oEmitCaseBranchTable = 81;
+> 	oCasePush = 82;
+> 	oCasePop = 83;
+> 	oCaseEnterTCodeAddress = 84;
+> 	oCaseEnterVariantAddress = 85;
+> 	oCaseEnterMergeAddress = 86;
+> 	oCaseEnterAbortAddress = 87;
+> 	oArrayEnterLowerBound = 88;
+> 	oArrayEnterUpperBound = 89;
+> 	oOptionTestChecking = 90; { >>14 }
+135c136
+<         { Input Tokens }
+---
+> 	{ Input Tokens }
+137,328c138,225
+<         firstInputToken = 0;
+<         tDivide = 1;
+<         tModulus = 2;
+<         tAdd = 3;
+<         tSubtract = 4;
+<         tEQ = 5;
+<         tNE = 6;
+<         tGT = 7;
+<         tGE = 8;
+<         tLT = 9;
+<         tLE = 10;
+<         tAnd = 11;
+<         tInfixAnd = 12;
+<         tOr = 13;
+<         tInfixOr = 14;
+<         tNegate = 15;
+<         tNot = 16;
+<         tChr = 17;
+<         tOrd = 18;
+<         tEoln = 19;
+<         tEOF = 20;
+<         tVarParm = 21;
+<         tFetchAddress = 22;
+<         tFetchInteger = 23;
+<         tFetchString = 24;
+<         tFetchBoolean = 25;
+<         tAssignBegin = 26;
+<         tAssignAddress = 27;
+<         tAssignInteger = 28;
+<         tAssignString = 29;
+<         tAssignBoolean = 30;
+<         tStoreParmAddress = 31;
+<         tStoreParmInteger = 32;
+<         tStoreParmString = 33;
+<         tStoreParmBoolean = 34;
+<         tSubscriptBegin = 35;
+<         tSubscriptAddress = 36;
+<         tSubscriptInteger = 37;
+<         tSubscriptString = 38;
+<         tSubscriptBoolean = 39;
+<         tArrayDescriptor = 40;
+<         tFileDescriptor = 41;
+<         tIfBegin = 42;
+<         tIfEnd = 43;
+<         tCaseBegin = 44;
+<         tLoopBegin = 45;
+<         tLoopBreakWhen = 46;
+<         tCallBegin = 47;
+<         tParmEnd = 48;
+<         tProcedureEnd = 49;
+<         tWriteBegin = 50;
+<         tReadBegin = 51;
+<         tTrapBegin = 52;
+<         tWriteEnd = 53;
+<         tReadEnd = 54;
+<         tCaseElse = 55;
+<         tConcatenate = 56;
+<         tSubstring = 57;
+<         tLength = 58;
+<         tStringEqual = 59;
+<         tFunctionResult = 60;
+<         tLiteralAddress = 61;
+<         firstCompoundToken = 61;
+<         tLiteralInteger = 62;
+<         tLiteralBoolean = 63;
+< 	tLiteralString = 64;
+<      	tStringDescriptor = 65;
+<         tSkipString = 66;
+<         tIfThen = 67;
+<         tIfMerge = 68;
+<         tCaseSelect = 69;
+<         tCaseMerge = 70;
+<         tCaseEnd = 71;
+<         tLoopTest = 72;
+<         tLoopEnd = 73;
+<         tSkipProc = 74;
+<         tCallEnd = 75;
+<         tLineNumber = 76;
+<         tTrap = 77;
+<         lastCompoundToken = 77;
+<         tEndOfFile = 78;
+<         lastInputToken = 78;
+<   { Output Tokens }
+< 
+<         { Input/Output Tokens }
+< 
+<         { Error Codes }
+<         eDivisionByZero = 10;
+<         firstErrorCode = 10;
+<         lastSslErrorCode = 10;
+< 
+<         { Type Values }
+<         { Type 13 }
+<         minusOne = -1;
+<         zero = 0;
+<         null = 0;
+<         one = 1;
+<         two = 2;
+<         four = 4;
+<         eight = 8;
+<         ten = 10;
+<         twelve = 12;
+<         regAX = 1;
+<         regBX = 2;
+<         regCX = 3;
+<         regDX = 4;
+<         trHalt = 0;
+<         trReset = 1;
+<         trRewrite = 2;
+<         trRead = 3;
+<         trReadln = 4;
+<         trWrite = 5;
+<         trWriteln = 6;
+<         trWriteInteger = 8;
+<         trReadInteger = 10;
+<         trAssign = 12;
+<         trSubscriptAbort = 13;
+<         trCaseAbort = 14;
+<         trEoln = 15;
+<         trEof = 16;
+<         pttrap101 = 101;
+<         pttrap102 = 102;
+<         pttrap103 = 103;
+<         pttrap104 = 104;
+<         pttrap105 = 105;
+<         pttrap106 = 106;
+<         pttrap107 = 107;
+<         pttrap108 = 108;
+<         byte = 1;
+<         word = 2;
+<         string = 3;
+<         { Type 14 }
+<         no = 0;
+<         yes = 1;
+<         { Type 15 }
+<         iJalways = -9;
+<         iJhi = -8;
+<         iJlos = -7;
+<         iJge = -6;
+<         iJlt = -5;
+<         iJle = -4;
+<         iJgt = -3;
+<         iJne = -2;
+<         iJeq = -1;
+<         iJnever = 0;
+<         { Type 16 }
+<         mStatic = 1;
+<         mStaticManifest = 2;
+<         mTemp = 3;
+<         mTempIndirect = 4;
+<         mTempIndirectCaseOffset = 5;
+<         mStackReg = 6;
+<         mStack = 7;
+<         mBaseReg = 8;
+<         mArgument = 9;
+<         mManifest = 10;
+<         mResultReg = 11;
+<         mRemainderReg = 12;
+<         mScratchReg1 = 13;
+<         mScratchReg2 = 14;
+<         mGlobalBase = 15;
+<         mLineNum = 16;
+<         mMainProc = 17;
+<         mProc = 18;
+<         mTrap = 19;
+<         mString = 20;
+<         mWord = 21;
+<         { Type 17 }
+<         iAdd = 1;
+<         iCmp = 2;
+<         iDec = 3;
+<         iDiv = 4;
+<         iInc = 5;
+<         iMul = 6;
+<         iShl = 7;
+<         iNeg = 8;
+<         iSub = 9;
+<         iMov = 10;
+<         iPush = 11;
+<         iPop = 12;
+<         iLoada = 13;
+<         iExtend = 14;
+<         iJmp = 15;
+<         iCall = 16;
+<         iReturn = 17;
+<         iEnter = 18;
+<         iLeave = 19;
+<         iGlobl = 20;
+<         iText = 21;
+<         iData = 22;
+<         iWord = 23;
+<         iSpace = 24;
+---
+> 	firstInputToken = 0;
+> 	tDivide = 1;
+> 	tModulus = 2;
+> 	tAdd = 3;
+> 	tSubtract = 4;
+> 	tEQ = 5;
+> 	tNE = 6;
+> 	tGT = 7;
+> 	tGE = 8;
+> 	tLT = 9;
+> 	tLE = 10;
+> 	tAnd = 11;
+> 	tInfixAnd = 12;
+> 	tOr = 13;
+> 	tInfixOr = 14;
+> 	tNegate = 15;
+> 	tNot = 16;
+> 	tChr = 17;
+> 	tOrd = 18;
+> 	tEoln = 19;
+> 	tEOF = 20;
+> 	tVarParm = 21;
+> 	tFetchAddress = 22;
+> 	tFetchInteger = 23;
+> 	tFetchChar = 24;
+> 	tFetchBoolean = 25;
+> 	tAssignBegin = 26;
+> 	tAssignAddress = 27;
+> 	tAssignInteger = 28;
+> 	tAssignChar = 29;
+> 	tAssignBoolean = 30;
+> 	tStoreParmAddress = 31;
+> 	tStoreParmInteger = 32;
+> 	tStoreParmChar = 33;
+> 	tStoreParmBoolean = 34;
+> 	tSubscriptBegin = 35;
+> 	tSubscriptAddress = 36;
+> 	tSubscriptInteger = 37;
+> 	tSubscriptChar = 38;
+> 	tSubscriptBoolean = 39;
+> 	tArrayDescriptor = 40;
+> 	tFileDescriptor = 41;
+> 	tIfBegin = 42;
+> 	tIfEnd = 43;
+> 	tCaseBegin = 44;
+> 	tWhileBegin = 45;
+> 	tRepeatBegin = 46;
+> 	tRepeatControl = 47;
+> 	tCallBegin = 48;
+> 	tParmEnd = 49;
+> 	tProcedureEnd = 50;
+> 	tWriteBegin = 51;
+> 	tReadBegin = 52;
+> 	tTrapBegin = 53;
+> 	tWriteEnd = 54;
+> 	tReadEnd = 55;
+> 	tLiteralAddress = 56;
+> 	firstCompoundToken = 56;
+> 	tLiteralInteger = 57;
+> 	tLiteralChar = 58;
+> 	tLiteralBoolean = 59;
+> 	tLiteralString = 60;
+> 	tStringDescriptor = 61;
+> 	tSkipString = 62;
+> 	tIfThen = 63;
+> 	tIfMerge = 64;
+> 	tCaseSelect = 65;
+> 	tCaseMerge = 66;
+> 	tCaseEnd = 67;
+> 	tWhileTest = 68;
+> 	tWhileEnd = 69;
+> 	tRepeatTest = 70;
+> 	tSkipProc = 71;
+> 	tCallEnd = 72;
+> 	tLineNumber = 73;
+> 	tTrap = 74;
+> 	lastCompoundToken = 74;
+> 	tEndOfFile = 75;
+> 	lastInputToken = 75;
+> 
+> 	{ Output Tokens }
+> 
+> 	{ Input/Output Tokens }
+> 
+> 	{ Error Codes }
+> 	eDivisionByZero = 10;
+> 	firstErrorCode = 10;
+> 	lastSslErrorCode = 10;
+330c227,320
+<         { S/SL Rule Table Addresses } {
+---
+> 	{ Type Values }
+> 	{ Type 13 }
+> 	minusOne = -1;
+> 	zero = 0;
+> 	null = 0;
+> 	one = 1;
+> 	two = 2;
+> 	four = 4;
+> 	eight = 8;
+> 	twelve = 12;
+> 	regAX = 1;
+> 	regBX = 2;
+> 	regCX = 3;
+> 	regDX = 4;
+> 	trHalt = 0;
+> 	trReset = 1;
+> 	trRewrite = 2;
+> 	trRead = 3;
+> 	trReadln = 4;
+> 	trWrite = 5;
+> 	trWriteln = 6;
+> 	trWriteString = 7;
+> 	trWriteInteger = 8;
+> 	trWriteChar = 9;
+> 	trReadInteger = 10;
+> 	trReadChar = 11;
+> 	trAssign = 12;
+> 	trSubscriptAbort = 13;
+> 	trCaseAbort = 14;
+> 	trEoln = 15;
+> 	trEof = 16;
+> 	byte = 1;
+> 	word = 2;
+> 	{ Type 14 }
+> 	no = 0;
+> 	yes = 1;
+> 	{ Type 15 }
+> 	iJalways = -9;
+> 	iJhi = -8;
+> 	iJlos = -7;
+> 	iJge = -6;
+> 	iJlt = -5;
+> 	iJle = -4;
+> 	iJgt = -3;
+> 	iJne = -2;
+> 	iJeq = -1;
+> 	iJnever = 0;
+> 	{ Type 16 }
+> 	mStatic = 1;
+> 	mStaticManifest = 2;
+> 	mTemp = 3;
+> 	mTempIndirect = 4;
+> 	mTempIndirectCaseOffset = 5;
+> 	mStackReg = 6;
+> 	mStack = 7;
+> 	mBaseReg = 8;
+> 	mArgument = 9;
+> 	mManifest = 10;
+> 	mResultReg = 11;
+> 	mRemainderReg = 12;
+> 	mScratchReg1 = 13;
+> 	mScratchReg2 = 14;
+> 	mGlobalBase = 15;
+> 	mLineNum = 16;
+> 	mMainProc = 17;
+> 	mProc = 18;
+> 	mTrap = 19;
+> 	mString = 20;
+> 	mWord = 21;
+> 	{ Type 17 }
+> 	iAdd = 1;
+> 	iCmp = 2;
+> 	iDec = 3;
+> 	iDiv = 4;
+> 	iInc = 5;
+> 	iMul = 6;
+> 	iShl = 7;
+> 	iNeg = 8;
+> 	iSub = 9;
+> 	iMov = 10;
+> 	iPush = 11;
+> 	iPop = 12;
+> 	iLoada = 13;
+> 	iExtend = 14;
+> 	iJmp = 15;
+> 	iCall = 16;
+> 	iReturn = 17;
+> 	iEnter = 18;
+> 	iLeave = 19;
+> 	iGlobl = 20;
+> 	iText = 21;
+> 	iData = 22;
+> 	iWord = 23;
+> 	iSpace = 24;
+331a322
+> 	{ S/SL Rule Table Addresses } {
+333,440c324,426
+<         EmitProgramPrologue = 7;
+<         Block = 65;
+<         EmitProgramEpilogue = 58;
+<         OperandPopAndFreeTemp = 4011;
+<         AssignStmt = 401;
+<         CallStmt = 409;
+<         IfStmt = 484;
+<         LoopStmt = 643;
+<         CaseStmt = 703;
+<         WriteProc = 846;
+<         ReadProc = 930;
+<         TrapStmt = 1021;
+<         Routine = 206;
+<         Statements = 345;
+<         OperandNextParameter = 330;
+<         EmitMove = 4715;
+<         OperandAssignStringPopPop = 2490;
+<         OperandPushExpression = 1139;
+<         OperandPushVariable = 1379;
+<         OperandPushExpressionAssignPopPop = 2167;
+<         OperandConvertJumpConditionToData = 4036;
+<         OperandForceAddressIntoTemp = 4388;
+<         OperandForceToStack = 4544;
+<         OperandPushBooleanControlExpression = 537;
+<         FoldIfStmt = 578;
+<         OperandInfixOr = 3950;
+<         OperandForceToJumpCondition = 542;
+<         EmitTst = 4749;
+<         SkipToEndIf = 624;
+<         SkipToEndLoop = 684;
+<         OperandFreeTemp = 4024;
+<         CaseSelect = 731;
+<         CaseVariant = 734;
+<         CaseEnd = 742;
+<         EmitDefaultCaseAbort = 752;
+<         EmitCaseSubscriptJump = 787;
+<         OperandForceIntoTemp = 4320;
+<         OperandSubtractRightFromLeftPop = 3020;
+<         WriteParameter = 861;
+<         ReadParameter = 945;
+<         OperandAssignIntegerPopPop = 3973;
+<         EmitStringDescriptor = 1376;
+<         OperandConcatenatePop = 2540;
+< 	OperandSubstringPopPop = 2611;
+<         OperandLength = 2684;
+<         OperandStringEqualPop = 2749;
+<         SaveTempRegsToStack = 3729;
+<         RestoreTempRegsFromStack = 3761;
+<         OperandNegate = 2845;
+<         OperandAddPop = 2923;
+<         OperandSubtractPop = 3042;
+<         OperandMultiplyPop = 3193;
+<         OperandDividePop = 3339;
+<         OperandModPop = 3465;
+<         OperandNot = 3946;
+<         OperandOrPop = 3967;
+<         OperandEqualPop = 4129;
+<         OperandGreaterPop = 4204;
+<         OperandLessPop = 4292;
+<         OperandChr = 3575;
+<         OperandOrd = 3638;
+<         OperandEolnFunction = 3667;
+<         OperandEofFunction = 3793;
+<         OperandSubscriptIntegerPop = 1450;
+<         OperandSubscriptStringPop = 1479;
+<         OperandSubscriptBooleanPop = 1540;
+<         OperandSubscriptNonManifestIntegerPop = 1543;
+<         OperandSubscriptNonManifestStringPop = 1556;
+<         OperandSubscriptCharPop = 1508;
+<         OperandSubscriptNonManifestCharPop = 1999;
+<         OperandCheckedSubscriptNonManifestIntegerPop = 1569;
+<         OperandUncheckedSubscriptNonManifestIntegerPop = 1853;
+<         OperandCheckedSubscriptNonManifestStringPop = 1684;
+<         OperandUncheckedSubscriptNonManifestStringPop = 1926;
+<         OperandPushArrayUpperBound = 1813;
+<         EmitCmp = 4659;
+<         OperandPushArrayLowerBound = 1799;
+<         EmitSubscriptAbort = 1832;
+<         OperandCheckedSubscriptNonManifestCharPop = 2012;
+<         OperandUncheckedSubscriptNonManifestCharPop = 2114;
+<         OperandAssignBooleanPopPop = 4006;
+<         OperandNegateAssignPopPop = 2820;
+<         OperandAddAssignPopPopPop = 2860;
+<         OperandSubtractAssignPopPopPop = 3000;
+<         OperandMultiplyAssignPopPopPop = 3085;
+<         OperandDivideAssignPopPopPop = 3292;
+<         OperandNotAssignPopPop = 3855;
+<         OperandAddRightToLeftPop = 2893;
+<  	EmitAdd = 4629;
+<         OperandForceLeftIntoTemp = 4374;
+<         EmitSub = 4644;
+<         OperandMultiplyLeftByRightPop = 3118;
+<         OperandDivideLeftByRightPop = 3312;
+<         OperandAssignCharPopPop = 3996;
+<         OperandPushFalseTemp = 4113;
+<         OperandPushTrueTemp = 4097;
+<         OperandPushTempByte = 4535;
+<         OperandFoldComparisonPopPop = 4296;
+<         OperandPushTempWord = 4526;
+<         OperandForceAddressIntoNewTemp = 4452;
+<         OperandAreLeftAndRightManifest = 4571; >>14
+<         OperandLeftOrRightIsTemp = 4600; >>14
+<         }
+< 
+<         { S/SL Table Parameters }
+<         sslTblSize = 4784;
+<         minSslTableValue = -32767;
+<         maxSslTableValue = 32767;
+---
+> 	EmitProgramPrologue = 7;
+> 	Block = 65;
+> 	EmitProgramEpilogue = 58;
+> 	OperandPopAndFreeTemp = 3295;
+> 	Routine = 160;
+> 	Statements = 264;
+> 	OperandNextParameter = 249;
+> 	EmitMove = 4016;
+> 	AssignStmt = 326;
+> 	CallStmt = 334;
+> 	IfStmt = 409;
+> 	WhileStmt = 568;
+> 	RepeatStmt = 625;
+> 	CaseStmt = 657;
+> 	WriteProc = 789;
+> 	ReadProc = 873;
+> 	TrapStmt = 964;
+> 	OperandPushVariable = 1277;
+> 	OperandPushExpressionAssignPopPop = 1841;
+> 	OperandPushExpression = 1082;
+> 	OperandConvertJumpConditionToData = 3320;
+> 	OperandForceAddressIntoTemp = 3689;
+> 	OperandForceToStack = 3845;
+> 	OperandPushBooleanControlExpression = 462;
+> 	FoldIfStmt = 503;
+> 	OperandInfixOr = 3234;
+> 	OperandForceToJumpCondition = 467;
+> 	EmitTst = 4050;
+> 	SkipToEndIf = 549;
+> 	SkipToEndWhile = 606;
+> 	OperandFreeTemp = 3308;
+> 	CaseSelect = 685;
+> 	CaseVariant = 688;
+> 	CaseEnd = 696;
+> 	EmitDefaultCaseAbort = 706;
+> 	EmitCaseSubscriptJump = 730;
+> 	OperandForceIntoTemp = 3604;
+> 	OperandSubtractRightFromLeftPop = 2322;
+> 	WriteParameter = 804;
+> 	ReadParameter = 888;
+> 	OperandAssignIntegerPopPop = 3257;
+> 	EmitStringDescriptor = 1274;
+> 	OperandNegate = 2147;
+> 	OperandAddPop = 2225;
+> 	OperandSubtractPop = 2344;
+> 	OperandMultiplyPop = 2495;
+> 	OperandDividePop = 2641;
+> 	OperandModPop = 2767;
+> 	OperandNot = 3230;
+> 	OperandOrPop = 3251;
+> 	OperandEqualPop = 3413;
+> 	OperandGreaterPop = 3488;
+> 	OperandLessPop = 3576;
+> 	OperandChr = 2890;
+> 	OperandOrd = 2927;
+> 	OperandEolnFunction = 2951;
+> 	OperandEofFunction = 3077;
+> 	OperandSubscriptIntegerPop = 1344;
+> 	OperandSubscriptCharPop = 1373;
+> 	OperandSubscriptBooleanPop = 1405;
+> 	OperandSubscriptNonManifestIntegerPop = 1408;
+> 	OperandSubscriptNonManifestCharPop = 1670;
+> 	OperandCheckedSubscriptNonManifestIntegerPop = 1421;
+> 	OperandUncheckedSubscriptNonManifestIntegerPop = 1597;
+> 	OperandPushArrayLowerBound = 1539;
+> 	OperandPushArrayUpperBound = 1555;
+> 	EmitCmp = 3960;
+> 	EmitSubscriptAbort = 1576;
+> 	OperandForceIntoNewTemp = 3666;
+> 	OperandForceAddressIntoNewTemp = 3753;
+> 	OperandCheckedSubscriptNonManifestCharPop = 1683;
+> 	OperandUncheckedSubscriptNonManifestCharPop = 1788;
+> 	OperandAssignCharPopPop = 3280;
+> 	OperandAssignBooleanPopPop = 3290;
+> 	OperandNegateAssignPopPop = 2122;
+> 	OperandAddAssignPopPopPop = 2162;
+> 	OperandSubtractAssignPopPopPop = 2302;
+> 	OperandMultiplyAssignPopPopPop = 2387;
+> 	OperandDivideAssignPopPopPop = 2594;
+> 	OperandNotAssignPopPop = 3139;
+> 	OperandChrAssignPopPop = 2877;
+> 	OperandOrdAssignPopPop = 2896;
+> 	OperandAddRightToLeftPop = 2195;
+> 	EmitAdd = 3930;
+> 	OperandForceLeftIntoTemp = 3652;
+> 	EmitSub = 3945;
+> 	OperandMultiplyLeftByRightPop = 2420;
+> 	OperandDivideLeftByRightPop = 2614;
+> 	SaveTempRegsToStack = 3013;
+> 	RestoreTempRegsFromStack = 3045;
+> 	OperandPushFalseTemp = 3397;
+> 	OperandPushTrueTemp = 3381;
+> 	OperandPushTempByte = 3836;
+> 	OperandFoldComparisonPopPop = 3580;
+> 	OperandPushTempWord = 3827;
+> 	OperandAreLeftAndRightManifest = 3872; >>14
+> 	OperandLeftOrRightIsTemp = 3901; >>14
+> 	}
+> 
+> 	{ S/SL Table Parameters }
+> 	sslTblSize = 4085;
+> 	minSslTableValue = -32767;
+> 	maxSslTableValue = 32767;
+508d493
+< 	stringSize = 1024;	{ MJM 2Apr16: size of string is 1024 bytes }
+980d964
+< 	    {MPM 2th April: Change loop to handle empty string case ""}
+985,999c969
+< 	    {
+< 		MPM 2th April: Change loop to handle empty string case "".
+< 		If there is empty string, we output a whitespace instead.
+< 	    }
+< 	    if(compoundTokenLength = 0) then
+< 	    begin
+< 		write(object, ' ');
+< 	    end
+< 	else 
+< 	{
+< 		Otherwise, handle it as usual, add one assertion that
+< 		compundTokenLength does not equal to zero.
+< 	}
+< 	    Assert( (compoundTokenLength <> 0), assert5);
+< 	begin
+---
+> 
+1014c984
+< 	end;
+---
+> 
+1586,1587c1556
+< {%%%%%%%% MJM 25Mar16: Change name of OperandPushStringDescriptor }
+<     procedure OperandPushString;
+---
+>     procedure OperandPushStringDescriptor;
+1590,1592c1559
+< {%%%%%%%% MJM 21Mar16: Changed tStringDescriptor to tLiteralString 
+< %%%%%%%%}
+< 	    Assert ( (compoundToken = tLiteralString), assert28);
+---
+> 	    Assert ( (compoundToken = tStringDescriptor), assert28);
+1594c1561
+< 	end { OperandPushString };
+---
+> 	end { OperandPushStringDescriptor };
+1826,1833c1793
+< 			subscript := subscript * wordSize
+< {%%%%%%%% MJM 2Apr16: Add case for string arrays of size stringSize
+< %%%%%%%%}
+<                     else if operandStkLength[operandStkTop-1] = string then
+<                         { Convert a byte offset to a string offset }
+<                         subscript := subscript * stringSize;
+< 
+< 
+---
+> 			subscript := subscript * wordSize;
+1894,1900c1854,1856
+< {%%%%%%%% MJM 21Mar16: removed tLiteralChar, tStringDescriptor
+< %%%%%%%%%                      tSkipString, tWhileTest, 
+< %%%%%%%%%                      tWhileEnd, tRepeatTest
+< %%%%%%%%%               and added tLoopTest, tLoopEnd.
+< %%%%%%%%}
+< 			tLiteralAddress, tLiteralInteger, tLiteralBoolean,
+< 			tCallEnd,
+---
+> 			tLiteralAddress, tLiteralInteger, tLiteralChar,
+> 			tLiteralBoolean, tStringDescriptor, tSkipString,
+> 			tWhileTest, tWhileEnd, tRepeatTest, tCallEnd,
+1902c1858
+< 			tLoopTest, tLoopEnd, tCaseSelect, tCaseMerge:
+---
+> 			tCaseSelect, tCaseMerge:
+1921,1926c1877
+< 				{MPM 2th April: add handle of empty string ""
+< 				 if there is empty string "", we just ignore it
+<                                  from the input side and handle it in 
+< 				 the EmitX86StringLiteral function instead.
+< 				}
+< 				Assert ( (compoundTokenLength >= 0), assert5);
+---
+> 				Assert ( (compoundTokenLength >= 1), assert5);
+1928,1930d1878
+< 				if(compoundTokenLength <> 0) then
+< 				begin
+< 			
+1938d1885
+< 
+1940,1941c1887
+< 				    compoundTokenText[compoundTokenLength + 1] := null
+< 				end
+---
+> 				    compoundTokenText[compoundTokenLength+1] := null
+2257,2260c2203
+< {%%%%%%%% MJM 21Mar16: remove call to AssertTempsAreAllFree, as we now
+< %%%%%%%%%              use string traps
+< %%%%%%%%}
+< {%%%%%%%%			    AssertTempsAreAllFree %%%%%%%%}
+---
+> 			    AssertTempsAreAllFree
+2309d2251
+< {%%%%%%%% MJM 25Mar16: Delete oOperandPushChar : no longer used
+2316d2257
+< %%%%%%%%}
+2368,2370c2309,2310
+< {%%%%%%%% MJM 25Mar16: Change name of oOperandPushStringDescriptor }
+< 		    oOperandPushString:
+< 			OperandPushString;
+---
+> 		    oOperandPushStringDescriptor:
+> 			OperandPushStringDescriptor;

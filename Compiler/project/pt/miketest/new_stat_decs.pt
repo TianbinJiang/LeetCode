@@ -1,0 +1,9 @@
+// Test Declaration with Statements
+program Hello (output)
+{
+    let x = 5;
+    type s : string;
+    var m, n, o: integer;
+    writeln( "hello" );
+  }
+

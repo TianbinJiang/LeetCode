@@ -1,0 +1,23 @@
+program testLoop(output)
+{
+    var a : integer;
+    var b : integer;
+    a = 1;
+    loop
+    {
+       break when(a == 1);
+    }
+    
+    loop
+    {
+       b = 1;
+       break when(a == 1);
+    }
+
+    loop
+    {
+       b = 1;
+       break when(a == 2);
+       a = a + 1;
+    }
+}

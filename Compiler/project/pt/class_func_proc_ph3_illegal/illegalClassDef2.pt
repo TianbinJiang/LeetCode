@@ -1,0 +1,24 @@
+program primes (output) {
+    //Global Declarations below
+    let maxprimes = 100;
+
+    class flags {
+	//Class Declarations below
+	var flagvector : boolean;
+
+	public function flagset (f : integer, tf : boolean) {
+	    flagvector  = tf;
+	}
+
+
+	//Class Statements below
+	i = 1;
+
+	var i : integer; //ERROR: in wrong place
+    }
+
+    var multiple : integer;
+
+    //Global Statements below
+    multiple = 2;
+}

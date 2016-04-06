@@ -1,0 +1,4 @@
+program testType(output) 
+{
+   var a, b : integer;
+}

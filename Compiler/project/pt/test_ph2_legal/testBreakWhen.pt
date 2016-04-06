@@ -1,0 +1,21 @@
+program a(out) 
+{
+	loop {
+	  a = 3;
+	  break when (a == 1);
+          b = 4;
+	}
+	writeln("Hello");
+	loop {
+	  a = 3;
+          b = 4;
+	  break when (a == 1);
+	}
+	writeln("Again");
+	loop {
+	  break when (a == 1);
+	  a = 3;
+          b = 4;
+	}
+}
+

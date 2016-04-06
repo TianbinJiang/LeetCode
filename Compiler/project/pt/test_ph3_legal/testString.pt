@@ -1,0 +1,5 @@
+program testString(output)
+{
+   var a : string;
+   a = "bcb";
+}

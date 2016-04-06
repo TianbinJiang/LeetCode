@@ -1,0 +1,10 @@
+program a(out) 
+{
+	if(#"jim" == 3)
+	  a = 3;
+	elsif(not #a == 3)
+	  a = 5;
+	else
+	  a = 6;
+
+}

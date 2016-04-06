@@ -1,0 +1,5 @@
+program testString(output);
+var a : string;
+begin
+	a := 'abc';
+end.

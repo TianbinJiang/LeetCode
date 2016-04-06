@@ -1,0 +1,20 @@
+// Test Function Declaration with Statements
+program Hello (output)
+{
+    var n: integer;
+    function a (var b:integer):integer
+    {
+        return (b+1);
+    }   
+    function i (var j:integer, var k:integer):integer
+    {
+        return (j+k);
+    }   
+    var n: integer;
+    n = i(4, 5);
+    n = i(n, n);
+    n = a(4);
+    n = a(n);
+    writeln( "hello" );
+  }
+

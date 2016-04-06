@@ -1,0 +1,5 @@
+program testTernary(output)
+{
+    var a : string;
+    a = "abc" @ 0 : 2;
+}

@@ -1,0 +1,13 @@
+program p (output) 
+{
+
+  var a, b, c : integer;
+
+  var d : integer;
+
+  type t : integer;
+
+  let a = 27;
+
+  a = 32;
+}

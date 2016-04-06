@@ -1,0 +1,52 @@
+// boxes
+program P (input, output) {
+
+    var top, middle, bottom : string;
+    var width, height : integer;
+    var Nacross, Ndown : integer;
+    var i, j : integer;
+
+    // ask for what size we're doing 
+    write ("enter box width and height: ");
+    read (width, height);
+    write ("enter number of boxes across and down: ");
+    read (Nacross, Ndown);
+
+    // add 1 for boundaries 
+    width = width + 1; ;
+    height = height + 1;
+
+    // compute top, bottom and middle lines 
+    top = ""; middle = ""; bottom = "";
+    i = 0;
+    loop {
+	break when (i > width * Nacross);
+	if (i mod width == 0) { 
+	    top = top + " ";
+	    middle = middle + "|";
+	    bottom = bottom + "|";
+	} else {
+	    top = top + "_";
+	    middle = middle + " ";
+	    bottom = bottom + "_";
+	}
+	i = i + 1;
+    }
+
+    // now output the whole thing
+    write (top);  writeln ();
+
+    i = 1;
+    loop {
+        break when (i > Ndown);
+	j = 1;
+ 	loop {
+	    break when (j >= height - 1);
+	    write (middle);  writeln ();
+	    j = j + 1;
+	}
+
+	write (bottom);  writeln ();
+	i = i + 1;
+    }
+}

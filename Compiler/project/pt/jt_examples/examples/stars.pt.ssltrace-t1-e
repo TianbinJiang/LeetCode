@@ -1,0 +1,73 @@
+  .pNewLine
+  .pIdentifier (screened to pProgram)
+  .pIdentifier
+ .pLeftParen
+  .pIdentifier
+ .pRightParen
+ .pLeftBrace
+ .pNewLine
+ .pNewLine
+  .pIdentifier (screened to pVar)
+  .pIdentifier
+ .pColon
+  .pIdentifier
+ .pSemicolon
+ .pNewLine
+  .pIdentifier (screened to pVar)
+  .pIdentifier
+ .pColon
+  .pIdentifier
+ .pSemicolon
+ .pNewLine
+ .pNewLine
+  .pIdentifier
+ .pEquals
+  .pInteger
+ .pSemicolon
+ .pNewLine
+  .pIdentifier
+ .pEquals
+  .pLiteral
+ .pSemicolon
+ .pNewLine
+  .pIdentifier (screened to pLoop)
+ .pLeftBrace
+ .pNewLine
+  .pIdentifier (screened to pBreak)
+  .pIdentifier (screened to pWhen)
+ .pLeftParen
+  .pIdentifier
+ .pGreater
+  .pInteger
+ .pRightParen
+ .pSemicolon
+ .pNewLine
+  .pIdentifier
+ .pEquals
+  .pLiteral
+ .pPlus
+  .pIdentifier
+ .pSemicolon
+ .pNewLine
+  .pIdentifier
+ .pLeftParen
+  .pIdentifier
+ .pRightParen
+ .pSemicolon
+  .pIdentifier
+ .pLeftParen
+ .pRightParen
+ .pSemicolon
+ .pNewLine
+  .pIdentifier
+ .pEquals
+  .pIdentifier
+ .pPlus
+  .pInteger
+ .pSemicolon
+ .pNewLine
+ .pRightBrace
+ .pNewLine
+ .pRightBrace
+ .pNewLine
+ .pEndFile

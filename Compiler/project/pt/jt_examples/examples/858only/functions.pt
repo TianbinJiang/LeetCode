@@ -1,0 +1,25 @@
+program functions (output) {
+
+    function i () : integer {
+        return (42);
+    }
+
+    function s () : string {
+        return ("forty-two");
+    }
+
+    function b () : boolean {
+    	return (false);
+    }
+
+    write (i()); writeln ();
+
+    write (s()); writeln ();
+
+    if (not b())
+        write (42);
+    else
+      	write ("ERROR");
+
+    writeln ();
+}

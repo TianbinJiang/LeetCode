@@ -1,0 +1,4 @@
+@Program
+ line 4: syntax error at: :
+ line 5: syntax error at: var
+ line 5: extraneous program text - ignored

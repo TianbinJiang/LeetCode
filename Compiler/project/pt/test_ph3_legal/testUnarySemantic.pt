@@ -1,0 +1,5 @@
+program testUnary(output)
+{
+    var a : integer;
+    a = #"testUnary";	
+}

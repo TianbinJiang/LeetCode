@@ -1,0 +1,71 @@
+// Bubble sort of a list of integers
+program bubble (output) {
+
+    let nelements = 25;;
+    let maxval = 99;;
+
+    class elements {
+	var list : array [1 .. nelements] of integer;
+	var current: integer;
+
+	public function lessthan  (i : integer, j : integer) : boolean {
+	    current = i;
+	    return (list [i] < list [j]);
+	}
+
+	public function swap  (i: integer, j : integer) {
+	    var t : integer;
+	    current = j;
+	    t = list [i];
+	    list [i] = list [j];
+	    list [j] = t;
+	}
+
+	public function print () {
+	    var i: integer;
+	    i = 1;
+	    loop {
+		write (list[i]:4);
+		i = i + 1;
+		break when (i > nelements);
+	    }
+	    writeln (); 
+	}
+
+	var i,j: integer;
+
+	list[1] = 61;
+
+	i = 1;
+	loop {
+	    i = i + 1;
+	    j = list[i-1] * 1271;
+	    list[i] = j mod maxval;
+	    break when (i >= nelements);
+	}
+
+	current = 0;
+    }
+
+    function sort () {
+	var i,j: integer;
+	var lt: boolean;
+	i = nelements - 1;
+	loop {
+	    break when (i <= 0);
+	    j = 1;
+	    loop {
+		break when (j >= nelements);
+		if (not lessthan (j, j+1)) 
+		    swap (j, j + 1);
+		j = j + 1;
+	    }
+	    i = i - 1;
+	}
+    }
+
+    // Main program
+    print ();
+    sort ();
+    print ();
+}

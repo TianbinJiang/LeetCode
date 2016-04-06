@@ -1,0 +1,26 @@
+program primes (output) {
+    //Global Declarations below
+    let maxprimes = 100;
+
+    class flags {
+	//Class Declarations below
+	var flagvector : boolean;
+
+	public function flagset (f : integer, tf : boolean) {
+	    flagvector  = tf;
+	}
+
+	var i : integer; 
+
+	//Class Statements below
+	i = 1;
+
+	return (i); //ERROR: illegal context for return
+
+    }
+
+    var multiple : integer;
+
+    //Global Statements below
+    multiple = 2;
+}

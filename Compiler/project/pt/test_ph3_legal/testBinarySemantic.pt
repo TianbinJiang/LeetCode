@@ -1,0 +1,5 @@
+program testBinary(output)
+{
+    var m : string;
+     m = "a" + "bc";
+}

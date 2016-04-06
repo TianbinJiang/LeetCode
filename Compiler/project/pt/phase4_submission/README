@@ -1,0 +1,22 @@
+CISC458 PROJECT PHASE 4 SUBMISSION
+
+NAME OF GROUP:
+  iCompile
+
+GROUP ACCOUNT:
+  cisc458a
+
+GROUP MEMBERS:
+  Michael Michaud    SN: 10210320  ID: 15mm75
+  Tianbin Jiang      SN: 10052495  ID: 11tj13
+
+SUBDIRECTORIES IN SUBMISSION:
+  "Documentation/" contains:
+     - main documentation file "Phase4_Documentation.pdf"
+     - test case report files: "Phase4_TestCases.pdf"
+
+  "Raw_Files/" contains:
+     - "*_diff_out" files detailing differences in source files from originals
+     - test case input and output files (ie. used to create test case reports)
+
+

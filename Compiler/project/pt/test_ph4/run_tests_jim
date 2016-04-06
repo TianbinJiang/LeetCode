@@ -1,0 +1,15 @@
+#!/bin/sh
+
+#ssltrace "ptc -o3 -t3 -L /cas/course/cisc458/jt/lib $1" /cas/course/cisc458/jt/lib/semantic.def -m | egrep '^ *[\.o%]' > $1_ssl3_m_jim
+
+#ssltrace "ptc -o3 -t3 -L /cas/course/cisc458/jt/lib $1" /cas/course/cisc458/jt/lib/semantic.def -i > $1_ssl3_i_out
+
+ssltrace "ptc -o3 -t3 -L /cas/course/cisc458/jt/lib $1" /cas/course/cisc458/jt/lib/semantic.def -e > $1_ssl3_e_jim
+
+ptc -S -L /cas/course/cisc458/jt/lib/pt $1 > $1_ptc4_jim
+
+#cat $1_ptc3_jim | grep "line" > $1_ptc3_jim_error
+
+# cat $1_ssl3_e_out
+#cat $1_ptc3_jim_error
+

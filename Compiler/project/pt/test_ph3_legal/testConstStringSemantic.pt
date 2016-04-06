@@ -1,0 +1,4 @@
+program testConstString(output)
+{
+    let a = "a";
+}

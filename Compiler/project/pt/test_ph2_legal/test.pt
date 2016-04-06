@@ -1,0 +1,14 @@
+program a(output) {
+	switch(i) 
+	{
+		case 42:
+		 a = 1;
+		 break;
+		case 43:
+		 a = 2;
+		 break;
+		default:
+		 a = 3;
+		 break;
+	}
+}

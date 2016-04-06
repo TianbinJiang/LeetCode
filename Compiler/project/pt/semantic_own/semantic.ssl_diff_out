@@ -1,0 +1,1493 @@
+19,94c19,68
+<         sIdentifier
+<         firstSemanticToken = sIdentifier
+<         firstCompoundSemanticToken = sIdentifier
+<         sInteger
+<         sLiteral
+<         lastCompoundSemanticToken = sLiteral
+< 
+<         %   MJM: 29Feb16: Removed the following output tokens:
+<         %        - sWhileStmt
+<         %        - sRepeatStmt
+<         %        - sRepeatEnd
+<         %
+<         %   MJM: 29Feb16: Added the following output tokens:
+<         %        - sPublic
+<         %        - sDefault
+<         %        - sClass
+<         %        - sLoopStmt
+<         %        - sLoopBreakWhen
+<         %        - sLoopEnd
+<         %        - sSubstring
+<         %        - sLength
+<         %        - sReturn
+<         %
+< 
+<         sProgram
+<         sParmBegin
+<         sParmEnd
+<         sConst
+<         sType
+<         sVar
+<         sProcedure
+<         sPublic
+<         sBegin
+<         sEnd
+<         sNegate
+<         sArray
+<         sPacked
+<         sFile
+<         sRange
+<         sCaseStmt
+<         sDefault
+<         sCaseEnd
+<         sLabelEnd
+<         sExpnEnd
+<         sNullStmt
+<         sAssignmentStmt
+<         sSubscript
+<         sCallStmt
+<         sFieldWidth
+<         sIfStmt
+<         sThen
+<         sElse
+<         sClass
+<         sLoopStmt
+<         sLoopBreakWhen
+<         sLoopEnd
+<         sReturn
+<         sEq
+<         sNE
+<         sLT
+<         sLE
+<         sGT
+<         sGE
+<         sAdd
+<         sSubtract
+<         sMultiply
+<         sDivide
+<         sModulus
+<         sInfixOr
+<         sOr
+<         sInfixAnd
+<         sAnd
+<         sNot
+<         sSubstring
+<         sLength
+<         sNewLine
+---
+> 	sIdentifier 
+> 	firstInputToken = sIdentifier
+> 	sInteger
+> 	sLiteral
+> 	sProgram
+> 	sParmBegin
+> 	sParmEnd
+> 	sConst
+> 	sType
+> 	sVar
+> 	sProcedure
+> 	sBegin
+> 	sEnd
+> 	sNegate
+> 	sArray
+> 	sPacked
+> 	sFile
+> 	sRange
+> 	sCaseStmt
+> 	sCaseEnd
+> 	sLabelEnd
+> 	sExpnEnd
+> 	sNullStmt
+> 	sAssignmentStmt
+> 	sSubscript
+> 	sCallStmt
+> 	sFieldWidth
+> 	sIfStmt
+> 	sThen
+> 	sElse
+> 	sWhileStmt
+> 	sRepeatStmt
+> 	sRepeatEnd
+> 	sEq
+> 	sNE
+> 	sLT
+> 	sLE
+> 	sGT
+> 	sGE
+> 	sAdd
+> 	sSubtract
+> 	sMultiply
+> 	sDivide
+> 	sModulus
+> 	sInfixOr
+> 	sOr
+> 	sInfixAnd
+> 	sAnd
+> 	sNot
+> 	sNewLine
+96,97c70
+<         lastSemanticToken = sEndOfFile;
+< 
+---
+> 	lastInputToken = sEndOfFile;
+105,107d77
+< 
+< 	% MPM 7th March: Add tConcatenate for string add.
+< 	tConcatenate
+128,132c98
+< 
+< 	% MPM 4th March: Change tFetchChar into tFetchString
+< 	% tFetchChar
+< 	tFetchString
+< 
+---
+> 	tFetchChar
+137,141c103
+< 	
+< 	% MPM 4th March: Change tAssignChar into tAssignString
+< 	% tAssignChar
+< 	tAssignString
+< 
+---
+> 	tAssignChar
+145,149c107
+< 
+< 	% MPM 4th March: Change tStoreParmChar into tStoreParmString
+< 	% tStoreParmChar
+< 	tStoreParmString
+< 
+---
+> 	tStoreParmChar
+154,158c112
+< 
+< 	% MPM 4th March: Change tStoreParmChar into tStoreParmString
+< 	% tSubscriptChar
+< 	tSubscriptString
+< 
+---
+> 	tSubscriptChar
+165,171c119,121
+< 
+< 	% MPM 4th March: Remove the old While T-Code.
+< 	% tWhileBegin
+< 
+< 	% MPM 5th March: Remove the old Repeat T-Code.
+< 	% tRepeatBegin
+< 	% tRepeatControl
+---
+> 	tWhileBegin
+> 	tRepeatBegin
+> 	tRepeatControl
+180,193d129
+< %%%%%%%% MJM 29Feb16: Added tFunctionResult
+< %%%%%%%%              for cisc858 return types
+< 	tFunctionResult
+< 
+< %%%%%%%%%%%%% New Added Tokens Feb: 29th%%%%%%%%%%%%
+< 	tLoopBegin
+< 	tLoopBreakWhen
+< 	tLoopTest
+< 	tLoopEnd
+< 	tCaseElse
+< 	tSubstring
+< 	tLength
+< 	tStringEqual
+< 
+199,203c135
+< 	
+< 	% MPM 4th March: remove redundant tLiteralChar
+< 	% seems like how to handle the removed tLiteralChar is not clear
+< 	%tLiteralChar
+< 
+---
+> 	tLiteralChar
+206,210c138,139
+< 	% MPM 10th: remove redundant tStringDescriptor
+< 	% tStringDescriptor
+< 	
+< 	% MPM 10th March: tSkipString is no long needed.
+< 	%tSkipString
+---
+> 	tStringDescriptor
+> 	tSkipString
+216,222c145,147
+< 
+< 	% MPM 4th March: Remove the old While T-Code.
+< 	% tWhileTest
+< 	% tWhileEnd
+< 
+< 	% MPM 5th March: Remove the old Repeat T-Code.
+< 	% tRepeatTest
+---
+> 	tWhileTest
+> 	tWhileEnd
+> 	tRepeatTest
+259,261c184
+< 
+< 	%MPM 5th March: change eCharExpnReqd into eStringExpnReqd
+< 	eStringExpnReqd
+---
+> 	eCharExpnReqd
+271,273c194
+< 
+< 	%MPM 5th March: change eCharFileVarReqd into eStringFileVarReqd
+< 	eStringFileVarReqd
+---
+> 	eCharFileVarReqd
+288,291c209
+< 	wordSize = 4
+< 	
+< 	% MPM 4th March: Add a definition for stringSize and set its value to 1024
+< 	stringSize = 1024;
+---
+> 	wordSize = 4;
+308,311c226
+< 	
+< 	% MPM 5th March: change pidChar into pidString
+< 	pidString
+< 
+---
+> 	pidChar
+339,343c254
+< 	
+< 	% MPM 4th March: Change stdChar into stdString
+< 	% stdChar
+< 	stdString
+< 
+---
+> 	stdChar
+378,418d288
+< %%%%%%%%% MJM 1Mar16: Added 'oSymbolTblStripScope' and 'oSymbolTblMergeScope'
+< %%%%%%%%%             to handle "popping" the Symbol table scope properly
+< %%%%%%%%%             after a 'class' declaration. To do this, both operations
+< %%%%%%%%%             need to be called in sequence instead of oSymbolTblPopScope
+< %%%%%%%%%             at the end of the 'class' rule.  This is done to make the 
+< %%%%%%%%%             symbols inside the class invisible, however, the public
+< %%%%%%%%%             functions/procedures remain visible.
+< 
+<     oSymbolTblStripScope
+< %%%%%%%% MJM 29Feb16: Strips the top level of the symbol stack by setting
+< %%%%%%%%              the identSymbolTbl references to the entries in the
+< %%%%%%%%              symbolTbl at the next lower Lexical Level. 
+< %%%%%%%%              Notice that this is only done for non-Public entries, 
+< %%%%%%%%              which will be dealt with with the oSymbolMergeScope
+< %%%%%%%%              Operation that gets called after this for classes. 
+< 
+<     oSymbolTblMergeScope
+< %%%%%%%% MJM 29Feb16: This merges the top two scopes in the symbol table 
+< %%%%%%%%              by decrementing the lexical level but not changing the 
+< %%%%%%%%              symbol table top. If this was called immediately after 
+< %%%%%%%%              oSymbolTblStripScope (which it should be), then only the 
+< %%%%%%%%              public procedures from the top scope will be visible, 
+< %%%%%%%%              and only they will be merged. 
+< %%%%%%%%              We are doing this so that the Public procedures will 
+< %%%%%%%%              become visible to the enclosing Class scope or Main 
+< %%%%%%%%              program scope. 
+< 
+<     oSymbolTblSearchConvertFunctionReturnType
+< %%%%%%%% MJM 29Feb16: This traverses the top scope in the symbol table 
+< %%%%%%%%              until it finds the 'syProcedure' or 'syPublicProcedure'
+< %%%%%%%%              kind, and then sets it to 'syFunction' or 
+< %%%%%%%%              'syPublicFuntion'.
+< 
+<     oSymbolTblChooseCurrentScopeIsFunction >> Boolean
+< %%%%%%%% MJM 7Mar16: If this is a function, then the bottom of the scope
+< %%%%%%%%              in the table should be the 'syFunction' or 
+< %%%%%%%%              'syPublicFunction' kind.
+< %%%%%%%%              Return true/yes if the scope is a function
+< %%%%%%%%              and false/no otherwise.
+< 
+< 
+437,443d306
+< %%%%%%%% MJM 29Feb16: Added 'syClass' for classes
+< %%%%%%%%              'syPublicProcedure' and
+< %%%%%%%%              'syPublicFunction' to account for
+< %%%%%%%%              global nature of 'public'. 
+<         syClass
+<         syPublicProcedure
+<         syPublicFunction
+576,580c439
+< 	
+< 	% MPM: 4th March: Change tpChar into tpString
+< 	%tpChar
+< 	tpString
+< 
+---
+> 	tpChar
+676c535
+<     oTypeStkPop
+---
+>     oTypeStkPop;
+679,683c538
+< %%%%%%%% MJM 10Mar16: New mechanism to handle Function return type
+<     oTypeStkPopAndCopyKind;
+< %%%%%%%%% MJM 10Mar16: This copies the Kind from the top entry in the
+< %%%%%%%%%              type stack into the next lower stack entry,
+< %%%%%%%%%              then pops the stack.
+---
+> 
+697,701c552,557
+< 	trWriteInteger = 7
+< 	trReadInteger = 8
+< 	trAssign = 9
+< 	trReadString = 107
+< 	trWriteString = 108;
+---
+> 	trWriteString = 7
+> 	trWriteInteger = 8
+> 	trWriteChar = 9
+> 	trReadInteger = 10
+> 	trReadChar = 11
+> 	trAssign = 12;
+973c829
+< 	    | sProcedure: % Prodecures and Functions
+---
+> 	    | sProcedure:
+975,977d830
+< %%%%%%%% MJM 29Feb16: Add new call to handle 'class'
+<             | sClass:
+<                 @ClassDefinition
+988,997c841
+< 	@BeginStmt
+< 
+< %%%%%%%%% MJM 11Mar16: Add handling of sReturn.
+<         [
+<             | sReturn:
+<                 @ReturnStmt
+<             | *:
+<         ]
+< 
+< 	;
+---
+> 	@BeginStmt;
+1007d850
+< % MPM 12th March: modify it to only handle one Constant definition per line.
+1019c862
+< 	%oSymbolStkSetKind(syConstant)
+---
+> 	oSymbolStkSetKind(syConstant)
+1064,1120c907,937
+< 	       %MPM 12th March, this should be handle in var's way.
+< 	       % oValuePush(one)	% implicit lower bound of string index type
+< 	       % oValuePushStringLength
+< 	       % [ oValueChoose
+< 	       %     | zero:
+< 	       % 	#eNullString
+< 	       % 	% MPM 5th March: Change SymbolStkPushCharConstant into SymbolStkPushStringConstant
+< 	       % 	@SymbolStkPushStringConstant
+< 	       %     | one:
+< 	       % 	% MPM 4th March: Change stdChar into stdString
+< 	       % 	oSymbolStkLinkToStandardType(stdString)
+< 	       % 	oSymbolStkEnterStringValue
+< 	       %     | *:
+< 	       % 	% Emit a branch around the string since
+< 	       % 	% it is stored in the code area
+< 	       % 	% MPM 10th March: tSkipString is no long needed.
+< 	       % 	%.tSkipString
+< 	       % 	oFixPushForwardBranch
+< 	       % 	oEmitNullAddress
+< 	       % 	.tLiteralString
+< 	       % 	oEmitValue	% string length
+< 	       % 	% The string "address" is the location (offset)
+< 	       % 	% of the first character of the string
+< 	       % 	oSymbolStkEnterCodeAddress
+< 	       % 	oEmitString
+< 	       % 	oFixPopForwardBranch
+< 	       % 	oTypeStkPush(tpPackedArray)	% means literal string
+< 	       % 	oTypeStkEnterBounds
+< 	       % 	% MPM 4th March: Change stdChar into stdString
+< 	       % 	oTypeStkLinkToStandardComponentType(stdString)
+< 	       % 	oTypeTblEnter
+< 	       % 	oSymbolStkEnterTypeReference
+< 	       % 	oTypeStkPop
+< 	       % ]
+< 	       % oValuePop	% Upper bound
+< 	       % oValuePop	% Lower bound 
+< %%%%%%%%%%%%%%% MPM 15th March, add handing of constant string definition to behave like var.
+< 	      .tAssignBegin
+< 	      .tLiteralAddress
+<               oSymbolStkLinkToStandardType(stdString)
+< 
+< 	      oSymbolStkPushLocalIdentifier
+< 	      oTypeStkPushSymbol
+< 	      oAllocateAlignOnWord   % allocate memory space for var
+< 	      oSymbolStkEnterDataAddress
+< 	      oEmitDataAddress
+< 	      oAllocateVarParameter
+< 	      oTypeStkPop
+< 	      .tLiteralString
+< 
+< 	      oValuePushStringLength
+< 	      oEmitValue
+<               oValuePop
+< 	      oEmitString
+<               oSymbolStkSetKind(syVariable)
+<               oSymbolStkLinkToStandardType(stdString)
+< 	      .tAssignString 
+---
+> 		oValuePush(one)	% implicit lower bound of string index type
+> 		oValuePushStringLength
+> 		[ oValueChoose
+> 		    | zero:
+> 			#eNullString
+> 			@SymbolStkPushCharConstant
+> 		    | one:
+> 			oSymbolStkLinkToStandardType(stdChar)
+> 			oSymbolStkEnterStringValue
+> 		    | *:
+> 			% Emit a branch around the string since
+> 			% it is stored in the code area
+> 			.tSkipString
+> 			oFixPushForwardBranch
+> 			oEmitNullAddress
+> 			.tLiteralString
+> 			oEmitValue	% string length
+> 			% The string "address" is the location (offset)
+> 			% of the first character of the string
+> 			oSymbolStkEnterCodeAddress
+> 			oEmitString
+> 			oFixPopForwardBranch
+> 			oTypeStkPush(tpPackedArray)	% means literal string
+> 			oTypeStkEnterBounds
+> 			oTypeStkLinkToStandardComponentType(stdChar)
+> 			oTypeTblEnter
+> 			oSymbolStkEnterTypeReference
+> 			oTypeStkPop
+> 		]
+> 		oValuePop	% Upper bound
+> 		oValuePop	% Lower bound
+1125,1221d941
+< %ConstantValue :		% An identifier token has just been accepted
+< %	oSymbolStkPushLocalIdentifier
+< %	[ oSymbolStkChooseKind
+< %	    | syUndefined:
+< %	    | syExternal:
+< %		% A program parameter must be declared as a file variable
+< %		#eExternalDeclare
+< %	    | *:
+< %		#eMultiplyDefined
+< %		% The new definition will now obscure the old one
+< %	]
+< %	oSymbolStkSetKind(syConstant)
+< %	[
+< %	    | sInteger:
+< %		oValuePushInteger
+< %		oSymbolStkLinkToStandardType(stdInteger)
+< %		[
+< %		    | sNegate:
+< %			oValueNegate
+< %		    | *:
+< %		]
+< %		oSymbolStkEnterValue
+< %		oValuePop
+< %	%    | sIdentifier:
+< %	%	oSymbolStkPushIdentifier
+< %	%	[ oSymbolStkChooseKind
+< %	%	    | syUndefined:
+< %	%		#eUndefinedIdentifier
+< %	%	    | *:
+< %	%	]
+< %	%	[ oSymbolStkChooseKind
+< %	%	    | syConstant:
+< %	%		oValuePushSymbol
+< %	%	    | *:
+< %	%		#eConstantReqd
+< %	%		oSymbolStkPop
+< %	%		@SymbolStkPushIntegerConstant
+< %	%		oValuePush(one)
+< %	%	]
+< %	%	oTypeStkPushSymbol
+< %	%	[
+< %	%	    | sNegate:
+< %	%		[ oTypeStkChooseKind
+< %	%		    | tpInteger:
+< %	%			oValueNegate
+< %	%		    | *:
+< %	%			#eOperandOperatorTypeMismatch
+< %	%		]
+< %	%	    | *:
+< %	%	]
+< %	%	oSymbolStkPop	% constant value symbol
+< %	%	oSymbolStkEnterTypeReference
+< %	%	oTypeStkPop
+< %	%	oSymbolStkEnterValue
+< %	%	oValuePop
+< %	    %| sLiteral:
+< %	    %    oValuePush(one)	% implicit lower bound of string index type
+< %	    %    oValuePushStringLength
+< %	    %    [ oValueChoose
+< %	    %        | zero:
+< %	    %    	#eNullString
+< %	    %    	% MPM 5th March: Change SymbolStkPushCharConstant into SymbolStkPushStringConstant
+< %	    %    	@SymbolStkPushStringConstant
+< %	    %        | one:
+< %	    %    	% MPM 4th March: Change stdChar into stdString
+< %	    %    	oSymbolStkLinkToStandardType(stdString)
+< %	    %    	oSymbolStkEnterStringValue
+< %	    %        | *:
+< %	    %    	% Emit a branch around the string since
+< %	    %    	% it is stored in the code area
+< %	    %    	% MPM 10th March: tSkipString is no long needed.
+< %	    %    	%.tSkipString
+< %	    %    	oFixPushForwardBranch
+< %	    %    	oEmitNullAddress
+< %	    %    	.tLiteralString
+< %	    %    	oEmitValue	% string length
+< %	    %    	% The string "address" is the location (offset)
+< %	    %    	% of the first character of the string
+< %	    %    	oSymbolStkEnterCodeAddress
+< %	    %    	oEmitString
+< %	    %    	oFixPopForwardBranch
+< %	    %    	oTypeStkPush(tpPackedArray)	% means literal string
+< %	    %    	oTypeStkEnterBounds
+< %	    %    	% MPM 4th March: Change stdChar into stdString
+< %	    %    	oTypeStkLinkToStandardComponentType(stdString)
+< %	    %    	oTypeTblEnter
+< %	    %    	oSymbolStkEnterTypeReference
+< %	    %    	oTypeStkPop
+< %	    %    ]
+< %	    %    oValuePop	% Upper bound
+< %	    %    oValuePop	% Lower bound
+< %	]
+< %	oSymbolTblEnter
+< %	oSymbolStkPop;		% name being defined
+< 
+< 
+< % MPM 12th March: Change the semantic handing of Type definitions to handle one type definition per line.
+1228,1229d947
+< 		    | syType:
+< 			@OneTypePerLine
+1243,1245c961
+< 	     | *:
+< 	         >
+< 	]};
+---
+> 		oSymbolStkSetKind(syType)
+1247,1248c963
+< OneTypePerLine:
+< 	% Create type table entries for the object as necessary.
+---
+> 		% Create type table entries for the object as necessary.
+1276,1330c991,994
+< 		oTypeStkPop;
+< 
+< %TypeDefinitions :	% process named type definitions
+< %	{[
+< %	    | sIdentifier:
+< %		oSymbolStkPushLocalIdentifier
+< %		@TypeBody
+< %		[ oSymbolStkChooseKind
+< %		    | syUndefined:
+< %		    | syExternal:
+< %			% Program parameters must be declared as file variables
+< %			#eExternalDeclare
+< %			% Ignore this definition
+< %			oSymbolStkPop
+< %			oTypeStkPop
+< %			oTypeStkPop
+< %			>>
+< %		    | *:
+< %			#eMultiplyDefined
+< %			% The new definition will obscure the old one
+< %		]
+< %		oSymbolStkSetKind(syType)
+< %
+< %		% Create type table entries for the object as necessary.
+< %		% Where named types were used in the declaration, a type
+< %		% reference will be present, otherwise the type reference
+< %		% fields will be null.
+< %		oTypeStkSwap	% structure on top
+< %		[ oTypeStkChooseKind
+< %		    | tpArray:
+< %			oTypeStkSwap	% component on top
+< %			[ oTypeStkChooseTypeReference
+< %			    | no:
+< %				% No type table entry exists,
+< %				% so create one.
+< %				oTypeTblEnter
+< %			    | *:
+< %			]
+< %			oTypeStkEnterComponentReference
+< %			oTypeStkSwap	% structure on top
+< %		    | *:
+< %		]
+< %		[ oTypeStkChooseTypeReference
+< %		    | no:
+< %			oTypeTblEnter
+< %		    | *:
+< %		]
+< %		oSymbolStkEnterTypeReference
+< %		oSymbolTblEnter
+< %		oSymbolStkPop
+< %		oTypeStkPop
+< %		oTypeStkPop
+< %	    | *:
+< %		>
+< %	]};
+---
+> 		oTypeStkPop
+> 	    | *:
+> 		>
+> 	]};
+1549,1551d1212
+< 
+< % MPM 12th March: Allow handling of variable declarations to allow multiple identifiers declared using
+< %%%%%%%%%%%%%%%%%%%One Type, but only one declaration per definition
+1553,1560d1213
+< 	oCountPush(one)
+< 	sIdentifier
+< 	oSymbolStkPushLocalIdentifier
+< 	[ oSymbolStkChooseKind
+< 	    | syUndefined, syExternal:
+<             | *:
+< 	       #eMultiplyDefined
+< 	]
+1562,1571c1215,1217
+< 	    |sVar:
+< 		sIdentifier
+< 		oCountIncrement
+< 		oSymbolStkPushLocalIdentifier
+< 		[ oSymbolStkChooseKind
+< 		    | syUndefined, syExternal:
+< 		    |*:
+< 			#eMultiplyDefined
+< 		]
+< 	     | *:
+---
+> 	    | sIdentifier:
+> 		@VariableAttributes
+> 	    | *:
+1573,1576c1219
+< 	]}
+< 	@VariableAttributes
+< 	oCountPop;	
+< 
+---
+> 	]};
+1578a1222,1228
+> 	oSymbolStkPushLocalIdentifier
+> 	[ oSymbolStkChooseKind
+> 	    | syUndefined, syExternal:
+> 	    | *:
+> 		#eMultiplyDefined
+> 		% The new definition will obscure the old one
+> 	]
+1582,1588d1231
+<      {[
+< 	oCountChoose
+< 	| zero:
+< 		>
+< 	| *:
+< 	   oCountDecrement
+< 
+1668,1669d1310
+< 	oTypeStkSwap
+< 	]}
+1691,1692c1332
+< 		    % MPM: 4th March: Change tpChar into tpString
+< 		    | tpString, tpBoolean:
+---
+> 		    | tpChar, tpBoolean:
+1731,1782d1370
+< %%%%%%%% MJM 29Feb29: Add new rule to handle 'class'
+< %%%%%%%%              - Patterned after the 'ProcedureDefinition' rule
+< %%%%%%%%                but has no parameters
+< %%%%%%%%
+< ClassDefinition :
+<         sIdentifier  oSymbolStkPushLocalIdentifier      % class name
+<         [ oSymbolStkChooseKind
+<             | syUndefined:
+<             | syExternal:
+<                 % Program parameters must be declared as file variables
+<                 #eExternalDeclare
+<             | *:
+<                 #eMultiplyDefined
+<                 % New definition obscures old one.
+<         ]
+< %%%%%%%% MJM 4Mar16: Do not do the following actions, as we are in a 
+< %%%%%%%%             class, not a procedure, and statements occur
+< %%%%%%%%             in the global scope when main program is run.
+< %        .tSkipProc      
+< %        oFixPushForwardBranch
+< %        oEmitNullAddress
+<         oSymbolStkSetKind(syClass) % new symbol stack kind 'syClass'
+<         oSymbolStkEnterCodeAddress
+<         oTypeStkPush(tpNull)
+<         oTypeStkSetRecursionFlag(yes)
+<         oTypeTblEnter
+<         oSymbolStkEnterTypeReference
+<         oSymbolTblEnter
+<         oSymbolTblPushScope     % procedure scope
+<         % Note no procesing of parameters (i.e. like '@ProcedureHeading'
+<         @Block
+< %%%%%%%% MJM 4Mar16: Do not do the following actions, as we are in a 
+< %%%%%%%%             class, not a procedure, and statements occur
+< %%%%%%%%             in the global scope when main program is run.
+< %        .tProcedureEnd   
+< %        oFixPopForwardBranch    % fix skip around procedure
+<         oSymbolTblUpdate
+<         oSymbolStkPop
+<         oTypeStkSetRecursionFlag(no)
+<         oTypeTblUpdate
+<         oTypeStkPop
+< %%%%%%%% MJM 29Feb16: Call 'oSymbolTblStripScope' and 'oSymbolTblMergeScope'
+< %%%%%%%%              instead of 'oSymbolTblPopScope'
+<         oSymbolTblStripScope
+<         oSymbolTblMergeScope;
+< 
+< 
+< %%%%%%%% MJM 4Mar16: Added a case to handle 'public function'
+< %%%%%%%%             within the 'ProcedureDefinition' rule
+< %%%%%%%%             to pass a symbolKind of syPublicProcedure
+< %%%%%%%%             instead of syProcedure, which is required for proper
+< %%%%%%%%             scope processing in 'ClassDefinition' rule.
+1797,1804c1385
+< %%%%%%%% MJM 4Mar16: Set syProcedure for now, but might be
+< %%%%%%%%             overridden if sPublic encountered.
+<         oSymbolStkSetKind(syProcedure)
+<         [
+<            | sPublic:
+<                 oSymbolStkSetKind(syPublicProcedure)
+<            | *:
+<         ]
+---
+> 	oSymbolStkSetKind(syProcedure)
+1853,1929c1434
+< 	@ProcedurePrologue
+< 
+< %%%%%%%% MJM 7 Mar16: Add new rule for function return types in header
+<         @FunctionHeaderReturnType
+<         ;
+< 
+< 
+< %%%%%%%% MJM 7Mar16: If a return type is specified in the procedure/function
+< %%%%%%%%             heading, then:
+< %%%%%%%%             1. Check and accept the input token.
+< %%%%%%%%             2. Change the type stack entry from tpNull
+< %%%%%%%%             (set previously), so the actual return type.
+< %%%%%%%%             3. Change the symbol table kind by
+< %%%%%%%%             converting a non-return syProcedure/syPublicProcedure
+< %%%%%%%%             to a return syFunction or syPublicFunction.
+< %%%%%%%%             4. Clean up the stacks.
+< %%%%%%%%             5. Change symbolStkKind from procedure to function.
+< FunctionHeaderReturnType :
+<         [
+<             | sIdentifier: % The only time a sIdentifier is here is for
+<                            % a return type specified in a function header.
+< 
+<                 % 1. Accept the type specified in sIdentifier and push onto
+<                 %    the symbolStk, for processing in next step
+<                 oSymbolStkPushIdentifier % push temp symbol
+< 
+<                 [ oSymbolStkChooseKind
+<                     | syType:
+< 
+<                         % 2. Change the type stack entry for the function
+<                         %    type, by copying from the sIdentifier input.
+<                         %    Note that by this time, the typeStack should be 
+<                         %    back to where is was when the procedure was 
+<                         %    declared, and the procedure type (tpNull) in 
+<                         %    the typeStack can be modified.
+<                         %
+<                         %    Note we don't need to update the corresponding 
+<                         %    type table entry here as it is done 
+<                         %    in ProcedureDefinition
+<                         %    after the block has been processed via the 
+<                         %    oTypeTableUpdate mechanism (which is after the 
+<                         %    'return' statement was processed and checked 
+<                         %    to make sure it it the correct return type.
+<                         oTypeStkPushSymbol
+< 
+<                         % Call mechanism to copy Kind (of sIdentifier)
+<                         % pop the typStack, then copy Kind into top/next
+<                         % typeStack entry.
+<                         oTypeStkPopAndCopyKind
+< 
+<                     | *:
+<                         % Return type not a syType
+<                         #eUndefinedIdentifier
+<                 ]
+< 
+<                 % 3. Update the Symbol Table entry with new type
+<                 oSymbolTblSearchConvertFunctionReturnType
+< 
+<                 % 4. Clean up the symbolStack by popping temp entry
+<                 oSymbolStkPop % pop temp symbol
+< 
+<                 % 5. Now we change the symbol Stack Kind from procedure
+<                 % to function.
+<                 [ oSymbolStkChooseKind
+<                     | syProcedure:
+<                         oSymbolStkSetKind (syFunction)
+<                     | syPublicProcedure:
+<                         oSymbolStkSetKind (syPublicFunction)
+<                     | *:
+<                         #eProcedureReqd
+<                 ]
+< 
+<            | *: % else this is not a sIdentifier, therefore it is
+<                 % a procedure and not a function.
+<         ]
+<         ;
+< 
+---
+> 	@ProcedurePrologue;
+2001,2004c1506,1507
+< 			    % MPM: 4th March: Change tpChar into tpString
+< 			    | tpString:
+< 				% MPM 4th March: Change tStoreParmChar into tStoreParmString
+< 				.tStoreParmString
+---
+> 			    | tpChar:
+> 				.tStoreParmChar
+2029,2034c1532,1533
+< % MPM 6th March: add handling of Loop statement.
+< 	    | sLoopStmt:
+< 		@LoopStmt
+< % MPM 6th March: remove While statement.
+< %	    | sWhileStmt:
+< %		@WhileStmt
+---
+> 	    | sWhileStmt:
+> 		@WhileStmt
+2037,2039c1536,1537
+< % MPM 6th March: remove Repeat statement.
+< %	    | sRepeatStmt:
+< %		@RepeatStmt
+---
+> 	    | sRepeatStmt:
+> 		@RepeatStmt
+2068,2071c1566,1567
+< 	    % MPM: 4th March: Change tpChar into tpString
+< 	    | tpString:
+< 		% MPM 4th March: Change tAssignChar into tAssignString
+< 		.tAssignString
+---
+> 	    | tpChar:
+> 		.tAssignChar
+2143,2161d1638
+< %%%%%%%% MJM 4Mar16: Add handling of Public Procedures - these should 
+< %%%%%%%%             always be a user-defined procedure. This code
+< %%%%%%%%             section is same as user-defined case above.
+<             | syPublicProcedure:
+<                         .tCallBegin
+<                         oTypeStkPushSymbol
+<                         [ oTypeStkChooseRecursionFlag
+<                             | yes:
+<                                 #eRecursiveCall
+<                             | *:
+<                         ]
+<                         @ActualParameters
+<                         .tCallEnd
+<                         oValuePushSymbol
+<                         oEmitValue      % procedure code area address
+<                         oValuePop
+<                         oTypeStkPop
+< 
+< 
+2226,2227c1703
+< 		    % MPM: 4th March: Change tpChar into tpString
+< 		    | tpInteger, tpSubrange, tpString, tpBoolean:
+---
+> 		    | tpInteger, tpSubrange, tpChar, tpBoolean:
+2272,2293c1748,1750
+< % MPM 4th March: Remove the old While T-Code.
+< %WhileStmt :
+< %	.tWhileBegin
+< %	oFixPushTargetAddress		% top-of-loop branch target
+< %	@BooleanControlExpression
+< %	.tWhileTest
+< %	oFixPushForwardBranch
+< %	oEmitNullAddress		% exit branch
+< %	oFixSwap		% top-of-loop target back on top
+< %	@Statement
+< %	.tWhileEnd
+< %	oFixPopTargetAddress
+< %	oFixPopForwardBranch;
+< 
+< % MPM 6th March: add handling of Loop.
+< LoopStmt :
+< 	.tLoopBegin
+< 	oFixPushTargetAddress
+< 	@Statement
+< 
+< 	% if matched the LoopBreakWhen token, push a branch into the stack.
+< 	sLoopBreakWhen .tLoopBreakWhen 
+---
+> WhileStmt :
+> 	.tWhileBegin
+> 	oFixPushTargetAddress		% top-of-loop branch target
+2295c1752
+< 	.tLoopTest
+---
+> 	.tWhileTest
+2297,2301c1754,1757
+< 	oEmitNullAddress
+< 
+< 	oFixSwap
+<         @Statement
+<  	sLoopEnd .tLoopEnd
+---
+> 	oEmitNullAddress		% exit branch
+> 	oFixSwap		% top-of-loop target back on top
+> 	@Statement
+> 	.tWhileEnd
+2305,2319c1761,1773
+< 
+< %RepeatStmt :
+< %	.tRepeatBegin
+< %	oFixPushTargetAddress		% top-of-loop branch target
+< %	{[
+< %%%%%%%% FIX LATER
+< %	    | sRepeatEnd:
+< %		>
+< %	    | *:
+< %		@Statement
+< %	]}
+< %	.tRepeatControl
+< %	@BooleanControlExpression
+< %	.tRepeatTest
+< %	oFixPopTargetAddress;
+---
+> RepeatStmt :
+> 	.tRepeatBegin
+> 	oFixPushTargetAddress		% top-of-loop branch target
+> 	{[
+> 	    | sRepeatEnd:
+> 		>
+> 	    | *:
+> 		@Statement
+> 	]}
+> 	.tRepeatControl
+> 	@BooleanControlExpression
+> 	.tRepeatTest
+> 	oFixPopTargetAddress;
+2332,2340d1785
+< 	% MPM 11th March: Add handling of 'default' cases.
+< 	    | sDefault:
+< 		.tCaseElse
+< 		@Statement
+< 		.tCaseMerge
+< 		oFixPushForwardBranch
+< 		oEmitNullAddress
+< 		oFixSwap
+< 		oCountIncrement
+2345d1789
+< 
+2420,2459d1863
+< %%%%%%%%% MJM 10Mar16: New 'ReturnStmt' rule to handle 'return' statements.
+< %%%%%%%%%              - This ensures that the return type is same as what
+< %%%%%%%%%                was in the Function declaration.
+< %%%%%%%%%              - This also checks to see if the sReturn was received
+< %%%%%%%%%                within the context of a function.
+< ReturnStmt :
+<        [ oSymbolTblChooseCurrentScopeIsFunction
+<            | yes:
+<                 .tFunctionResult
+<                 % Process expression in the 'return' statement
+<                 % and check to see if type matches what was 
+<                 % declared in the function header
+< 
+<                 % Expression will push symbol and type stack entries for
+<                 % the expression in the 'return' statement
+<                 @Expression
+< 
+<                 % CompareReturnTypes will generate an error if the top two
+<                 % typestack entries are mismatched.
+<                 % - Top stack entry is the result of the expression
+<                 %   in the 'return' statememt.
+<                 % - Second stack entry is the return function type
+<                 %   declared in the function header (still on the stack 
+<                 %   from before). 
+<                 @CompareReturnTypes
+< 
+<                 % Restore the type stack and the symbol stack such that 
+<                 % they just contain the entry for the function heading
+<                 % return type.
+< 
+<                 oTypeStkPop
+<                 oSymbolStkPop
+< 
+<            | *:
+<                #eInvalidExpn
+<                >>
+<        ]
+<         ;
+< 
+< 
+2469d1872
+< 	    @TernaryOperator
+2495,2496c1898
+< %%%%%%%% MJM 12Mar16: Add 'syPublicFunction' to case below.
+<                     | syFunction, syPublicFunction:
+---
+> 		    | syFunction:
+2518,2519c1920
+< 			% MPM: 4th March: Change tpChar into tpString
+< 			oTypeStkPush(tpString)
+---
+> 			oTypeStkPush(tpChar)
+2522,2525c1923,1924
+< 			% MPM: 4th March: Change tpChar into tpString
+< 			oTypeStkPush(tpString)
+< 			% MPM: 4th March: Change tLiteralChar into tLiteralString
+< 			.tLiteralString
+---
+> 			oTypeStkPush(tpChar)
+> 			.tLiteralChar
+2531,2532c1930
+< 			% MPM 10th March: tSkipString is no long needed.
+< 			%.tSkipString
+---
+> 			.tSkipString
+2543,2544c1941
+< 			% MPM 10th: remove redundant tStringDescriptor
+< 			% .tStringDescriptor
+---
+> 			.tStringDescriptor
+2546,2548c1943
+< 			%oTypeStkPush(tpPackedArray)
+< 		        %MPM 12th March: change tpPackedArray into tpString
+< 			oTypeStkPush(tpString)
+---
+> 			oTypeStkPush(tpPackedArray)
+2550,2551c1945
+< 			% MPM 4th March: Change stdChar into stdString
+< 			oTypeStkLinkToStandardComponentType(stdString)
+---
+> 			oTypeStkLinkToStandardComponentType(stdChar)
+2563,2567d1956
+< 	    %MPM 6th March: Add handling the string length operation. But how to test it?
+< 	    | sLength:
+< 		.tFetchString
+< 		.tLength
+< 		oTypeStkPush(tpInteger)
+2588,2596c1977,1978
+< 		% MPM 7th March: Add handling of string concatenation.
+< 		[ oTypeStkChooseKind
+< 		     | tpInteger:
+< 			.tAdd
+< 			oTypeStkPush(tpInteger)  % result type
+< 		     | tpString:
+< 			.tConcatenate
+< 			oTypeStkPush(tpString)
+< 		]
+---
+> 		.tAdd
+> 		oTypeStkPush(tpInteger)	% result type
+2646,2733d2027
+< % MPM 8th March: Add handling of ternary operators.
+< TernaryOperator:
+< 	[
+< 	    | sSubString:
+< 		[
+< 		   oTypeStkChooseKind
+< 		   | tpInteger:
+< 		   | *:
+< 			#eTypeMismatch
+< 		]
+< 		oTypeStkPop
+< 		oSymbolStkPop
+< 		[
+<                    oTypeStkChooseKind
+<                    | tpInteger:
+<                    | *:
+<                         #eTypeMismatch
+<                 ]
+< 		oTypeStkPop
+< 		oSymbolStkPop
+< 
+< 		[
+< 		    oTypeStkChooseKind
+< 		    | tpString:
+< 		    | *:
+< 			#eTypeMismatch
+< 		]
+< 		oTypeStkPop
+< 
+< 		oTypeStkPush(tpString)
+< 		.tSubstring
+< 	    | *:
+< 	];
+< 
+< %%%%%%%% MJM 10Mar16: CompareReturnTypes will generate an error if 
+< %%%%%%%%              the top two typestack entries are mismatched.
+< %%%%%%%%              - Top stack entry is the result of the expression
+< %%%%%%%%                in the 'return' statememt.
+< %%%%%%%%              - Second stack entry is the return function type
+< %%%%%%%%                declared in the function header (still on the stack 
+< %%%%%%%%                from before). 
+< CompareReturnTypes :
+<         [ oTypeStkChooseKind
+<             | tpInteger:
+<                 oTypeStkSwap %swap to compare
+<                 [ oTypeStkChooseKind
+<                     | tpInteger:
+<                     | *:
+<                         #eTypeMismatch
+<                 ]
+<                 oTypeStkSwap %swap back to restore state
+< 
+<             | tpString:
+<                 oTypeStkSwap %swap to compare
+<                 [ oTypeStkChooseKind
+<                     | tpString:
+<                     | *:
+<                         #eTypeMismatch
+<                 ]
+<                 oTypeStkSwap %swap back to restore state
+< 
+<             | tpBoolean:
+<                 oTypeStkSwap %swap to compare
+<                 [ oTypeStkChooseKind
+<                     | tpBoolean:
+<                     | *:
+<                         #eTypeMismatch
+<                 ]
+<                 oTypeStkSwap %swap back to restore state
+< 
+<             | tpFile:
+<                 oTypeStkSwap %swap to compare
+<                 [ oTypeStkChooseKind
+<                     | tpFile:
+<                     | *:
+<                         #eTypeMismatch
+<                 ]
+<                 oTypeStkSwap %swap back to restore state
+< 
+<             % The following are never allowed:
+<             | tpArray,
+<               tpPackedArray,
+<               tpSubrange:
+<                 #eTypeMismatch
+<            | *:
+<                 #eTypeMismatch
+<         ];
+< 
+2749,2750c2043
+< 	    % MPM: 4th March: Change tpChar into tpString
+< 	    | tpString:
+---
+> 	    | tpChar:
+2753,2754c2046
+< 		    % MPM: 4th March: Change tpChar into tpString
+< 		    | tpString:
+---
+> 		    | tpChar:
+2815,2816c2107
+< 	    % MPM: 4th March: Change tpChar into tpString
+< 	    | tpString:
+---
+> 	    | tpChar:
+2819,2820c2110
+< 		    % MPM: 4th March: Change tpChar into tpString
+< 		    | tpString:
+---
+> 		    | tpChar:
+2895,2898c2185,2186
+< 		    % MPM: 4th March: Change tpChar into tpString
+< 		    | tpString:
+< 			% MPM 4th March: Change tStoreParmChar into tStoreParmString
+< 			.tSubscriptString
+---
+> 		    | tpChar:
+> 			.tSubscriptChar
+2904,2905c2192
+< 		    % MPM: 4th March: Change tpChar into tpString
+< 		    | tpInteger, tpSubrange, tpString, tpBoolean:
+---
+> 		    | tpInteger, tpSubrange, tpChar, tpBoolean:
+2918,2921c2205,2206
+< 	    % MPM: 4th March: Change tpChar into tpString
+< 	    | tpString:
+< 	        % MPM: 4th March: Change .tLiteralChar into .tLiteralString
+< 		.tLiteralString
+---
+> 	    | tpChar:
+> 		.tLiteralChar
+2924,2926c2209,2210
+< 	    % MPM 10th: remove redundant tStringDescriptor and comment out tpPackedArray
+< 	    %| tpPackedArray:	% always a named literal string
+< 		% .tStringDescriptor
+---
+> 	    | tpPackedArray:	% always a named literal string
+> 		.tStringDescriptor
+2940,2943c2224,2225
+< 	    % MPM: 4th March: Change tpChar into tpString
+< 	    | tpString:
+< 		% MPM 4th March: Change tFetchChar into tFetchString
+< 		.tFetchString
+---
+> 	    | tpChar:
+> 		.tFetchChar
+2978,2979c2260
+< 		% MPM: 4th March: Change tpChar into tpString
+< 		oTypeStkPush(tpString)
+---
+> 		oTypeStkPush(tpChar)
+2985,2986c2266
+< 			    % MPM: 4th March: Change tpChar into tpString
+< 			    | tpString:
+---
+> 			    | tpChar:
+2988,2989c2268
+< 				%MPM 5th March: considering to change eCharExpnReqd into eStringExpnReqd
+< 				#eStringExpnReqd
+---
+> 				#eCharExpnReqd
+3008,3028d2286
+< %%%%%%%%%% MJM 13Mar16: Handle the alternative routine type whereby   
+< %%%%%%%%%%              a user function was defined, and therefore
+< %%%%%%%%%%              we have to pass arguments to it, and return
+< %%%%%%%%%%              another value to an assignment/expression.
+<             | *:
+<                 .tCallBegin
+<                 [
+<                     | sParmBegin:
+<                         % oTypeStkPushSymbol % Not necessary
+< 
+<                         @ActualParameters
+<                         % sParmEnd   % Handled by @ActualParameters
+<                     | *:
+<                         #eInsufficientActuals
+<                 ]
+<                 .tCallEnd
+<                 oValuePushSymbol % resultant value from @ActualParameters
+<                 oEmitValue       % now output it
+<                 oValuePop        % clean up value stack
+<                 oSymbolStkPop   % Get rid of last one, and replace with below
+<                 oSymbolStkPush(syExpression)  % Result part of Expression
+3194,3195c2452
+< 				% MPM 4th March: Change tStoreParmChar into tStoreParmString
+< 				.tSubscriptString
+---
+> 				.tSubscriptChar
+3203,3204c2460
+< 				    % MPM: 4th March: Change tpChar into tpString
+< 				    | tpString:
+---
+> 				    | tpChar:
+3267,3268c2523
+< 				    % MPM: 4th March: Change tpChar into tpString
+< 				    | tpString:
+---
+> 				    | tpChar:
+3288,3289c2543
+< 						    % MPM 4th March: Change tStoreParmChar into tStoreParmString
+< 						    .tSubscriptString
+---
+> 						    .tSubscriptChar
+3294,3295c2548
+< 					    % MPM 5th March: Change WriteChar into WriteString
+< 					    @WriteString
+---
+> 					    @WriteChar
+3316,3317c2569
+< 					    % MPM 5th March: Change WriteNonChar into WriteNonString
+< 					    @WriteNonString
+---
+> 					    @WriteNonChar
+3366,3367c2618
+< %%%%%%%% MJM 12Mar16: Add 'syPublicFunction' to case below.
+<                             | syFunction, syPublicFunction:
+---
+> 			    | syFunction:
+3383,3384c2634
+< 				% MPM 4th March: Change tSubscriptChar into tSubscriptString
+< 				.tSubscriptString
+---
+> 				.tSubscriptChar
+3389,3390c2639
+< 			% MPM 5th March: Change WriteChar into WriteString
+< 			@WriteString
+---
+> 			@WriteChar
+3427,3428c2676
+< 			% MPM 4th March: Change tSubscriptChar into tSubscriptString
+< 			.tSubscriptString
+---
+> 			.tSubscriptChar
+3433,3434c2681
+< 		% MPM 5th March: Change WriteChar into WriteString
+< 		@WriteString
+---
+> 		@WriteChar
+3438,3439c2685
+< % MPM 5th March: Change WriteChar into WriteString
+< WriteString :
+---
+> WriteChar :
+3464,3465c2710
+< 		    % MPM: 4th March: Change tpChar into tpString
+< 		    | tpString:
+---
+> 		    | tpChar:
+3478,3479c2723
+< 	    % MPM: 4th March: Change tpChar into tpString
+< 	    | tpString:
+---
+> 	    | tpChar:
+3481,3482c2725
+< 	    	% MPM: 4th March: Change trWriteChar into trWriteString
+< 		oEmitTrapKind(trWriteString)
+---
+> 		oEmitTrapKind(trWriteChar)
+3489,3490c2732
+< 		    % MPM: 4th March: Change tpChar into tpString
+< 		    | tpString:
+---
+> 		    | tpChar:
+3510,3511c2752
+< % MPM 5th March: Change WriteNonChar into WriteNonString
+< WriteNonString :
+---
+> WriteNonChar :
+3592,3593c2833
+< 				    % MPM: 4th March: Change tpChar into tpString
+< 				    | tpString:
+---
+> 				    | tpChar:
+3600,3601c2840
+< 							%MPM 5th March: change eCharFileVarReqd into eStringFileVarReqd
+< 							#eStringFileVarReqd
+---
+> 							#eCharFileVarReqd
+3605,3606c2844
+< 						%MPM 5th March: change eCharFileVarReqd into eStringFileVarReqd
+< 						#eStringFileVarReqd
+---
+> 						#eCharFileVarReqd
+3610,3611c2848
+< 					%MPM 5th March: change eCharFileVarReqd into eStringFileVarReqd
+< 					#eStringFileVarReqd
+---
+> 					#eCharFileVarReqd
+3617,3618c2854
+< 				%MPM 5th March: change eCharFileVarReqd into eStringFileVarReqd
+< 				#eStringFileVarReqd
+---
+> 				#eCharFileVarReqd
+3622,3623c2858
+< 			%MPM 5th March: change eCharFileVarReqd into eStringFileVarReqd
+< 			#eStringFileVarReqd
+---
+> 			#eCharFileVarReqd
+3631,3632c2866
+< 		%MPM 5th March: change eCharFileVarReqd into eStringFileVarReqd
+< 		#eStringFileVarReqd
+---
+> 		#eCharFileVarReqd
+3667,3670c2901,2902
+< 				    % MPM: 4th March: Change tpChar into tpString
+< 				    | tpString:
+< 					% MPM 5th March: Change ReadCharParameterList into ReadStringParameterList
+< 					@ReadStringParameterList
+---
+> 				    | tpChar:
+> 					@ReadCharParameterList
+3672,3673c2904
+< 					% MPM 5th March: Change ReadNonCharParameterList into ReadNonStringParameterList
+< 					@ReadNonStringParameterList
+---
+> 					@ReadNonCharParameterList
+3711,3712c2942
+< 			% MPM 5th March: Change ReadChar into ReadString
+< 			@ReadString
+---
+> 			@ReadChar
+3718,3719c2948
+< 				% MPM 5th March: Change ReadCharParameterList into ReadStringParameterList
+< 				@ReadStringParameterList
+---
+> 				@ReadCharParameterList
+3729,3730c2958
+< % MPM 5th March: Change ReadCharParameterList into ReadStringParameterList
+< ReadStringParameterList :
+---
+> ReadCharParameterList :
+3752,3753c2980
+< 		% MPM 5th March: Change ReadChar into ReadString
+< 		@ReadString
+---
+> 		@ReadChar
+3772,3773c2999
+< % MPM 5th March: Change ReadNonCharParameterList into ReadNonStringParameterList
+< ReadNonStringParameterList :
+---
+> ReadNonCharParameterList :
+3795,3796c3021
+< 		% MPM 5th March: Change ReadNonChar into ReadNonString
+< 		@ReadNonString
+---
+> 		@ReadNonChar
+3814,3815c3039,3040
+< % MPM 5th March: Change ReadChar into ReadString
+< ReadString :
+---
+> 
+> ReadChar :
+3817,3818c3042
+< 	    % MPM: 4th March: Change tpChar into tpString
+< 	    | tpString:
+---
+> 	    | tpChar:
+3820,3821c3044
+< 	    	% MPM: 4th March: Change tpChar into tpString
+< 		oEmitTrapKind(trReadString)
+---
+> 		oEmitTrapKind(trReadChar)
+3831,3832c3054
+< % MPM 5th March: Change ReadNonChar into ReadNonString
+< ReadNonString :
+---
+> ReadNonChar :
+3899,3900c3121
+< 				    % MPM: 4th March: Change tpChar into tpString
+< 				    | tpString:
+---
+> 				    | tpChar:
+3907,3908c3128
+< 							%MPM 5th March: change eCharFileVarReqd into eStringFileVarReqd
+< 							#eStringFileVarReqd
+---
+> 							#eCharFileVarReqd
+3912,3913c3132
+< 						%MPM 5th March: change eCharFileVarReqd into eStringFileVarReqd
+< 						#eStringFileVarReqd
+---
+> 						#eCharFileVarReqd
+3917,3918c3136
+< 					%MPM 5th March: change eCharFileVarReqd into eStringFileVarReqd
+< 					#eStringFileVarReqd
+---
+> 					#eCharFileVarReqd
+3923,3924c3141
+< 				%MPM 5th March: change eCharFileVarReqd into eStringFileVarReqd
+< 				#eStringFileVarReqd
+---
+> 				#eCharFileVarReqd
+3928,3929c3145
+< 			%MPM 5th March: change eCharFileVarReqd into eStringFileVarReqd
+< 			#eStringFileVarReqd
+---
+> 			#eCharFileVarReqd
+3937,3938c3153
+< 		%MPM 5th March: change eCharFileVarReqd into eStringFileVarReqd
+< 		#eStringFileVarReqd
+---
+> 		#eCharFileVarReqd
+3990,3991c3205,3206
+< % MPM 5th March: Change SymbolStkPushCharConstant into SymbolStkPushStringConstant
+< SymbolStkPushStringConstant :
+---
+> 
+> SymbolStkPushCharConstant :
+3996,3997c3211
+< 	% MPM 4th March: Change stdChar into stdString
+< 	oSymbolStkLinkToStandardType(stdString);
+---
+> 	oSymbolStkLinkToStandardType(stdChar);
+4035a3250,3251
+> 
+> 

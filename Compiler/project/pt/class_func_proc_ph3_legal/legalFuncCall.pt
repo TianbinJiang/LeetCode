@@ -1,0 +1,11 @@
+program primes (output) {
+    function test2 (var f: integer):boolean {
+  	    f =2;
+	    return (true);
+    }
+
+    var i: integer;
+    var j: boolean;
+
+    j = test2(i);
+}

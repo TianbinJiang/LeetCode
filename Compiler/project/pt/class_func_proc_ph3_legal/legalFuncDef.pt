@@ -1,0 +1,7 @@
+program primes (output) {
+    function test2 (var f: integer):boolean {
+  	    f =2;
+	    return (true);
+    }
+
+}

@@ -1,0 +1,5 @@
+program testVariable(output)
+{
+  var a, b, c : integer;
+  var d : integer;
+}

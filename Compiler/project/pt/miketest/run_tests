@@ -1,0 +1,16 @@
+#!/bin/sh
+
+ptc -o3 -t3 -L /cas/student/cisc458a/project/pt/lib/pt $1 > $1_ptc3_out
+
+cat $1_ptc3_out | grep "line" > $1_ptc3_error
+
+ssltrace "ptc -o3 -t3 -L /cas/student/cisc458a/project/pt/lib/pt $1" /cas/student/cisc458a/project/pt/semantic/semantic.def | egrep '^ *[\.o%]' > $1_ssl3_1_out
+
+ssltrace "ptc -o3 -t3 -L /cas/student/cisc458a/project/pt/lib/pt $1" /cas/student/cisc458a/project/pt/semantic/semantic.def > $1_ssl3_2_out
+
+ssltrace "ptc -o3 -t3 -L /cas/student/cisc458a/project/pt/lib/pt $1" /cas/student/cisc458a/project/pt/semantic/semantic.def -i > $1_ssl3_i_out
+
+ssltrace "ptc -o3 -t3 -L /cas/student/cisc458a/project/pt/lib/pt $1" /cas/student/cisc458a/project/pt/semantic/semantic.def -e > $1_ssl3_e_out
+
+# cat $1_ssl3_e_out
+cat $1_ptc3_error

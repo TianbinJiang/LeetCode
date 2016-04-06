@@ -1,0 +1,39 @@
+program Hello (output)
+{
+    var string1: string;
+    var string2: string;
+    var string3: string;
+    var i: integer;
+    var j : integer;
+    var tf: boolean;
+
+    string1 = "Hello ";
+    string2 = "World";
+
+    string3 = string1 + string2;
+    write( "concatenate them: ", string3 );
+    writeln();
+
+    string3 = string1 @ 2 : 4;
+    write( "Then (substring): ", string3 );
+    writeln();
+
+    //String Length output as integer, which currently has error
+    i = #string3 ;
+    write( "Then length is: ", i );
+    writeln();
+
+    if(#"a" == 1) 
+      write("The length is 1");
+    else 
+      write("The length is not 1");
+    writeln();
+
+    if (string3 == string3 ) 
+        write( "The strings are Equal!" );
+    else
+        write( "Then strings are NOT Equal." );
+
+    writeln();
+  }
+

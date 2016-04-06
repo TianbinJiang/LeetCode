@@ -1,0 +1,8 @@
+program out(a) {
+        root = infinitive @ 1:(#infinitive-2);
+
+        if (root @ 1:1 == "a")
+            writeln ("J'" + root + "e");
+        elsif(a @ (#a - 1) : #b == "ir")
+            writeln ("Hello");
+}

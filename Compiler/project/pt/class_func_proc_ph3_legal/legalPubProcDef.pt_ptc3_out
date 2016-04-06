@@ -1,0 +1,397 @@
+Input token accepted 54;  Line 1;  Next input token 3
+Table index 0;  Operation 5;  Argument 3
+Input token accepted 3;  Line 1;  Next input token 0
+Table index 2;  Operation 16;  Argument 12
+Table index 3;  Operation 12;  Argument 3
+Table index 5;  Operation 85;  Argument 7
+Table index 6;  Operation 7;  Argument 5
+Choice tag 0 (not matched)
+Table index 15;  Operation 0;  Argument 41
+Table index 41;  Operation 5;  Argument 0
+Input token accepted 0;  Line 1;  Next input token 5
+Table index 43;  Operation 25;  Argument 35
+Table index 44;  Operation 35;  Argument 10
+Table index 45;  Operation 10;  Argument 46
+Choice tag 11 (matched)
+Table index 47;  Operation 36;  Argument 10
+Table index 48;  Operation 10;  Argument 25
+Choice tag 1 (matched)
+Table index 62;  Operation 12;  Argument 2
+Table index 64;  Operation 28;  Argument 12
+Table index 65;  Operation 12;  Argument 3
+Table index 67;  Operation 29;  Argument 42
+Table index 68;  Operation 42;  Argument 12
+Table index 69;  Operation 12;  Argument 2
+Table index 71;  Operation 71;  Argument 4
+Table index 72;  Operation 4;  Argument 14
+Table index 87;  Operation 0;  Argument 892
+Table index 892;  Operation 35;  Argument 10
+Table index 893;  Operation 10;  Argument 6
+Choice tag 2 (not matched)
+Table index 903;  Operation 55;  Argument 10
+Table index 904;  Operation 10;  Argument 50
+Choice tag 6 (matched)
+Table index 942;  Operation 67;  Argument 33
+Table index 943;  Operation 33;  Argument 8
+Table index 944;  Operation 8;  Argument 64
+Output token emitted 64
+Table index 946;  Operation 62;  Argument 8
+Output token emitted 2
+Table index 947;  Operation 8;  Argument 63
+Output token emitted 63
+Table index 949;  Operation 64;  Argument 8
+Output token emitted 0
+Table index 950;  Operation 8;  Argument 42
+Output token emitted 42
+Table index 952;  Operation 70;  Argument 4
+Table index 953;  Operation 4;  Argument 15
+Table index 969;  Operation 1;  Argument 5
+Table index 89;  Operation 14;  Argument 4
+Table index 90;  Operation 4;  Argument 6
+Table index 97;  Operation 38;  Argument 59
+Table index 98;  Operation 59;  Argument 80
+Table index 99;  Operation 80;  Argument 1
+Table index 100;  Operation 1;  Argument 7
+Table index 17;  Operation 3;  Argument 12
+Table index 6;  Operation 7;  Argument 5
+Choice tag 5 (matched)
+Input token accepted 5;  Line 1;  Next input token 31
+Table index 8;  Operation 4;  Argument 10
+Table index 19;  Operation 87;  Argument 0
+Table index 20;  Operation 0;  Argument 101
+Table index 101;  Operation 7;  Argument 21
+Choice tag 31 (matched)
+Input token accepted 31;  Line 2;  Next input token 0
+Table index 107;  Operation 0;  Argument 970
+Table index 970;  Operation 5;  Argument 0
+Input token accepted 0;  Line 2;  Next input token 9
+Table index 972;  Operation 25;  Argument 35
+Table index 973;  Operation 35;  Argument 10
+Table index 974;  Operation 10;  Argument 7
+Choice tag 11 (matched)
+Table index 976;  Operation 4;  Argument 12
+Table index 989;  Operation 12;  Argument 6
+Table index 991;  Operation 28;  Argument 32
+Table index 992;  Operation 32;  Argument 12
+Table index 993;  Operation 12;  Argument 7
+Table index 995;  Operation 41;  Argument 12
+Table index 996;  Operation 12;  Argument 1
+Table index 998;  Operation 45;  Argument 39
+Table index 999;  Operation 39;  Argument 34
+Table index 1000;  Operation 34;  Argument 14
+Table index 1001;  Operation 14;  Argument 16
+Table index 1002;  Operation 16;  Argument 0
+Table index 1003;  Operation 0;  Argument 101
+Table index 101;  Operation 7;  Argument 21
+Choice tag 9 (matched)
+Input token accepted 9;  Line 3;  Next input token 0
+Table index 103;  Operation 0;  Argument 1015
+Table index 1015;  Operation 5;  Argument 0
+Input token accepted 0;  Line 3;  Next input token 10
+Table index 1017;  Operation 25;  Argument 35
+Table index 1018;  Operation 35;  Argument 10
+Table index 1019;  Operation 10;  Argument 7
+Choice tag 11 (matched)
+Table index 1021;  Operation 4;  Argument 12
+Table index 1034;  Operation 8;  Argument 72
+Output token emitted 72
+Table index 1036;  Operation 91;  Argument 61
+Table index 1037;  Operation 61;  Argument 12
+Output token emitted -32767
+Table index 1038;  Operation 12;  Argument 4
+Table index 1040;  Operation 28;  Argument 7
+Table index 1041;  Operation 7;  Argument 6
+Choice tag 10 (matched)
+Input token accepted 10;  Line 3;  Next input token 0
+Table index 1043;  Operation 12;  Argument 7
+Table index 1045;  Operation 28;  Argument 4
+Table index 1046;  Operation 4;  Argument 4
+Table index 1051;  Operation 32;  Argument 12
+Table index 1052;  Operation 12;  Argument 7
+Table index 1054;  Operation 41;  Argument 12
+Table index 1055;  Operation 12;  Argument 1
+Table index 1057;  Operation 45;  Argument 39
+Table index 1058;  Operation 39;  Argument 34
+Table index 1059;  Operation 34;  Argument 14
+Table index 1060;  Operation 14;  Argument 16
+Table index 1061;  Operation 16;  Argument 0
+Table index 1062;  Operation 0;  Argument 1078
+Table index 1078;  Operation 12;  Argument 0
+Table index 1080;  Operation 85;  Argument 7
+Table index 1081;  Operation 7;  Argument 5
+Choice tag 0 (not matched)
+Table index 1090;  Operation 88;  Argument 5
+Table index 1091;  Operation 5;  Argument 0
+Input token accepted 0;  Line 3;  Next input token 8
+Table index 1093;  Operation 25;  Argument 35
+Table index 1094;  Operation 35;  Argument 10
+Table index 1095;  Operation 10;  Argument 3
+Choice tag 11 (matched)
+Table index 1097;  Operation 4;  Argument 6
+Table index 1104;  Operation 7;  Argument 6
+Choice tag 8 (matched)
+Input token accepted 8;  Line 3;  Next input token 0
+Table index 1106;  Operation 12;  Argument 3
+Table index 1108;  Operation 28;  Argument 4
+Table index 1109;  Operation 4;  Argument 7
+Table index 1117;  Operation 0;  Argument 1169
+Table index 1169;  Operation 5;  Argument 0
+Input token accepted 0;  Line 3;  Next input token 5
+Table index 1171;  Operation 24;  Argument 35
+Table index 1172;  Operation 35;  Argument 10
+Table index 1173;  Operation 10;  Argument 5
+Choice tag 1 (not matched)
+Table index 1182;  Operation 35;  Argument 10
+Table index 1183;  Operation 10;  Argument 3
+Choice tag 1 (matched)
+Table index 1185;  Operation 4;  Argument 9
+Table index 1195;  Operation 42;  Argument 38
+Table index 1196;  Operation 38;  Argument 35
+Table index 1197;  Operation 35;  Argument 10
+Table index 1198;  Operation 10;  Argument 20
+Choice tag 3 (not matched)
+Table index 1222;  Operation 34;  Argument 55
+Table index 1223;  Operation 55;  Argument 10
+Table index 1224;  Operation 10;  Argument 4
+Choice tag 0 (not matched)
+Table index 1232;  Operation 12;  Argument 7
+Table index 1234;  Operation 41;  Argument 58
+Table index 1235;  Operation 58;  Argument 0
+Table index 1236;  Operation 0;  Argument 892
+Table index 892;  Operation 35;  Argument 10
+Table index 893;  Operation 10;  Argument 6
+Choice tag 3 (matched)
+Table index 895;  Operation 67;  Argument 33
+Table index 896;  Operation 33;  Argument 69
+Table index 897;  Operation 69;  Argument 4
+Table index 898;  Operation 4;  Argument 70
+Table index 969;  Operation 1;  Argument 5
+Table index 1238;  Operation 14;  Argument 1
+Table index 1239;  Operation 1;  Argument 0
+Table index 1119;  Operation 3;  Argument 39
+Table index 1081;  Operation 7;  Argument 5
+Choice tag 5 (matched)
+Input token accepted 5;  Line 3;  Next input token 11
+Table index 1083;  Operation 4;  Argument 37
+Table index 1121;  Operation 0;  Argument 1240
+Table index 1240;  Operation 0;  Argument 4448
+Table index 4448;  Operation 75;  Argument 86
+Table index 4449;  Operation 86;  Argument 80
+Table index 4450;  Operation 80;  Argument 1
+Table index 4451;  Operation 1;  Argument 12
+Table index 1242;  Operation 90;  Argument 10
+Table index 1243;  Operation 10;  Argument 8
+Choice tag 1 (not matched)
+Table index 1255;  Operation 8;  Argument 63
+Output token emitted 63
+Table index 1257;  Operation 74;  Argument 62
+Table index 1258;  Operation 62;  Argument 80
+Output token emitted 4
+Table index 1259;  Operation 80;  Argument 35
+Table index 1260;  Operation 35;  Argument 10
+Table index 1261;  Operation 10;  Argument 32
+Choice tag 3 (matched)
+Table index 1290;  Operation 8;  Argument 32
+Output token emitted 32
+Table index 1292;  Operation 4;  Argument 7
+Table index 1300;  Operation 38;  Argument 59
+Table index 1301;  Operation 59;  Argument 59
+Table index 1302;  Operation 59;  Argument 89
+Table index 1303;  Operation 89;  Argument 3
+Table index 1304;  Operation 3;  Argument 63
+Table index 1242;  Operation 90;  Argument 10
+Table index 1243;  Operation 10;  Argument 8
+Choice tag 0 (matched)
+Table index 1245;  Operation 87;  Argument 8
+Table index 1246;  Operation 8;  Argument 47
+Output token emitted 47
+Table index 1248;  Operation 4;  Argument 57
+Table index 1306;  Operation 52;  Argument 87
+Table index 1307;  Operation 87;  Argument 1
+Table index 1308;  Operation 1;  Argument 7
+Table index 1123;  Operation 0;  Argument 1126
+Table index 1126;  Operation 7;  Argument 38
+Choice tag 11 (not matched)
+Table index 1168;  Operation 1;  Argument 5
+Table index 1125;  Operation 1;  Argument 7
+Table index 1064;  Operation 0;  Argument 101
+Table index 101;  Operation 7;  Argument 21
+Choice tag 11 (not matched)
+Table index 134;  Operation 4;  Argument 3
+Table index 138;  Operation 5;  Argument 11
+Input token accepted 11;  Line 4;  Next input token 24
+Table index 140;  Operation 0;  Argument 1419
+Table index 1419;  Operation 7;  Argument 5
+Choice tag 24 (not matched)
+Table index 1428;  Operation 0;  Argument 1309
+Table index 1309;  Operation 7;  Argument 27
+Choice tag 24 (matched)
+Input token accepted 24;  Line 4;  Next input token 0
+Table index 1311;  Operation 0;  Argument 1357
+Table index 1357;  Operation 5;  Argument 0
+Input token accepted 0;  Line 4;  Next input token 1
+Table index 1359;  Operation 24;  Argument 35
+Table index 1360;  Operation 35;  Argument 10
+Table index 1361;  Operation 10;  Argument 5
+Choice tag 3 (not matched)
+Table index 1370;  Operation 8;  Argument 27
+Output token emitted 27
+Table index 1372;  Operation 0;  Argument 2615
+Table index 2615;  Operation 35;  Argument 10
+Table index 2616;  Operation 10;  Argument 24
+Choice tag 3 (matched)
+Table index 2625;  Operation 8;  Argument 63
+Output token emitted 63
+Table index 2627;  Operation 74;  Argument 62
+Table index 2628;  Operation 62;  Argument 80
+Output token emitted 4
+Table index 2629;  Operation 80;  Argument 8
+Table index 2630;  Operation 8;  Argument 23
+Output token emitted 23
+Table index 2632;  Operation 4;  Argument 20
+Table index 2653;  Operation 42;  Argument 0
+Table index 2654;  Operation 0;  Argument 2657
+Table index 2657;  Operation 7;  Argument 70
+Choice tag 1 (not matched)
+Table index 2731;  Operation 55;  Argument 10
+Table index 2732;  Operation 10;  Argument 6
+Choice tag 0 (matched)
+Table index 2734;  Operation 12;  Argument 0
+Table index 2736;  Operation 47;  Argument 4
+Table index 2737;  Operation 4;  Argument 10
+Table index 2748;  Operation 1;  Argument 42
+Table index 2656;  Operation 1;  Argument 7
+Table index 1374;  Operation 55;  Argument 10
+Table index 1375;  Operation 10;  Argument 5
+Choice tag 0 (not matched)
+Table index 1384;  Operation 0;  Argument 1961
+Table index 1961;  Operation 0;  Argument 1991
+Table index 1991;  Operation 7;  Argument 124
+Choice tag 1 (matched)
+Input token accepted 1;  Line 4;  Next input token 22
+Table index 2040;  Operation 72;  Argument 12
+Table index 2041;  Operation 12;  Argument 10
+Table index 2043;  Operation 23;  Argument 12
+Table index 2044;  Operation 12;  Argument 0
+Table index 2046;  Operation 41;  Argument 8
+Table index 2047;  Operation 8;  Argument 64
+Output token emitted 64
+Table index 2049;  Operation 62;  Argument 80
+Output token emitted 2
+Table index 2050;  Operation 80;  Argument 4
+Table index 2051;  Operation 4;  Argument 73
+Table index 2125;  Operation 1;  Argument 7
+Table index 1963;  Operation 0;  Argument 2126
+Table index 2126;  Operation 7;  Argument 24
+Choice tag 22 (not matched)
+Table index 2158;  Operation 1;  Argument 12
+Table index 1965;  Operation 0;  Argument 2166
+Table index 2166;  Operation 7;  Argument 126
+Choice tag 22 (not matched)
+Table index 2324;  Operation 1;  Argument 7
+Table index 1967;  Operation 0;  Argument 2325
+Table index 2325;  Operation 7;  Argument 43
+Choice tag 22 (not matched)
+Table index 2372;  Operation 1;  Argument 55
+Table index 1969;  Operation 7;  Argument 11
+Choice tag 22 (matched)
+Input token accepted 22;  Line 4;  Next input token 12
+Table index 1971;  Operation 4;  Argument 18
+Table index 1990;  Operation 1;  Argument 7
+Table index 1386;  Operation 0;  Argument 2454
+Table index 2454;  Operation 55;  Argument 10
+Table index 2455;  Operation 10;  Argument 81
+Choice tag 0 (matched)
+Table index 2457;  Operation 58;  Argument 55
+Table index 2458;  Operation 55;  Argument 10
+Table index 2459;  Operation 10;  Argument 3
+Choice tag 0 (matched)
+Table index 2461;  Operation 4;  Argument 8
+Table index 2470;  Operation 4;  Argument 82
+Table index 2553;  Operation 1;  Argument 0
+Table index 1388;  Operation 55;  Argument 10
+Table index 1389;  Operation 10;  Argument 13
+Choice tag 0 (matched)
+Table index 1391;  Operation 8;  Argument 29
+Output token emitted 29
+Table index 1393;  Operation 4;  Argument 20
+Table index 1414;  Operation 38;  Argument 59
+Table index 1415;  Operation 59;  Argument 38
+Table index 1416;  Operation 38;  Argument 59
+Table index 1417;  Operation 59;  Argument 1
+Table index 1418;  Operation 1;  Argument 7
+Table index 1313;  Operation 4;  Argument 42
+Table index 1356;  Operation 1;  Argument 5
+Table index 1430;  Operation 3;  Argument 12
+Table index 1419;  Operation 7;  Argument 5
+Choice tag 12 (matched)
+Input token accepted 12;  Line 5;  Next input token 11
+Table index 1421;  Operation 4;  Argument 10
+Table index 1432;  Operation 1;  Argument 5
+Table index 142;  Operation 7;  Argument 5
+Choice tag 11 (not matched)
+Table index 151;  Operation 1;  Argument 7
+Table index 1066;  Operation 8;  Argument 48
+Output token emitted 48
+Table index 1068;  Operation 92;  Argument 15
+Table index 1069;  Operation 15;  Argument 38
+Table index 1070;  Operation 38;  Argument 12
+Table index 1071;  Operation 12;  Argument 0
+Table index 1073;  Operation 45;  Argument 40
+Table index 1074;  Operation 40;  Argument 59
+Table index 1075;  Operation 59;  Argument 17
+Table index 1076;  Operation 17;  Argument 1
+Table index 1077;  Operation 1;  Argument 12
+Table index 105;  Operation 4;  Argument 30
+Table index 136;  Operation 3;  Argument 36
+Table index 101;  Operation 7;  Argument 21
+Choice tag 11 (not matched)
+Table index 134;  Operation 4;  Argument 3
+Table index 138;  Operation 5;  Argument 11
+Input token accepted 11;  Line 6;  Next input token 12
+Table index 140;  Operation 0;  Argument 1419
+Table index 1419;  Operation 7;  Argument 5
+Choice tag 12 (matched)
+Input token accepted 12;  Line 6;  Next input token 11
+Table index 1421;  Operation 4;  Argument 10
+Table index 1432;  Operation 1;  Argument 5
+Table index 142;  Operation 7;  Argument 5
+Choice tag 11 (not matched)
+Table index 151;  Operation 1;  Argument 7
+Table index 1005;  Operation 15;  Argument 38
+Table index 1006;  Operation 38;  Argument 12
+Table index 1007;  Operation 12;  Argument 0
+Table index 1009;  Operation 45;  Argument 40
+Table index 1010;  Operation 40;  Argument 59
+Table index 1011;  Operation 59;  Argument 18
+Table index 1012;  Operation 18;  Argument 19
+Table index 1013;  Operation 19;  Argument 1
+Table index 1014;  Operation 1;  Argument 5
+Table index 109;  Operation 4;  Argument 26
+Table index 136;  Operation 3;  Argument 36
+Table index 101;  Operation 7;  Argument 21
+Choice tag 11 (not matched)
+Table index 134;  Operation 4;  Argument 3
+Table index 138;  Operation 5;  Argument 11
+Input token accepted 11;  Line 7;  Next input token 12
+Table index 140;  Operation 0;  Argument 1419
+Table index 1419;  Operation 7;  Argument 5
+Choice tag 12 (matched)
+Input token accepted 12;  Line 7;  Next input token 55
+Table index 1421;  Operation 4;  Argument 10
+Table index 1432;  Operation 1;  Argument 5
+Table index 142;  Operation 7;  Argument 5
+Choice tag 55 (not matched)
+Table index 151;  Operation 1;  Argument 7
+Table index 22;  Operation 22;  Argument 10
+Table index 23;  Operation 10;  Argument 5
+Choice tag 0 (not matched)
+Table index 32;  Operation 17;  Argument 8
+Table index 33;  Operation 8;  Argument 51
+Output token emitted 51
+Table index 35;  Operation 8;  Argument 75
+Output token emitted 75
+Table index 37;  Operation 12;  Argument 0
+Table index 39;  Operation 65;  Argument 1
+Output token emitted 0
+Table index 40;  Operation 1;  Argument 5

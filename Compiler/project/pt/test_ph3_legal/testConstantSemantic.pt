@@ -1,0 +1,6 @@
+program testConstant(output)
+{
+   let a = 2;
+       c = 1;
+   let d = a;
+}

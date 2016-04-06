@@ -1,0 +1,475 @@
+// Blackjack Simulation Program                 
+program thorp (input, output) {
+
+    /* J.R. Cordy, Computer Systems Research Group, 
+       University of Toronto, July 1975             
+       For instructions on use, run once with no input.                                       
+    */
+
+    // hands of players                             
+    type handarray: array [1 .. 7] of integer;
+    var playershand, dealershand : handarray;
+    var playerscards, dealerscards : integer;
+
+    // game counts for each shuffle                 
+    var gamesplayed, gamesplayerwon, gamesdealerwon : integer;
+
+    // player's hand values                         
+    var dealerscount, playerscount : integer;
+
+    // flags to indicate player's status            
+    var dealerstops, playerstops : boolean;
+
+    // player parameters                            
+    var playersname : string;
+
+    // player's count limit for naive strategy      
+    var joenaivesguts : integer;
+
+
+    // random number generation
+    class random {
+	// random seed
+	var seed : integer;
+	var multiplier : integer;
+
+	public function randint (modulus : integer) : integer {
+	    if (multiplier == 17)
+		multiplier = 19;
+	    else 
+		multiplier = 17;
+	    seed = (seed * multiplier) mod 10000;
+	    return ((seed mod modulus) + 1);
+	}
+
+	// initialize random seed
+	seed = 13277;
+	multiplier = 17;
+    }
+
+
+    // deck to deal cards from                      
+    class carddeck {
+	var deck : array [1 .. 52] of integer;
+	var nextcard : integer;
+
+	public function shuffle () {
+	    // puts a new shuffled deck of cards in the array "deck".                                
+	    // cards are coded as 1 to 13, 1 being ace,     
+	    // 2-10 as they are, and 11-13 being j,q,k respectively.                                
+
+	    var card : integer;
+	    var cardcount : array [1 .. 13] of integer;
+	    var c, ncards : integer;
+
+	    c = 1;
+	    loop {
+		cardcount [c] = 0;
+		c = c + 1;
+		break when (c > 13);
+	    }
+
+	    ncards = 1;
+	    loop {
+		card = randint (13);
+		loop {
+		    break when (cardcount [card] != 4);
+		    card = randint (13);
+		}
+
+		deck [ncards] = card;
+		cardcount [card] = cardcount [card] + 1;
+
+		ncards = ncards + 1;
+		break when (ncards > 52);
+	    }
+
+	    nextcard = 0;
+	}
+
+	public function dealcard () : integer {
+	    nextcard = nextcard + 1;
+	    return (deck [nextcard]);
+	}
+
+	public function cardsleft () : integer {
+	    return (52 - nextcard + 1);
+	}
+    }
+
+
+    class namesofcards {
+	// alphanumeric card names                      
+	var cardnames : array [1 .. 13] of string;
+
+	public function handimage (ncards : integer, var hand : handarray) : string {
+	    // returns a character string image of the hand 
+	    var i,h : integer;
+	    var image : string;
+
+	    image = "";
+
+	    i = 1;
+	    loop {
+		break when (i > ncards);
+		image = image + " " + cardnames [hand [i]];
+		i = i + 1;
+	    }
+
+	    return (image);
+	}
+
+	// initialize card names
+	cardnames [1] = "A";
+	cardnames [2] = "2";
+	cardnames [3] = "3";
+	cardnames [4] = "4";
+	cardnames [5] = "5";
+	cardnames [6] = "6";
+	cardnames [7] = "7";
+	cardnames [8] = "8";
+	cardnames [9] = "9";
+	cardnames [10] = "10";
+	cardnames [11] = "J";
+	cardnames [12] = "Q";
+	cardnames [13] = "K";
+    }
+
+
+    function somebodyplays () : boolean {
+	// returns true if ((there is another shuffle to  )
+	// be played (i.e. if ((another player name is    )
+	// input), false otherwise initializes new shuffle                      
+
+	var r : boolean;
+
+	gamesplayed = 0;
+	gamesplayerwon = 0;
+	gamesdealerwon = 0;
+	writeln (); writeln ();
+	write ("New shuffle."); writeln ();
+	writeln ();
+	write ("Enter player name (E.O.Thorp for Thorp, your name for you, q to quit): ");
+	read (playersname); readln (); 
+
+	if (playersname == "q" )
+	    r = false;
+	else {
+
+	    if (playersname != "E.O.Thorp") {
+		write ("What does he/she stand on? ");
+		read (joenaivesguts); readln ();
+		loop {
+		    break when ((joenaivesguts > 0) and (joenaivesguts <= 20));
+		    write ("(1..20): ");
+		    read (joenaivesguts); readln ();
+		}
+	    }
+
+	    if (playersname == "E.O.Thorp") {
+		writeln ();
+		write ("E.O.Thorp plays this time."); writeln ();
+	    } else {
+		writeln ();
+		write ("Next player is " + playersname + "."); writeln ();
+		write ("He stops at ", joenaivesguts:1, "."); writeln ();
+
+		if (joenaivesguts < 15) {
+		    write ("(What a hamburger!)"); writeln ();
+		} else {
+		    write ("Good luck, " + playersname + "."); writeln ();
+		}
+	    }
+
+	    r = true;
+	}
+
+	return (r);
+    }
+
+
+    function playing () : boolean {
+	// returns true if ((enough cards left for        )
+	// another game, otherwise prints a shuffle     
+	// summary and returns false.                   
+
+	var r : boolean;
+
+	if (cardsleft > 10) {
+	    writeln ();
+	    write ("New game."); writeln ();
+	    gamesplayed = gamesplayed + 1;
+	    r = true;
+	} else {
+	    writeln ();
+	    write ("Too few cards left for another game."); writeln ();
+	    write ("Of ", gamesplayed:1, " games, ", playersname,
+		" won ", gamesplayerwon:1, ", dealer won ", gamesdealerwon:1, "."); writeln ();
+
+	    if (gamesdealerwon > gamesplayerwon) {
+		write ("House cleans up on " + playersname + " this time."); writeln ();
+	    } elsif (gamesplayerwon > gamesdealerwon)  {
+		if (playersname == "E.O.Thorp") {
+		    write ("E.O.Thorp does it again."); writeln ();
+		} else {
+		    write (playersname + " must have doctored the shuffle."); writeln ();
+		}
+	    } else {
+		write ("Even shuffle."); writeln ();
+	    }
+
+	    r = false;
+	}
+
+	return (r);
+    }
+
+
+    function playertakesacard () {
+	// player's hand gets another card from the top of the deck.                                 
+	playerscards = playerscards + 1;
+	playershand [playerscards] = dealcard;
+    }
+
+
+    function dealertakesacard () {
+	// dealer's hand gets another card from the top 
+	// of the deck.                                 
+	dealerscards = dealerscards + 1;
+	dealershand [dealerscards] = dealcard;
+    }
+
+
+    function deal () {
+	// initializes for a new hand and performs initial deal.                                
+	// player and dealer each get two cards.        
+	playerstops = false;
+	dealerstops = false;
+	playerscards = 0;
+	dealerscards = 0;
+
+	playertakesacard ();
+	dealertakesacard ();
+	playertakesacard ();
+	dealertakesacard ();
+
+	write ("The initial deal gives ", playersname, " :", handimage (playerscards, playershand)); writeln ();
+	write ("  and the dealer :", handimage (dealerscards, dealershand), "."); writeln ();
+    }
+
+
+    function evaluate (ncards : integer, var hand : handarray,
+	    var softhand : boolean) : integer {
+	// evaluates the best count for the hand, and   
+	// sets "softhand" to true if (one or more aces are counted as 11.                           )
+
+	var nacescounted11 : integer;
+	var i, value : integer;
+
+	value = 0;
+	nacescounted11 = 0;
+
+	i = 1;
+	loop {
+	    break when (i > ncards);
+
+	    switch (hand [i]) {
+	      case 2: case 3: case 4: case 5: case 6: case 7: case 8: case 9: case 10:
+		// 2-10 
+		value = value + hand [i];
+		break;
+	      case 1:
+		// A 
+		value = value + 11;
+		nacescounted11 = nacescounted11 + 1;
+		break;
+	      default:
+		// J,Q,K 
+		value = value + 10;
+		break;
+	    }
+
+	    i = i + 1;
+	}
+
+	loop {
+	    break when ((value <= 21) or (nacescounted11 == 0));
+	    value = value - 10;
+	    nacescounted11 = nacescounted11 - 1;
+	 }
+
+	softhand = nacescounted11 > 0;
+
+	return (value);
+    }
+
+
+    function dealer () {
+	// simulates play of dealer.                    
+	// dealer plays the standard strategy of        
+	// standing with 17 or better.                  
+	// when dealer decides to stop, prints hand summary.                                     
+
+	var softhand : boolean;
+
+	dealerscount = evaluate (dealerscards, dealershand, softhand);
+
+	if (dealerscount > 21) {
+	    write ("Dealer goes bust."); writeln ();
+	    dealerstops = true;
+	    gamesplayerwon = gamesplayerwon + 1;
+	} elsif (dealerscount == 21) {
+	    write ("Dealer calls blackjack."); writeln ();
+	    dealerstops = true;
+	    gamesdealerwon = gamesdealerwon + 1;
+	} else {
+	    if (dealerscount < 17)
+		dealertakesacard ();
+	    else
+		dealerstops = true;
+
+	    if (dealerstops) {
+		write ("Dealer stands with ", dealerscount:1, "."); writeln ();
+
+		if (dealerscount > playerscount) {
+		    write ("House wins."); writeln ();
+		    gamesdealerwon = gamesdealerwon + 1;
+		} elsif (dealerscount < playerscount) {
+		    write (playersname + " wins."); writeln ();
+		    gamesplayerwon = gamesplayerwon + 1;
+		} else {
+		    write ("Tie game."); writeln ();
+		}
+	    } else {
+		write ("Dealer takes a card and now has ", handimage (dealerscards, dealershand), "."); writeln ();
+	    }
+	}
+    }
+
+
+    class players {
+
+	function playerjoenaive () {
+	    // simulates the naive player strategy          
+
+	    if (playerscount < joenaivesguts)
+		playertakesacard ();
+	    else
+		playerstops = true;
+	}
+
+	function playerthorp (softhand : boolean) {
+	    // simulates a simplified version of the player 
+	    // strategy described by E.O.Thorp in his book  
+	    // "Beat the Dealer" (Vintage books, 1966) pp. 20,21.                                   
+
+	    var dealershows: integer;
+	    dealershows = dealershand [1];
+
+	    if (softhand)
+		// soft hand strategy 
+		if (dealershows > 8)
+		    // 9 or 10 
+		    playerstops = playerscount > 18;
+		else
+		    // 2-8,A 
+		    playerstops = playerscount > 17;
+	    else
+		// hard hand strategy 
+		if ((dealershows > 1) and (dealershows < 4))
+		    // 2 or 3 
+		    playerstops = playerscount > 12;
+		elsif ((dealershows > 3) and (dealershows < 7))
+		    // 4 to 6 
+		    playerstops = playerscount > 11;
+		else
+		    // 7 to 10,A 
+		    playerstops = playerscount > 16;
+
+	    if (not playerstops)
+		playertakesacard ();
+	}
+
+	public function player () {
+	    // simulates play of player                     
+	    // player plays either the naive strategy       
+	    // or, if playersname="E.O.Thorp", E.O.Thorp's strategy. 
+
+	    var softhand : boolean;
+
+	    playerscount = evaluate (playerscards, playershand, softhand);
+
+	    if (playerscount == 21) {
+		write (playersname + " calls blackjack."); writeln ();
+		playerstops = true;
+		dealerstops = true;
+		gamesplayerwon = gamesplayerwon + 1;
+	    } elsif (playerscount > 21) {
+		write (playersname + " goes bust."); writeln ();
+		playerstops = true;
+		dealerstops = true;
+		gamesdealerwon = gamesdealerwon + 1;
+	    } else {
+		if (playersname == "E.O.Thorp")
+		    playerthorp (softhand);
+		else
+		    playerjoenaive ();
+
+		if (playerstops) {
+		    write (playersname, " stands with ", playerscount:1, "."); writeln ();
+		} else {
+		    write (playersname, " takes a card and now has ", handimage (playerscards, playershand), "."); writeln ();
+		}
+	    }
+	}
+    }
+
+
+    // main program 
+
+    class main {
+	// print program explanation                    
+	write ("This program simulates the game of blackjack."); writeln ();
+	writeln ();
+	write ("The dealer plays the compulsory strategy of standing on 17 or better."); writeln ();
+	writeln ();
+	write ("The player plays either"); writeln ();
+	write ("  [1] The standard naive strategy of standing on n or better, or"); writeln ();
+	write ("  [2] A simplified version of the strategy described by  E.O.Thorp"); writeln ();
+	write ("      in his book 'Beat the Dealer' (Vintage Books, 1966) pp. 20-21."); writeln ();
+	writeln ();
+	write ("Input :"); writeln ();
+	write ("  For each shuffle, a player name (character string of <= 20 characters),"); writeln ();
+	write ("  and if the player name specified is not 'E.O.Thorp', the count [n]"); writeln ();
+	write ("  on which the player stands."); writeln ();
+	writeln ();
+	write ("If the player name specified is 'E.O.Thorp', the player strategy used", " will be Thorp's.");
+	writeln ();
+	write ("Otherwise, the player will use the standard stop on count > n strategy."); writeln ();
+	writeln ();
+	write ("The program will simulate one complete shuffle of play for each player."); writeln ();
+
+	// commence the games!
+	loop {
+	    break when (not somebodyplays);
+
+	    shuffle ();
+
+	    loop {
+		break when (not playing);
+
+		deal ();
+
+		loop {
+		    break when (playerstops);
+		    player ();
+		}
+
+		loop {
+		    break when (dealerstops);
+		    dealer ();
+		}
+	    }
+	}
+    }
+}

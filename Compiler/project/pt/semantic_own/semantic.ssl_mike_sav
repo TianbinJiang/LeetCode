@@ -1,0 +1,4002 @@
+%  PT Semantic Analysis Pass   Ver. 2.00
+%
+%  Date  30 Jun 1980
+%	 (Revised 2 January 2014)
+%
+%  Author  Alan Rosselet
+%
+%  Abstract
+%      The semantic analyzer gathers information about names and stores
+%   that information in its symbol and type tables.  It enforces the 
+%   context sensitive syntax of PT such as declaration before use.
+%   It performs type compatibility checking in expressions, assignment
+%   statements, call statements etc.  It assigns runtime addresses to
+%   all data objects.  It generates a stream of PT intermediate code,
+%   "t-code", corresponding semantically to the source program.
+%
+
+Input :
+        sIdentifier
+        firstSemanticToken = sIdentifier
+        firstCompoundSemanticToken = sIdentifier
+        sInteger
+        sLiteral
+        lastCompoundSemanticToken = sLiteral
+
+        %   MJM: 29Feb16: Removed the following output tokens:
+        %        - sWhileStmt
+        %        - sRepeatStmt
+        %        - sRepeatEnd
+        %
+        %   MJM: 29Feb16: Added the following output tokens:
+        %        - sPublic
+        %        - sDefault
+        %        - sClass
+        %        - sLoopStmt
+        %        - sLoopBreakWhen
+        %        - sLoopEnd
+        %        - sSubstring
+        %        - sLength
+        %        - sReturn
+        %
+
+        sProgram
+        sParmBegin
+        sParmEnd
+        sConst
+        sType
+        sVar
+        sProcedure
+        sPublic
+        sBegin
+        sEnd
+        sNegate
+        sArray
+        sPacked
+        sFile
+        sRange
+        sCaseStmt
+        sDefault
+        sCaseEnd
+        sLabelEnd
+        sExpnEnd
+        sNullStmt
+        sAssignmentStmt
+        sSubscript
+        sCallStmt
+        sFieldWidth
+        sIfStmt
+        sThen
+        sElse
+        sClass
+        sLoopStmt
+        sLoopBreakWhen
+        sLoopEnd
+        sReturn
+        sEq
+        sNE
+        sLT
+        sLE
+        sGT
+        sGE
+        sAdd
+        sSubtract
+        sMultiply
+        sDivide
+        sModulus
+        sInfixOr
+        sOr
+        sInfixAnd
+        sAnd
+        sNot
+        sSubstring
+        sLength
+        sNewLine
+	sEndOfFile
+        lastSemanticToken = sEndOfFile;
+
+
+Output : 	% corresponds to coder.ssl input
+	tMultiply 
+	firstOutputToken = tMultiply
+	tDivide
+	tModulus
+	tAdd
+
+	% MPM 7th March: Add tConcatenate for string add.
+	tConcatenate
+	tSubtract
+	tEQ
+	tNE
+	tGT
+	tGE
+	tLT
+	tLE
+	tAnd
+	tInfixAnd
+	tOr
+	tInfixOr
+	tNegate
+	tNot
+	tChr
+	tOrd
+	tEoln
+	tEOF
+	tVarParm
+	tFetchAddress
+	tFetchInteger
+
+	% MPM 4th March: Change tFetchChar into tFetchString
+	% tFetchChar
+	tFetchString
+
+	tFetchBoolean
+	tAssignBegin
+	tAssignAddress
+	tAssignInteger
+	
+	% MPM 4th March: Change tAssignChar into tAssignString
+	% tAssignChar
+	tAssignString
+
+	tAssignBoolean
+	tStoreParmAddress
+	tStoreParmInteger
+
+	% MPM 4th March: Change tStoreParmChar into tStoreParmString
+	% tStoreParmChar
+	tStoreParmString
+
+	tStoreParmBoolean
+	tSubscriptBegin
+	tSubscriptAddress
+	tSubscriptInteger
+
+	% MPM 4th March: Change tStoreParmChar into tStoreParmString
+	% tSubscriptChar
+	tSubscriptString
+
+	tSubscriptBoolean
+	tArrayDescriptor
+	tFileDescriptor
+	tIfBegin
+	tIfEnd
+	tCaseBegin
+
+	% MPM 4th March: Remove the old While T-Code.
+	% tWhileBegin
+
+	% MPM 5th March: Remove the old Repeat T-Code.
+	% tRepeatBegin
+	% tRepeatControl
+	tCallBegin
+	tParmEnd
+	tProcedureEnd
+	tWriteBegin
+	tReadBegin
+	tTrapBegin
+	tWriteEnd
+	tReadEnd
+%%%%%%%% MJM 29Feb16: Added tFunctionResult
+%%%%%%%%              for cisc858 return types
+	tFunctionResult
+
+%%%%%%%%%%%%% New Added Tokens Feb: 29th%%%%%%%%%%%%
+	tLoopBegin
+	tLoopBreakWhen
+	tLoopTest
+	tLoopEnd
+	tCaseElse
+	tSubstring
+	tLength
+	tStringEqual
+
+
+	% Compound T-codes are those that take operands
+	tLiteralAddress 
+	firstCompoundOutputToken = tLiteralAddress
+	tLiteralInteger
+	
+	% MPM 4th March: remove redundant tLiteralChar
+	% seems like how to handle the removed tLiteralChar is not clear
+	%tLiteralChar
+
+	tLiteralBoolean
+	tLiteralString
+	% MPM 10th: remove redundant tStringDescriptor
+	% tStringDescriptor
+	
+	% MPM 10th March: tSkipString is no long needed.
+	%tSkipString
+	tIfThen
+	tIfMerge
+	tCaseSelect
+	tCaseMerge
+	tCaseEnd
+
+	% MPM 4th March: Remove the old While T-Code.
+	% tWhileTest
+	% tWhileEnd
+
+	% MPM 5th March: Remove the old Repeat T-Code.
+	% tRepeatTest
+	tSkipProc
+	tCallEnd
+	tLineNumber
+	tTrap
+	lastCompoundOutputToken = tTrap
+
+	tEndOfFile
+	lastOutputToken = tEndOfFile;
+
+Error :
+	eDuplicateName 
+	firstErrorCode = eDuplicateName
+	eMultiplyDefined
+	eUndefinedIdentifier
+	eConstantReqd
+	eNullString
+	eSubrangeReqd
+	eScalarReqd
+	eIntegerConstReqd
+	eBounds
+	eSimpleTypeReqd
+	eExternalUndeclared
+	eExternalDeclare
+	eFileVarReqd
+	eFileNameReqd
+	eOperandOperatorTypeMismatch
+	eNonScalarValParm
+	eParameterTypeMismatch
+	ePackedComponentByVar
+	eInsufficientActuals
+	eExtraActuals
+	eRecursiveCall
+	eProcedureReqd
+	eTypeIdentifierReqd
+	eIntegerExpnReqd
+	eBooleanExpnReqd
+
+	%MPM 5th March: change eCharExpnReqd into eStringExpnReqd
+	eStringExpnReqd
+	eArrayVarReqd
+	eVariableReqd
+	eDuplicateLabel
+	eExpnOperandReqd
+	eTypeMismatch
+	eInvalidExpn
+	eInputNotVisible
+	eOutputNotVisible
+	eFieldWidth
+
+	%MPM 5th March: change eCharFileVarReqd into eStringFileVarReqd
+	eStringFileVarReqd
+	eWriteExpn
+	eReadVar
+	lastSslErrorCode = eReadVar;
+
+
+type Integer :
+	zero = 0
+	one = 1
+	two = 2
+	three = 3
+	ten = 10
+
+	% These two sizes are machine dependent
+	byteSize = 1
+	wordSize = 4
+	
+	% MPM 4th March: Add a definition for stringSize and set its value to 1024
+	stringSize = 1024;
+
+
+type Boolean :
+	no
+	yes;
+
+
+type PredeclaredId :
+	% The predeclared identifiers of PT Pascal.
+	% This list must be in the exact same order as the 
+	% corresponding identifiers in the stdIdentifiers file.
+
+	firstPredeclaredId = 1
+
+	firstPredeclaredType = firstPredeclaredId
+	pidInteger = firstPredeclaredType
+	
+	% MPM 5th March: change pidChar into pidString
+	pidString
+
+	pidBoolean
+	pidText
+	lastPredeclaredType = pidText
+
+	pidTrue
+	pidFalse
+	pidReset
+	pidRewrite
+	pidWrite
+	pidWriteln
+	pidRead
+	pidReadln
+	pidChr
+	pidOrd
+	pidEoln
+	pidEof
+	pidAssign
+	lastPredeclaredId = pidAssign
+
+	pidInput
+	firstSpecialId = pidInput
+	pidOutput
+	lastSpecialId = pidOutput;
+
+
+type StdType :
+	stdInteger
+	
+	% MPM 4th March: Change stdChar into stdString
+	% stdChar
+	stdString
+
+	stdBoolean
+	stdText;
+
+
+
+
+
+
+
+mechanism SymbolTable :
+    % The symbol table associates declared attributes with names.
+    % A symbol table entry consists of 4 fields:  a name, a symbol kind
+    % (e.g. variable, type), a value (e.g. constant value, variable
+    % address) and a link to the symbol's type table entry.
+
+    oSymbolTblEnter
+	% Make a new symbol table entry with the attributes
+	% of the top symbol in the symbol stack.
+
+    oSymbolTblUpdate
+	% The symbol table entry referenced by the top entry
+	% in the symbol stack is given the attributes of the
+	% top symbol stack entry.
+
+    oSymbolTblPushScope
+	% Push a lexic level stack entry and set it to refer
+	% to the top entry in the symbol table.
+
+    oSymbolTblPopScope
+	% Pop the lexic level stack and remove all symbol table
+	% and associated type table entries for names local to
+	% the scope being exited, except for formal parameters
+	% which must be retained for type checking.
+
+%%%%%%%%% MJM 1Mar16: Added 'oSymbolTblStripScope' and 'oSymbolTblMergeScope'
+%%%%%%%%%             to handle "popping" the Symbol table scope properly
+%%%%%%%%%             after a 'class' declaration. To do this, both operations
+%%%%%%%%%             need to be called in sequence instead of oSymbolTblPopScope
+%%%%%%%%%             at the end of the 'class' rule.  This is done to make the 
+%%%%%%%%%             symbols inside the class invisible, however, the public
+%%%%%%%%%             functions/procedures remain visible.
+
+    oSymbolTblStripScope
+%%%%%%%% MJM 29Feb16: Strips the top level of the symbol stack by setting
+%%%%%%%%              the identSymbolTbl references to the entries in the
+%%%%%%%%              symbolTbl at the next lower Lexical Level. 
+%%%%%%%%              Notice that this is only done for non-Public entries, 
+%%%%%%%%              which will be dealt with with the oSymbolMergeScope
+%%%%%%%%              Operation that gets called after this for classes. 
+
+    oSymbolTblMergeScope
+%%%%%%%% MJM 29Feb16: This merges the top two scopes in the symbol table 
+%%%%%%%%              by decrementing the lexical level but not changing the 
+%%%%%%%%              symbol table top. If this was called immediately after 
+%%%%%%%%              oSymbolTblStripScope (which it should be), then only the 
+%%%%%%%%              public procedures from the top scope will be visible, 
+%%%%%%%%              and only they will be merged. 
+%%%%%%%%              We are doing this so that the Public procedures will 
+%%%%%%%%              become visible to the enclosing Class scope or Main 
+%%%%%%%%              program scope. 
+
+    oSymbolTblSearchConvertFunctionReturnType
+%%%%%%%% MJM 29Feb16: This traverses the top scope in the symbol table 
+%%%%%%%%              until it finds the 'syProcedure' or 'syPublicProcedure'
+%%%%%%%%              kind, and then sets it to 'syFunction' or 
+%%%%%%%%              'syPublicFuntion'.
+
+    oSymbolTblChooseCurrentScopeIsFunction >> Boolean
+%%%%%%%% MJM 7Mar16: If this is a function, then the bottom of the scope
+%%%%%%%%              in the table should be the 'syFunction' or 
+%%%%%%%%              'syPublicFunction' kind.
+%%%%%%%%              Return true/yes if the scope is a function
+%%%%%%%%              and false/no otherwise.
+
+
+    oSymbolTblLookupExternal >> Boolean;
+	% Return true if any external names (program parameters)
+	% have not yet been declared.
+
+
+
+
+
+
+% Symbol Stack types and mechanism
+
+type SymbolKind :
+	syConstant
+	syType
+	syVariable
+	syVarParameter
+	syProcedure
+	syFunction
+%%%%%%%% MJM 29Feb16: Added 'syClass' for classes
+%%%%%%%%              'syPublicProcedure' and
+%%%%%%%%              'syPublicFunction' to account for
+%%%%%%%%              global nature of 'public'. 
+        syClass
+        syPublicProcedure
+        syPublicFunction
+	syExternal
+	syExpression
+	syUndefined;
+
+type StdRoutine :
+	rtReset = 1
+	rtRewrite
+	rtWrite
+	rtWriteln
+	rtRead
+	rtReadln
+	rtOrd
+	rtChr
+	rtEoln
+	rtEof
+	rtAssign
+	rtNull;
+
+type StdFile :
+	stdInput
+	stdOutput
+	stdNull;
+
+
+
+mechanism SymbolStack :
+    % A symbol stack entry is a temporary copy of a symbol table
+    % entry.  During declaration processing the attributes of a
+    % name are built up in the symbol stack before being transferred
+    % to an entry in the symbol table.  During statement processing
+    % the symbol stack, using copies of symbol table entries, checks
+    % that symbols are properly accessed.  The stack structure
+    % allows arbitrary nesting of statements and expressions.
+    % A symbol stack entry consists of five fields: a reference
+    % to the associated symbol table entry, a name, a symbol kind, a
+    % value or address and a reference to the type table entry
+    % associated with this symbol.
+
+    oSymbolStkPush (SymbolKind)
+	% Push an entry and set its kind field to the parameter value.
+
+    oSymbolStkPushIdentifier
+	% Lookup the last accepted identifier in the symbol table.
+	% If found, push an entry with the attributes of the symbol
+	% table entry.  Otherwise, push an entry with kind syUndefined.
+
+    oSymbolStkPushLocalIdentifier
+	% Special case of PushIdentifier, the symbol table lookup is
+	% restricted to the current scope.
+
+    oSymbolStkPushStandardVariable (StdFile)
+	% Used to push entries for the standard files input and output.
+	% If the parameter variable was listed in the program heading
+	% and is visible in the current scope, push an entry with
+	% the variable's symbol table attributes, otherwise push an
+	% entry with kind syUndefined.
+
+    oSymbolStkPushFormalParameter
+	% The top entry is a procedure symbol.  The top count stack
+	% entry indicates which formal parameter is to be pushed
+	% (e.g. first, second...). Push The indicated formal parameter
+	% symbol, setting its attributes from its symbol table entry.
+
+    oSymbolStkSetKind (SymbolKind)
+	% Set the top entry's kind field to the parameter value.
+
+    oSymbolStkLinkToStandardType (StdType)
+	% Set the top entry's type reference field to point to the
+	% indicated standard type table entry (e.g. tpInteger).
+
+    oSymbolStkEnterValue
+	% The value field of the top entry is set to the value
+	% of the top value stack entry.
+
+    oSymbolStkEnterStringValue
+	% The value field of the top entry is set to the character
+	% value of the last accepted literal string (must be of length 1).
+
+    oSymbolStkEnterCodeAddress
+	% The address field of the top entry is set to the current code
+	% area free-address pointer.
+
+    oSymbolStkEnterDataAddress
+	% The address field of the top entry is set to the current data
+	% area free-address pointer.
+
+    oSymbolStkEnterTypeReference
+	% The top entry's type reference field is set to the type reference
+	% field of the top type stack entry.
+
+    oSymbolStkChooseKind >> SymbolKind
+	% Return the value of the top entry's kind field.
+
+    oSymbolStkChooseStandardFile >> StdFile
+	% If the top entry is a standard variable (input or output) return
+	% a value indicating which variable it is, otherwise return null.
+
+    oSymbolStkChooseStandardRoutine >> StdRoutine
+	% If the top entry is a standard routine symbol, return a
+	% value indicating which routine it is, otherwise return null.
+
+    oSymbolStkPop;
+	% Pop the symbol stack
+
+
+
+
+
+mechanism TypeTable :
+    % A type table entry consists of 4 fields:  a type kind (e.g. integer,
+    % char), a lower bound and an upper bound for array or subrange types
+    % (these sometimes contain other information such as number of parameters
+    % for a procedure) and a (possibly null) link to the type table entry
+    % for the component type (used for array and file types).
+
+    oTypeTblEnter
+	% Make a new type table entry with the attributes of the 
+	% top type stack entry.
+
+    oTypeTblUpdate;
+	% The type table entry referenced by the top entry in the
+	% type stack is given the attributes of the top type stack entry.
+
+
+
+
+
+% Type Stack types and mechanism
+
+
+type TypeKind :
+	tpInteger
+	
+	% MPM: 4th March: Change tpChar into tpString
+	%tpChar
+	tpString
+
+	tpBoolean
+	tpSubrange
+	tpArray
+	tpPackedArray	% string literal
+	tpFile
+	tpNull;
+
+
+
+mechanism TypeStack :
+    % A type stack entry is a temporary copy of a type table
+    % entry.  During declaration processing the attributes of a
+    % name are built up in the type stack before being transferred
+    % to an entry in the type table.  During statement processing
+    % the type stack, using copies of type table entries, checks
+    % that symbols are properly accessed.  The stack structure
+    % allows arbitrary nesting of statements and expressions.
+    % A type stack entry consists of five fields:  a reference
+    % to the associated type table entry, a type kind, a lower
+    % bound, an upper bound and a reference to the type table
+    % entry for this type's component type.
+
+
+    oTypeStkPush (TypeKind)
+	% Push a type stack entry and set its kind to the parameter value.
+
+    oTypeStkPushSymbol
+	% Push an entry and set its attributes from the type table 
+	% entry referenced by the top symbol stack entry.
+
+    oTypeStkPushComponent
+	% Push an entry and set its attributes from the type table
+	% entry referenced by the current top type stack entry.
+
+    oTypeStkSetKind (TypeKind)
+	% Set the top entry's kind field to the parameter value.
+
+    oTypeStkSetRecursionFlag (Boolean)
+	% Mark the top entry, a procedure type, to indicate whether the
+	% procedure is in the process of being defined.  Used to detect
+	% self recursive calls.
+
+    oTypeStkChooseRecursionFlag >> Boolean
+	% Return the value of the top entry's recursion flag
+
+    oTypeStkSetPackedComponentFlag (Boolean)
+	% Mark the top entry to indicate whether the variable it describes
+	% is a component of a packed structure (i.e. a subscripted packed
+	% array variable).  Used to detect the passing of a component of a
+	% packed structure as an actual parameter to a variable parameter.
+
+    oTypeStkChoosePackedComponentFlag >> Boolean
+	% Return the value of the top entry's packed component flag.
+
+    oTypeStkLinkToStandardComponentType (StdType)
+	% Set the top entry's type reference field to point to
+	% the parameter standard type table entry.
+
+    oTypeStkEnterBounds
+	% Set the lower and upper bound fields of the top entry to
+	% the top two values in the value stack (top value is upper bound).
+
+    oTypeStkVerifyBounds >> Boolean
+	% Return true if the lower bound field of the top entry is less
+	% than or equal to the upper bound field, return false otherwise.
+
+    oTypeStkEnterParameterCount
+	% Set the parameter count field of the top entry to the top
+	% count stack value.
+
+    oTypeStkCompareParameterCount >> Boolean
+	% Return true if the top entry's parameter count field matches
+	% the top count stack entry, otherwise return false.
+
+    oTypeStkEnterComponentReference
+	% Set the component reference field of the second entry to
+	% the type reference field of the top entry. (The structure type
+	% entry is beneath the component type entry on the stack.)
+
+    oTypeStkChooseKind >> TypeKind
+	% Return the value of the top entry's kind field.
+
+    oTypeStkChooseTypeReference >> Boolean
+	% Return true if the top entry's type reference field is non-null
+	% (i.e. the entry has an associated type table entry), otherwise
+	% return false.
+
+    oTypeStkCompareNames >> Boolean
+	% Return true is the top two entries were declared using the
+	% same type name (i.e. their type reference fields refer to
+	% the same type table entry), otherwise return false.
+
+    oTypeStkSwap
+	% Swap the top two entries
+
+    oTypeStkPop
+	% Pop the type stack
+
+%%%%%%%% MJM 10Mar16: New mechanism to handle Function return type
+    oTypeStkPopAndCopyKind;
+%%%%%%%%% MJM 10Mar16: This copies the Kind from the top entry in the
+%%%%%%%%%              type stack into the next lower stack entry,
+%%%%%%%%%              then pops the stack.
+
+
+
+% Emit type and mechanism
+
+type TrapKind :
+	trHalt = 0
+	trReset = 1
+	trRewrite = 2
+	trRead = 3
+	trReadln = 4
+	trWrite = 5
+	trWriteln = 6
+	trWriteInteger = 7
+	trReadInteger = 8
+	trAssign = 9
+	trReadString = 107
+	trWriteString = 108;
+
+
+mechanism Emit :
+    % Emit writes to the output "t-code" stream (the code area),
+    % incrementing the code area pointer as it does so.
+
+
+    oEmitNullAddress
+	% Emit a null address symbol as the operand of a forward
+	% branch instruction to be replaced by a real address later
+	% when the target becomes known.
+
+    oEmitValue
+	% Emit the value of the top value stack entry.
+
+    oEmitString
+	% Emit the text of the last accepted literal string token.
+
+    oEmitDataAddress
+	% Emit the current value of the data area free-address pointer.
+
+    oEmitTrapKind (TrapKind)
+	% Emit the parameter value which
+	% identifies the last emitted trap instruction
+
+    oEmitCaseBranchTable;
+	% Emit a table of code addresses to be used to branch to a
+	% selected case alternative statement.  The table is prefixed
+	% by the lowest and highest label values which occurred in the
+	% case statement.  The code addresses are emitted in ascending
+	% order of corresponding label values.
+
+
+
+
+
+mechanism Allocate :
+    % Data allocation is performed statically,
+    % so at the end of this pass the runtime
+    % displacements of all variables are known.
+    % The allocate mechanism alters only the data
+    % area free-address pointer.
+
+    oAllocateAlignOnWord
+	% Machine dependent.  Align the data area free-address
+	% pointer on a word boundary.
+
+    oAllocateVariable
+	% Allocate a variable using the structure type and component type
+	% information on top of the type stack (structure type is on top).
+
+    oAllocateVarParameter
+	% Allocate space to hold an address.
+
+    oAllocateDescriptor;
+	% Allocate space for a data descriptor (array bound or file descriptor).
+
+
+
+
+
+mechanism ValueStack :
+    % The value stack holds integer values.  It is used during
+    % declaration processing to handle values associated with
+    % symbols (e.g. constant symbol values) and types (e.g. array
+    % bounds).  It is used during statement processing to handle
+    % values occurring in expressions.
+
+    oValuePush (Integer)
+	% Push the parameter value.
+
+    oValuePushInteger
+	% Push the value of the last-accepted integer token.
+
+    oValuePushStringLength
+	% Push the length of the last-accepted string token.
+
+    oValuePushSymbol
+	% Push the value field of the top symbol stack entry.
+
+    oValuePushCount
+	% Push the value of the top count stack entry.
+
+    oValuePushTypeStkLowerBound
+    oValuePushTypeStkUpperBound
+	% Push the lower (upper) bound field of the top type stack entry.
+
+    oValueNegate
+	% Negate the top entry.
+
+    oValueChoose >> Integer
+	% Return the value of the top entry.
+
+    oValuePop;
+	% Pop the value stack.
+
+
+
+
+
+mechanism CaseStack :
+    % The case stack mechanism is used only in processing case
+    % statements.  A case stack entry consists of two fields:
+    % a label value and a code area pointer which references the
+    % statement which corresponds to that label value.  A case
+    % stack display is used to handle nested case statements.
+
+    oCasePushDisplay
+	% Push a case display entry which references the current
+	% top of the case label stack.  Used to handle nested cases.
+
+    oCasePopDisplay
+	% Set the case label stack top to the value of the case display
+	% top and pop the case display.
+
+    oCaseLookupLabel >> Boolean
+	% Returns true if the top value stack entry matches a
+	% label in the current-case-statement section (as indicated
+	% by the case display) of the label stack.
+
+    oCasePushLabel;
+	% Push the top value stack entry onto the case label stack and
+	% push the address of the next instruction to be emitted to the
+	% code area which will be the case statement alternative
+	% corresponding to the just-pushed label.
+
+
+
+
+
+mechanism CountStack :
+    % The count stack contains integer values.  It is used to
+    % count items such as formal parameters.
+
+    oCountPush (Integer)
+	% Push the parameter value onto the count stack.
+
+    oCountPushValue
+	% Push the top value stack entry onto the count stack.
+
+    oCountPop
+	% Pop the count stack.
+
+    oCountIncrement
+	% Increment the value of the top count stack entry.
+
+    oCountDecrement
+	% Decrement the value of the top count stack entry.
+
+    oCountChoose >> Integer;
+	% Return the value of the top count stack entry.
+
+
+
+
+
+mechanism FixAddress :
+    % FixAddress is used to fill in the targets of forward branches
+    % when they become known, and to remember the targets of
+    % not-yet-emitted backward branches.
+
+    oFixPushForwardBranch
+	% Push the current code area pointer which is the address
+	% of a forward branch instruction which must have its target
+	% address filled in when it becomes known.
+
+    oFixPopForwardBranch
+	% Set the target address of the popped branch instruction
+	% to be the current code area pointer.
+
+    oFixPushTargetAddress
+	% Push the current code area pointer which will serve as the target
+	% address of a backward branch instruction to be emitted later.
+
+    oFixPopTargetAddress
+	% Set the target of the just-emitted backward branch instruction
+	% to be the popped address.
+
+    oFixPopAndEnterValue
+	% Set the target of the popped branch instruction to be
+	% the top value stack entry.
+
+    oFixSwap;
+	% Swap the top two fix stack entries.
+
+
+
+
+
+rules
+
+
+Program :
+	sProgram
+	% Program scope, distinct from implicit scope surrounding
+	% program which contains predefined names
+	oSymbolTblPushScope
+	% Count is used to assign file descriptors to non-standard
+	% files.  We assume that "input" has file descriptor 1,
+	% "output" has descriptor 2 and user defined files have
+	% descriptors 3,4,...,n.
+	oCountPush(three)
+	{[
+	    | sParmEnd:
+		>
+	    | *:
+		@ProgramParameter
+	]}
+	oCountPop
+	@Block
+	% Check that all file parameters have been declared
+	[ oSymbolTblLookupExternal
+	    | yes:
+		#eExternalUndeclared
+	    | *:
+	]
+	% Pop program scope
+	oSymbolTblPopScope
+	% Return control to the runtime
+	% monitor at the end of program execution
+	.tTrapBegin
+	.tTrap  oEmitTrapKind(trHalt);
+
+ProgramParameter :
+	% Program parameters are external file names.  With the
+	% exception  of the standard files input and output, which
+	% are automatically declared if they are listed, these
+	% files must be declared in the global program scope.
+
+	sIdentifier  oSymbolStkPushLocalIdentifier
+	[ oSymbolStkChooseKind
+	    | syUndefined:	% a new name in this scope
+		[ oSymbolStkChooseStandardFile	% based on text of symbol
+		    | stdInput:
+			% Standard files (input and output) appearing in
+			% the program header are automatically declared.
+			oSymbolStkSetKind(syVariable)
+			oSymbolStkLinkToStandardType(stdText)
+			oTypeStkPushSymbol
+			% set up a file descriptor for the allocate mechanism
+			oValuePush(one)	% Standard input file descriptor is 1
+		    | stdOutput:
+			oSymbolStkSetKind(syVariable)
+			oSymbolStkLinkToStandardType(stdText)
+			oTypeStkPushSymbol
+			oValuePush(two)	% Standard output file descriptor is 2
+		    | *:	% a non-standard file
+			oSymbolStkSetKind(syExternal)	% pending declaration
+			oTypeStkPush(tpFile)		
+			oValuePushCount
+			% Increment the descriptor value for
+			% user declared files.
+			oCountIncrement
+		]
+
+		% As a side effect, AllocateVar emits the top value
+		% stack entry to the code area as a file descriptor.
+		@AllocateVar
+		oSymbolTblEnter
+	    | *:
+		#eDuplicateName
+	]
+	oSymbolStkPop
+	oTypeStkPop
+	oValuePop;
+
+Block :
+	% The parser has flagged phase errors, but has emitted out-of-phase
+	% definitions with the intent of providing better error repair.
+
+	{[
+	    | sProcedure: % Prodecures and Functions
+		@ProcedureDefinition
+%%%%%%%% MJM 29Feb16: Add new call to handle 'class'
+            | sClass:
+                @ClassDefinition
+	    | sConst:
+		@ConstantDefinitions
+	    | sType:
+		@TypeDefinitions
+	    | sVar:
+		@VariableDeclarations
+	    | *:
+		>
+	]}
+	sBegin
+	@BeginStmt
+
+%%%%%%%%% MJM 11Mar16: Add handling of sReturn.
+        [
+            | sReturn:
+                @ReturnStmt
+            | *:
+        ]
+
+	;
+
+ConstantDefinitions :		% Process named constant definitions
+	{[
+	    | sIdentifier:
+		@ConstantValue
+	    | *:
+		>
+	]};
+
+% MPM 12th March: modify it to only handle one Constant definition per line.
+ConstantValue :		% An identifier token has just been accepted
+	oSymbolStkPushLocalIdentifier
+	[ oSymbolStkChooseKind
+	    | syUndefined:
+	    | syExternal:
+		% A program parameter must be declared as a file variable
+		#eExternalDeclare
+	    | *:
+		#eMultiplyDefined
+		% The new definition will now obscure the old one
+	]
+	%oSymbolStkSetKind(syConstant)
+	[
+	    | sInteger:
+		oValuePushInteger
+		oSymbolStkLinkToStandardType(stdInteger)
+		[
+		    | sNegate:
+			oValueNegate
+		    | *:
+		]
+		oSymbolStkEnterValue
+		oValuePop
+	    | sIdentifier:
+		oSymbolStkPushIdentifier
+		[ oSymbolStkChooseKind
+		    | syUndefined:
+			#eUndefinedIdentifier
+		    | *:
+		]
+		[ oSymbolStkChooseKind
+		    | syConstant:
+			oValuePushSymbol
+		    | *:
+			#eConstantReqd
+			oSymbolStkPop
+			@SymbolStkPushIntegerConstant
+			oValuePush(one)
+		]
+		oTypeStkPushSymbol
+		[
+		    | sNegate:
+			[ oTypeStkChooseKind
+			    | tpInteger:
+				oValueNegate
+			    | *:
+				#eOperandOperatorTypeMismatch
+			]
+		    | *:
+		]
+		oSymbolStkPop	% constant value symbol
+		oSymbolStkEnterTypeReference
+		oTypeStkPop
+		oSymbolStkEnterValue
+		oValuePop
+	    | sLiteral:
+	       %MPM 12th March, this should be handle in var's way.
+	       % oValuePush(one)	% implicit lower bound of string index type
+	       % oValuePushStringLength
+	       % [ oValueChoose
+	       %     | zero:
+	       % 	#eNullString
+	       % 	% MPM 5th March: Change SymbolStkPushCharConstant into SymbolStkPushStringConstant
+	       % 	@SymbolStkPushStringConstant
+	       %     | one:
+	       % 	% MPM 4th March: Change stdChar into stdString
+	       % 	oSymbolStkLinkToStandardType(stdString)
+	       % 	oSymbolStkEnterStringValue
+	       %     | *:
+	       % 	% Emit a branch around the string since
+	       % 	% it is stored in the code area
+	       % 	% MPM 10th March: tSkipString is no long needed.
+	       % 	%.tSkipString
+	       % 	oFixPushForwardBranch
+	       % 	oEmitNullAddress
+	       % 	.tLiteralString
+	       % 	oEmitValue	% string length
+	       % 	% The string "address" is the location (offset)
+	       % 	% of the first character of the string
+	       % 	oSymbolStkEnterCodeAddress
+	       % 	oEmitString
+	       % 	oFixPopForwardBranch
+	       % 	oTypeStkPush(tpPackedArray)	% means literal string
+	       % 	oTypeStkEnterBounds
+	       % 	% MPM 4th March: Change stdChar into stdString
+	       % 	oTypeStkLinkToStandardComponentType(stdString)
+	       % 	oTypeTblEnter
+	       % 	oSymbolStkEnterTypeReference
+	       % 	oTypeStkPop
+	       % ]
+	       % oValuePop	% Upper bound
+	       % oValuePop	% Lower bound 
+%%%%%%%%%%%%%%% MPM 15th March, add handing of constant string definition to behave like var.
+	      .tAssignBegin
+	      .tLiteralAddress
+              oSymbolStkLinkToStandardType(stdString)
+
+	      oSymbolStkPushLocalIdentifier
+	      oTypeStkPushSymbol
+	      oAllocateAlignOnWord   % allocate memory space for var
+	      oSymbolStkEnterDataAddress
+	      oEmitDataAddress
+	      oAllocateVarParameter
+	      oTypeStkPop
+	      .tLiteralString
+
+	      oValuePushStringLength
+	      oEmitValue
+              oValuePop
+	      oEmitString
+              oSymbolStkSetKind(syVariable)
+              oSymbolStkLinkToStandardType(stdString)
+	      .tAssignString 
+	]
+	oSymbolTblEnter
+	oSymbolStkPop;		% name being defined
+
+%ConstantValue :		% An identifier token has just been accepted
+%	oSymbolStkPushLocalIdentifier
+%	[ oSymbolStkChooseKind
+%	    | syUndefined:
+%	    | syExternal:
+%		% A program parameter must be declared as a file variable
+%		#eExternalDeclare
+%	    | *:
+%		#eMultiplyDefined
+%		% The new definition will now obscure the old one
+%	]
+%	oSymbolStkSetKind(syConstant)
+%	[
+%	    | sInteger:
+%		oValuePushInteger
+%		oSymbolStkLinkToStandardType(stdInteger)
+%		[
+%		    | sNegate:
+%			oValueNegate
+%		    | *:
+%		]
+%		oSymbolStkEnterValue
+%		oValuePop
+%	%    | sIdentifier:
+%	%	oSymbolStkPushIdentifier
+%	%	[ oSymbolStkChooseKind
+%	%	    | syUndefined:
+%	%		#eUndefinedIdentifier
+%	%	    | *:
+%	%	]
+%	%	[ oSymbolStkChooseKind
+%	%	    | syConstant:
+%	%		oValuePushSymbol
+%	%	    | *:
+%	%		#eConstantReqd
+%	%		oSymbolStkPop
+%	%		@SymbolStkPushIntegerConstant
+%	%		oValuePush(one)
+%	%	]
+%	%	oTypeStkPushSymbol
+%	%	[
+%	%	    | sNegate:
+%	%		[ oTypeStkChooseKind
+%	%		    | tpInteger:
+%	%			oValueNegate
+%	%		    | *:
+%	%			#eOperandOperatorTypeMismatch
+%	%		]
+%	%	    | *:
+%	%	]
+%	%	oSymbolStkPop	% constant value symbol
+%	%	oSymbolStkEnterTypeReference
+%	%	oTypeStkPop
+%	%	oSymbolStkEnterValue
+%	%	oValuePop
+%	    %| sLiteral:
+%	    %    oValuePush(one)	% implicit lower bound of string index type
+%	    %    oValuePushStringLength
+%	    %    [ oValueChoose
+%	    %        | zero:
+%	    %    	#eNullString
+%	    %    	% MPM 5th March: Change SymbolStkPushCharConstant into SymbolStkPushStringConstant
+%	    %    	@SymbolStkPushStringConstant
+%	    %        | one:
+%	    %    	% MPM 4th March: Change stdChar into stdString
+%	    %    	oSymbolStkLinkToStandardType(stdString)
+%	    %    	oSymbolStkEnterStringValue
+%	    %        | *:
+%	    %    	% Emit a branch around the string since
+%	    %    	% it is stored in the code area
+%	    %    	% MPM 10th March: tSkipString is no long needed.
+%	    %    	%.tSkipString
+%	    %    	oFixPushForwardBranch
+%	    %    	oEmitNullAddress
+%	    %    	.tLiteralString
+%	    %    	oEmitValue	% string length
+%	    %    	% The string "address" is the location (offset)
+%	    %    	% of the first character of the string
+%	    %    	oSymbolStkEnterCodeAddress
+%	    %    	oEmitString
+%	    %    	oFixPopForwardBranch
+%	    %    	oTypeStkPush(tpPackedArray)	% means literal string
+%	    %    	oTypeStkEnterBounds
+%	    %    	% MPM 4th March: Change stdChar into stdString
+%	    %    	oTypeStkLinkToStandardComponentType(stdString)
+%	    %    	oTypeTblEnter
+%	    %    	oSymbolStkEnterTypeReference
+%	    %    	oTypeStkPop
+%	    %    ]
+%	    %    oValuePop	% Upper bound
+%	    %    oValuePop	% Lower bound
+%	]
+%	oSymbolTblEnter
+%	oSymbolStkPop;		% name being defined
+
+
+% MPM 12th March: Change the semantic handing of Type definitions to handle one type definition per line.
+TypeDefinitions :	% process named type definitions
+	{[
+	    | sIdentifier:
+		oSymbolStkPushLocalIdentifier
+		@TypeBody
+		[ oSymbolStkChooseKind
+		    | syType:
+			@OneTypePerLine
+		    | syUndefined:
+		    | syExternal:
+			% Program parameters must be declared as file variables
+			#eExternalDeclare
+			% Ignore this definition
+			oSymbolStkPop
+			oTypeStkPop
+			oTypeStkPop
+			>>
+		    | *:
+			#eMultiplyDefined
+			% The new definition will obscure the old one
+		]
+	     | *:
+	         >
+	]};
+
+OneTypePerLine:
+	% Create type table entries for the object as necessary.
+		% Where named types were used in the declaration, a type
+		% reference will be present, otherwise the type reference
+		% fields will be null.
+		oTypeStkSwap	% structure on top
+		[ oTypeStkChooseKind
+		    | tpArray:
+			oTypeStkSwap	% component on top
+			[ oTypeStkChooseTypeReference
+			    | no:
+				% No type table entry exists,
+				% so create one.
+				oTypeTblEnter
+			    | *:
+			]
+			oTypeStkEnterComponentReference
+			oTypeStkSwap	% structure on top
+		    | *:
+		]
+		[ oTypeStkChooseTypeReference
+		    | no:
+			oTypeTblEnter
+		    | *:
+		]
+		oSymbolStkEnterTypeReference
+		oSymbolTblEnter
+		oSymbolStkPop
+		oTypeStkPop
+		oTypeStkPop;
+
+%TypeDefinitions :	% process named type definitions
+%	{[
+%	    | sIdentifier:
+%		oSymbolStkPushLocalIdentifier
+%		@TypeBody
+%		[ oSymbolStkChooseKind
+%		    | syUndefined:
+%		    | syExternal:
+%			% Program parameters must be declared as file variables
+%			#eExternalDeclare
+%			% Ignore this definition
+%			oSymbolStkPop
+%			oTypeStkPop
+%			oTypeStkPop
+%			>>
+%		    | *:
+%			#eMultiplyDefined
+%			% The new definition will obscure the old one
+%		]
+%		oSymbolStkSetKind(syType)
+%
+%		% Create type table entries for the object as necessary.
+%		% Where named types were used in the declaration, a type
+%		% reference will be present, otherwise the type reference
+%		% fields will be null.
+%		oTypeStkSwap	% structure on top
+%		[ oTypeStkChooseKind
+%		    | tpArray:
+%			oTypeStkSwap	% component on top
+%			[ oTypeStkChooseTypeReference
+%			    | no:
+%				% No type table entry exists,
+%				% so create one.
+%				oTypeTblEnter
+%			    | *:
+%			]
+%			oTypeStkEnterComponentReference
+%			oTypeStkSwap	% structure on top
+%		    | *:
+%		]
+%		[ oTypeStkChooseTypeReference
+%		    | no:
+%			oTypeTblEnter
+%		    | *:
+%		]
+%		oSymbolStkEnterTypeReference
+%		oSymbolTblEnter
+%		oSymbolStkPop
+%		oTypeStkPop
+%		oTypeStkPop
+%	    | *:
+%		>
+%	]};
+
+TypeBody :
+	% Push a type stack entry for the structure type (e.g. array)
+	% and a type stack entry for its component type.  In the case
+	% of scalars a dummy component type is pushed.
+
+	[
+	    | sArray:
+		[
+		    | sPacked:
+			% no difference in PT
+		    | *:
+		]
+		oTypeStkPush(tpArray)
+		@IndexType
+		@ComponentType
+	    | sFile:
+		oTypeStkPush(tpFile)
+		@ComponentType
+	    | *:		% named type or subrange
+		@SimpleType
+		[ oSymbolStkChooseKind
+		    | syType:
+			oTypeStkPushSymbol
+			[ oTypeStkChooseKind
+			    | tpArray:
+				oTypeStkPushComponent
+			    | *:
+				oTypeStkPush(tpNull)	% dummy component type
+			]
+			oSymbolStkPop
+		    | *:	% subrange specification
+			oSymbolStkPop
+			oTypeStkPush(tpSubrange)
+			oTypeStkEnterBounds
+			[ oTypeStkVerifyBounds
+			    | yes:
+			    | *:
+				oValuePop
+				@ValuePushValuePlusOne
+				oTypeStkEnterBounds
+			]
+			oValuePop	% subrange upper
+			oValuePop	%	   lower bound
+			oTypeStkPush(tpNull)	% dummy component type
+		]
+	];
+
+IndexType :
+	% Fill in the index bound fields of an array type stack entry
+
+	@SimpleType
+	[ oSymbolStkChooseKind
+	    | syType:
+		% If the index type was specified with a named subrange type,
+		% push the bounds for that named type onto the value stack.
+		oTypeStkPushSymbol
+		[ oTypeStkChooseKind
+		    | tpSubrange:
+			oValuePushTypeStkLowerBound
+			oValuePushTypeStkUpperBound
+		    | *:
+			#eSubrangeReqd
+			oValuePush(one)
+			@ValuePushValuePlusOne
+		]
+		oTypeStkPop
+	    | *:
+	]
+	oSymbolStkPop
+
+	% Enter the bounds on the value stack into the structure type entry.
+	oTypeStkEnterBounds
+	[ oTypeStkVerifyBounds
+	    | yes:
+	    | *:
+		oValuePop
+		@ValuePushValuePlusOne
+		oTypeStkEnterBounds
+	]
+	oValuePop	% subrange upper
+	oValuePop;	% 	   lower bound
+
+ComponentType :
+	% Push a type stack entry for a component type.
+
+	@SimpleType
+	[ oSymbolStkChooseKind
+	    | syType:
+		oTypeStkPushSymbol
+		[ oTypeStkChooseKind
+		    | tpArray, tpFile:
+			% Component type must be a scalar.
+			#eScalarReqd
+			oSymbolStkPop
+			oTypeStkPop
+			@SymbolStkPushIntegerType
+			oTypeStkPushSymbol
+		    | *:
+		]
+		oSymbolStkPop
+	    | *:	% type was specified with a subrange
+		oSymbolStkPop
+		oTypeStkPush(tpSubrange)
+		oTypeStkEnterBounds
+		[ oTypeStkVerifyBounds
+		    | yes:
+		    | *:
+			oValuePop
+			@ValuePushValuePlusOne
+			oTypeStkEnterBounds
+		]
+		oValuePop	% subrange upper
+		oValuePop	%	   lower bound
+	];
+
+SimpleType :
+	% Push a Symbol Stack entry for a named type or a subrange.
+	% If the type is a subrange, push the bounds onto the value
+	% stack and mark the symbol as a constant to distinguish
+	% it from a named type.
+
+	[
+	    | sIdentifier:
+		% either a subrange specification or a type identifier
+		oSymbolStkPushIdentifier
+		[ 
+		    | sRange:	
+			% subrange specification
+			[ oSymbolStkChooseKind
+			    | syConstant:	
+				oTypeStkPushSymbol
+				[ oTypeStkChooseKind
+				    | tpInteger:	
+					oValuePushSymbol
+				    | *:
+					#eIntegerConstReqd
+					oValuePush(one)
+				]
+				[
+				    | sNegate:
+					oValueNegate
+				    | *:
+				]
+				oTypeStkPop
+			    | syUndefined:
+				#eUndefinedIdentifier
+				oValuePush(one)
+			    | *:
+				#eIntegerConstReqd
+				oValuePush(one)
+			]
+			@SubrangeUpperBound
+		    | *:	
+			% type identifier
+			[ oSymbolStkChooseKind
+			    | syType:
+			    | syUndefined:
+				#eUndefinedIdentifier
+				oSymbolStkPop
+				@SymbolStkPushIntegerType
+			    | *:
+				#eSimpleTypeReqd
+				oSymbolStkPop
+				@SymbolStkPushIntegerType
+			]
+		]
+	    | sInteger:		% lower bound of subrange specification
+		oValuePushInteger
+		oSymbolStkPush(syConstant)
+		[
+		    | sNegate:
+			oValueNegate
+		    | *:
+		]
+		sRange
+		@SubrangeUpperBound
+	    | *:
+		#eSimpleTypeReqd
+		@SymbolStkPushIntegerType
+	];
+
+SubrangeUpperBound :
+	% Push the upper bound of a subrange onto the value stack.
+	[
+	    | sInteger:
+		oValuePushInteger
+	    | sIdentifier:
+		oSymbolStkPushIdentifier
+		[ oSymbolStkChooseKind
+		    | syConstant:
+			oTypeStkPushSymbol
+			[ oTypeStkChooseKind
+			    | tpInteger:
+				oValuePushSymbol
+			    | *:
+				#eIntegerConstReqd
+				@ValuePushValuePlusOne
+			]
+			oTypeStkPop
+		    | syUndefined:
+			#eUndefinedIdentifier
+			@ValuePushValuePlusOne
+		    | *:
+			#eIntegerConstReqd
+			@ValuePushValuePlusOne
+		]
+		oSymbolStkPop
+	    | *:
+		#eIntegerConstReqd
+		@ValuePushValuePlusOne
+	]
+	[
+	    | sNegate:
+		oValueNegate
+	    | *:
+	];
+
+
+% MPM 12th March: Allow handling of variable declarations to allow multiple identifiers declared using
+%%%%%%%%%%%%%%%%%%%One Type, but only one declaration per definition
+VariableDeclarations :
+	oCountPush(one)
+	sIdentifier
+	oSymbolStkPushLocalIdentifier
+	[ oSymbolStkChooseKind
+	    | syUndefined, syExternal:
+            | *:
+	       #eMultiplyDefined
+	]
+	{[
+	    |sVar:
+		sIdentifier
+		oCountIncrement
+		oSymbolStkPushLocalIdentifier
+		[ oSymbolStkChooseKind
+		    | syUndefined, syExternal:
+		    |*:
+			#eMultiplyDefined
+		]
+	     | *:
+		>
+	]}
+	@VariableAttributes
+	oCountPop;	
+
+
+VariableAttributes :
+	% Push the variable's structure and
+	% component types onto the type stack
+	@TypeBody
+     {[
+	oCountChoose
+	| zero:
+		>
+	| *:
+	   oCountDecrement
+
+	[ oSymbolStkChooseKind
+	    | syExternal:	% file parameter to program
+		oTypeStkSwap	% structure on top
+		[ oTypeStkChooseKind
+		    | tpFile:
+			oSymbolStkSetKind(syVariable)
+			oTypeStkSwap	% component on top
+			[ oTypeStkChooseTypeReference
+			    | no:	% no type table entry
+				oTypeTblEnter
+			    | *:
+			]
+			oTypeStkEnterComponentReference
+			oTypeStkSwap	% structure on top
+			[ oTypeStkChooseTypeReference
+			    | no:
+				oTypeTblEnter
+			    | *:
+			]
+			oSymbolStkEnterTypeReference
+			% A symbol table entry was created for the file
+			% when its program parameter was accepted.
+			oSymbolTblUpdate
+		    | *:
+			#eExternalDeclare	% Ignore this declaration
+		]
+	    | *:		% new variable or redeclaration in this scope
+		oSymbolStkSetKind(syVariable)
+		oTypeStkSwap	% structure on top
+		[ oTypeStkChooseKind
+		    | tpFile:
+			% an internal file
+			oSymbolStkSetKind(syVariable)
+			oTypeStkSwap	% component on top
+			[ oTypeStkChooseTypeReference
+			    | no:	% no type table entry
+				oTypeTblEnter
+			    | *:
+			]
+			oTypeStkEnterComponentReference
+			oTypeStkSwap	% structure on top
+			[ oTypeStkChooseTypeReference
+			    | no:
+				oTypeTblEnter
+			    | *:
+			]
+			oSymbolStkEnterTypeReference
+			oValuePush(zero)
+			@AllocateVar
+			oValuePop
+		    | *:
+			@AllocateVar
+		]
+
+		% Create type table entries for the object as necessary.
+		% Where named types were used in the declaration, a type
+		% reference will be present, otherwise the type reference
+		% fields will be null.
+		[ oTypeStkChooseKind
+		    | tpArray, tpFile:
+			oTypeStkSwap	% component on top
+			[ oTypeStkChooseTypeReference
+			    | no:	% no type table entry
+				oTypeTblEnter
+			    | *:
+			]
+			oTypeStkEnterComponentReference
+			oTypeStkSwap	% structure on top
+		    | *:
+		]
+		[ oTypeStkChooseTypeReference
+		    | no:
+			oTypeTblEnter
+		    | *:
+		]
+		oSymbolStkEnterTypeReference
+		oSymbolTblEnter
+	]
+	oSymbolStkPop
+	oTypeStkSwap
+	]}
+	oTypeStkPop
+	oTypeStkPop;
+
+AllocateVar :
+	% A symbol stack entry and type stack entries for both
+	% structure and component type have been pushed for
+	% the variable to be allocated (structure type is on top).
+
+	[ oSymbolStkChooseKind
+	    | syVarParameter:
+		% A var parameter is allocated
+		% space for the address of its actual
+		oAllocateAlignOnWord
+		oSymbolStkEnterDataAddress
+		oAllocateVarParameter
+	    | *:
+		[ oTypeStkChooseKind
+		    | tpInteger, tpSubrange:
+			oAllocateAlignOnWord
+			oSymbolStkEnterDataAddress
+			oAllocateVariable
+		    % MPM: 4th March: Change tpChar into tpString
+		    | tpString, tpBoolean:
+			oSymbolStkEnterDataAddress
+			oAllocateVariable
+		    | tpArray:
+			oAllocateAlignOnWord
+			oSymbolStkEnterDataAddress
+			% emit code to initialize array descriptor
+			.tLiteralInteger
+			oValuePushTypeStkLowerBound
+			oEmitValue	% array index lower bound
+			oValuePop
+			.tLiteralAddress
+			oEmitDataAddress
+			.tArrayDescriptor
+			oAllocateDescriptor
+			.tLiteralInteger
+			oValuePushTypeStkUpperBound
+			oEmitValue	% array index upper bound
+			oValuePop
+			.tLiteralAddress
+			oEmitDataAddress
+			.tArrayDescriptor
+			oAllocateDescriptor
+			oAllocateVariable
+		    | tpFile:
+			% Assume here that the file variable's descriptor
+			% value is on top of the value stack.
+			oAllocateAlignOnWord
+			oSymbolStkEnterDataAddress
+			% Emit code to initialize the file descriptor
+			.tLiteralInteger
+			oEmitValue	% file descriptor value
+			.tLiteralAddress
+			oEmitDataAddress
+			.tFileDescriptor
+			oAllocateDescriptor
+		]
+	];
+
+%%%%%%%% MJM 29Feb29: Add new rule to handle 'class'
+%%%%%%%%              - Patterned after the 'ProcedureDefinition' rule
+%%%%%%%%                but has no parameters
+%%%%%%%%
+ClassDefinition :
+        sIdentifier  oSymbolStkPushLocalIdentifier      % class name
+        [ oSymbolStkChooseKind
+            | syUndefined:
+            | syExternal:
+                % Program parameters must be declared as file variables
+                #eExternalDeclare
+            | *:
+                #eMultiplyDefined
+                % New definition obscures old one.
+        ]
+%%%%%%%% MJM 4Mar16: Do not do the following actions, as we are in a 
+%%%%%%%%             class, not a procedure, and statements occur
+%%%%%%%%             in the global scope when main program is run.
+%        .tSkipProc      
+%        oFixPushForwardBranch
+%        oEmitNullAddress
+        oSymbolStkSetKind(syClass) % new symbol stack kind 'syClass'
+        oSymbolStkEnterCodeAddress
+        oTypeStkPush(tpNull)
+        oTypeStkSetRecursionFlag(yes)
+        oTypeTblEnter
+        oSymbolStkEnterTypeReference
+        oSymbolTblEnter
+        oSymbolTblPushScope     % procedure scope
+        % Note no procesing of parameters (i.e. like '@ProcedureHeading'
+        @Block
+%%%%%%%% MJM 4Mar16: Do not do the following actions, as we are in a 
+%%%%%%%%             class, not a procedure, and statements occur
+%%%%%%%%             in the global scope when main program is run.
+%        .tProcedureEnd   
+%        oFixPopForwardBranch    % fix skip around procedure
+        oSymbolTblUpdate
+        oSymbolStkPop
+        oTypeStkSetRecursionFlag(no)
+        oTypeTblUpdate
+        oTypeStkPop
+%%%%%%%% MJM 29Feb16: Call 'oSymbolTblStripScope' and 'oSymbolTblMergeScope'
+%%%%%%%%              instead of 'oSymbolTblPopScope'
+        oSymbolTblStripScope
+        oSymbolTblMergeScope;
+
+
+%%%%%%%% MJM 4Mar16: Added a case to handle 'public function'
+%%%%%%%%             within the 'ProcedureDefinition' rule
+%%%%%%%%             to pass a symbolKind of syPublicProcedure
+%%%%%%%%             instead of syProcedure, which is required for proper
+%%%%%%%%             scope processing in 'ClassDefinition' rule.
+ProcedureDefinition :
+	sIdentifier  oSymbolStkPushLocalIdentifier	% procedure name
+	[ oSymbolStkChooseKind
+	    | syUndefined:
+	    | syExternal:
+		% Program parameters must be declared as file variables
+		#eExternalDeclare
+	    | *:
+		#eMultiplyDefined
+		% New definition obscures old one.
+	]
+	.tSkipProc	% Branch around the procedure definition
+	oFixPushForwardBranch
+	oEmitNullAddress
+%%%%%%%% MJM 4Mar16: Set syProcedure for now, but might be
+%%%%%%%%             overridden if sPublic encountered.
+        oSymbolStkSetKind(syProcedure)
+        [
+           | sPublic:
+                oSymbolStkSetKind(syPublicProcedure)
+           | *:
+        ]
+	oSymbolStkEnterCodeAddress
+	oTypeStkPush(tpNull)
+	oTypeStkSetRecursionFlag(yes)
+	oTypeTblEnter
+	oSymbolStkEnterTypeReference
+	oSymbolTblEnter
+	oSymbolTblPushScope	% procedure scope
+	@ProcedureHeading
+	@Block
+	.tProcedureEnd
+	oFixPopForwardBranch	% fix skip around procedure
+	oSymbolTblUpdate
+	oSymbolStkPop
+	oTypeStkSetRecursionFlag(no)
+	oTypeTblUpdate
+	oTypeStkPop
+	oSymbolTblPopScope;
+
+
+ProcedureHeading :
+	% Enter formal parameters into the symbol table, allocate
+	% data space for them, emit code to assign actual parameter
+	% values to the formals in the prologue and set the
+	% parameter count field of the procedure symbol.
+
+	oCountPush(zero)	% count the number of formal parameters
+	{[
+	    | sParmEnd:
+		>
+	    | *:
+		oCountIncrement
+		% formal parameter name
+		sIdentifier  oSymbolStkPushLocalIdentifier
+		[ oSymbolStkChooseKind
+		    | syUndefined:
+		    | *:
+			#eMultiplyDefined
+			% The new declaration obscures the old one
+		]
+		[
+		    | sVar:
+			% variable parameter
+			oSymbolStkSetKind(syVarParameter)
+		    | *:
+			oSymbolStkSetKind(syVariable)
+		]
+		@ProcedureParameterType
+	]}
+	@ProcedurePrologue
+
+%%%%%%%% MJM 7 Mar16: Add new rule for function return types in header
+        @FunctionHeaderReturnType
+        ;
+
+
+%%%%%%%% MJM 7Mar16: If a return type is specified in the procedure/function
+%%%%%%%%             heading, then:
+%%%%%%%%             1. Check and accept the input token.
+%%%%%%%%             2. Change the type stack entry from tpNull
+%%%%%%%%             (set previously), so the actual return type.
+%%%%%%%%             3. Change the symbol table kind by
+%%%%%%%%             converting a non-return syProcedure/syPublicProcedure
+%%%%%%%%             to a return syFunction or syPublicFunction.
+%%%%%%%%             4. Clean up the stacks.
+%%%%%%%%             5. Change symbolStkKind from procedure to function.
+FunctionHeaderReturnType :
+        [
+            | sIdentifier: % The only time a sIdentifier is here is for
+                           % a return type specified in a function header.
+
+                % 1. Accept the type specified in sIdentifier and push onto
+                %    the symbolStk, for processing in next step
+                oSymbolStkPushIdentifier % push temp symbol
+
+                [ oSymbolStkChooseKind
+                    | syType:
+
+                        % 2. Change the type stack entry for the function
+                        %    type, by copying from the sIdentifier input.
+                        %    Note that by this time, the typeStack should be 
+                        %    back to where is was when the procedure was 
+                        %    declared, and the procedure type (tpNull) in 
+                        %    the typeStack can be modified.
+                        %
+                        %    Note we don't need to update the corresponding 
+                        %    type table entry here as it is done 
+                        %    in ProcedureDefinition
+                        %    after the block has been processed via the 
+                        %    oTypeTableUpdate mechanism (which is after the 
+                        %    'return' statement was processed and checked 
+                        %    to make sure it it the correct return type.
+                        oTypeStkPushSymbol
+
+                        % Call mechanism to copy Kind (of sIdentifier)
+                        % pop the typStack, then copy Kind into top/next
+                        % typeStack entry.
+                        oTypeStkPopAndCopyKind
+
+                    | *:
+                        % Return type not a syType
+                        #eUndefinedIdentifier
+                ]
+
+                % 3. Update the Symbol Table entry with new type
+                oSymbolTblSearchConvertFunctionReturnType
+
+                % 4. Clean up the symbolStack by popping temp entry
+                oSymbolStkPop % pop temp symbol
+
+                % 5. Now we change the symbol Stack Kind from procedure
+                % to function.
+                [ oSymbolStkChooseKind
+                    | syProcedure:
+                        oSymbolStkSetKind (syFunction)
+                    | syPublicProcedure:
+                        oSymbolStkSetKind (syPublicFunction)
+                    | *:
+                        #eProcedureReqd
+                ]
+
+           | *: % else this is not a sIdentifier, therefore it is
+                % a procedure and not a function.
+        ]
+        ;
+
+
+ProcedureParameterType :
+	% A local procedure's formal parameters must
+	% be declared using named types.
+
+	sIdentifier  oSymbolStkPushIdentifier	% formal parameter type
+	[ oSymbolStkChooseKind
+	    | syUndefined:
+		#eUndefinedIdentifier
+	    | *:
+	]
+	[ oSymbolStkChooseKind
+	    | syType:
+	    | *:
+		#eTypeIdentifierReqd
+		oSymbolStkPop
+		@SymbolStkPushIntegerType
+	]
+	oTypeStkPushSymbol
+	oSymbolStkPop	% type symbol
+	[ oSymbolStkChooseKind
+	    | syVariable:
+		[ oTypeStkChooseKind
+		    | tpArray, tpFile:
+			#eNonScalarValParm
+			oTypeStkPop
+			@SymbolStkPushIntegerType
+			oTypeStkPushSymbol
+			oSymbolStkPop
+		    | *:
+		]
+	    | *:
+	]
+	oSymbolStkEnterTypeReference
+	[ oTypeStkChooseKind
+	    | tpArray:
+		oTypeStkPushComponent
+	    | *:
+		oTypeStkPush(tpNull)	% dummy component type
+	]
+	oTypeStkSwap	% structure on top
+	@AllocateVar	% allocate formal parameter
+	oSymbolTblEnter;
+	% No type table entry is needed since the type
+	% must have been specified by named type.
+
+
+ProcedurePrologue :
+	% Now all the formal parameter symbols are stacked on top of the
+	% procedure symbol.  Emit code in the procedure's prologue
+	% to store the actual parameters.
+
+	@CountCopy	% Count is the number of formal parameters
+	{[ oCountChoose
+	    | zero:
+		% procedure symbol is now on top of the Symbol Stack
+		oCountPop
+		.tParmEnd
+		>
+	    | *:
+		.tLiteralAddress
+		oValuePushSymbol	% Formal parameter address
+		oEmitValue
+		oValuePop
+
+		% Emit code to copy the actual to the formal parameter
+		[ oSymbolStkChooseKind
+		    | syVariable:		% value parameter
+			[ oTypeStkChooseKind
+			    | tpInteger, tpSubrange:
+				.tStoreParmInteger
+			    % MPM: 4th March: Change tpChar into tpString
+			    | tpString:
+				% MPM 4th March: Change tStoreParmChar into tStoreParmString
+				.tStoreParmString
+			    | tpBoolean:
+				.tStoreParmBoolean
+			]
+		    | syVarParameter:
+			.tStoreParmAddress
+		]
+		oSymbolStkPop	% formal parameter symbol
+		oTypeStkPop
+		oTypeStkPop
+		oCountDecrement
+	]}
+	oTypeStkEnterParameterCount	% In procedure's type entry
+	oCountPop;
+
+Statement :
+	[
+	    | sAssignmentStmt:
+		@AssignmentStmt
+	    | sCallStmt:
+		@CallStmt
+	    | sBegin:
+		@BeginStmt
+	    | sIfStmt:
+		@IfStmt
+% MPM 6th March: add handling of Loop statement.
+	    | sLoopStmt:
+		@LoopStmt
+% MPM 6th March: remove While statement.
+%	    | sWhileStmt:
+%		@WhileStmt
+	    | sCaseStmt:
+		@CaseStmt
+% MPM 6th March: remove Repeat statement.
+%	    | sRepeatStmt:
+%		@RepeatStmt
+	    | sNullStmt:
+	];
+
+AssignmentStmt :
+	% Assignment is permitted to scalar variables only.
+	sIdentifier  oSymbolStkPushIdentifier
+	[ oSymbolStkChooseKind
+	    | syUndefined:
+		#eUndefinedIdentifier
+	    | *:
+	]
+	.tAssignBegin
+
+	@Variable	% Push a type stack entry for the symbol
+	[ oTypeStkChooseKind
+	    | tpArray:
+		#eScalarReqd
+		% No error repair since error is confined to this rule
+	    | *:
+	]
+
+	@Expression	% Push symbol and type stack entries for an expression
+	@CompareAndSwapTypes
+
+	% Emit code to perform the assignment
+	[ oTypeStkChooseKind
+	    | tpInteger, tpSubrange, tpFile:
+		.tAssignInteger
+	    % MPM: 4th March: Change tpChar into tpString
+	    | tpString:
+		% MPM 4th March: Change tAssignChar into tAssignString
+		.tAssignString
+	    | tpBoolean:
+		.tAssignBoolean
+	    | *:		% error flagged above
+	]
+	oSymbolStkPop  oTypeStkPop	% R-value
+	oSymbolStkPop  oTypeStkPop;	% L-value
+
+BeginStmt :
+	{[
+	    | sEnd:
+		>
+	    | *:
+		@Statement
+	]};
+
+CallStmt :
+	sIdentifier  oSymbolStkPushIdentifier	% Procedure being called
+	[ oSymbolStkChooseKind
+	    | syUndefined:
+		#eUndefinedIdentifier
+	    | *:
+	]
+	[ oSymbolStkChooseKind
+	    | syProcedure:
+		[ oSymbolStkChooseStandardRoutine
+		    | rtReset:
+			.tTrapBegin
+			@OpenProcedure
+			.tTrap
+			oEmitTrapKind(trReset)
+		    | rtRewrite:
+			.tTrapBegin
+			@OpenProcedure
+			.tTrap
+			oEmitTrapKind(trRewrite)
+		    | rtAssign:
+			.tTrapBegin
+			@AssignProcedure
+			.tTrap
+			oEmitTrapKind(trAssign)
+		    | rtWrite:
+			.tWriteBegin
+			@WriteProcedure
+		    | rtWriteln:
+			.tTrapBegin
+			@WritelnProcedure
+			.tTrap
+			oEmitTrapKind(trWriteln)
+		    | rtRead:
+			.tReadBegin
+			@ReadProcedure
+		    | rtReadln:
+			.tTrapBegin
+			@ReadlnProcedure
+			.tTrap
+			oEmitTrapKind(trReadln)
+		    | *:		% call to a user defined procedure
+			.tCallBegin
+			oTypeStkPushSymbol
+			[ oTypeStkChooseRecursionFlag
+			    | yes:
+				#eRecursiveCall
+			    | *:
+			]
+			@ActualParameters
+			.tCallEnd
+			oValuePushSymbol
+			oEmitValue	% procedure code area address
+			oValuePop
+			oTypeStkPop
+		]
+%%%%%%%% MJM 4Mar16: Add handling of Public Procedures - these should 
+%%%%%%%%             always be a user-defined procedure. This code
+%%%%%%%%             section is same as user-defined case above.
+            | syPublicProcedure:
+                        .tCallBegin
+                        oTypeStkPushSymbol
+                        [ oTypeStkChooseRecursionFlag
+                            | yes:
+                                #eRecursiveCall
+                            | *:
+                        ]
+                        @ActualParameters
+                        .tCallEnd
+                        oValuePushSymbol
+                        oEmitValue      % procedure code area address
+                        oValuePop
+                        oTypeStkPop
+
+
+	    | *:
+		#eProcedureReqd
+		@FlushActuals
+	]
+	oSymbolStkPop;
+
+ActualParameters :
+	oCountPush(zero)		% actual parameters count
+	{[
+	    | sParmEnd:
+		>
+	    | *:
+		[ oTypeStkCompareParameterCount
+		    | yes:	% too many actuals supplied
+			#eExtraActuals
+			@FlushActuals
+			>	% exit main cycle
+		    | *:
+		]
+		oCountIncrement
+		% for type checking against actual
+		oSymbolStkPushFormalParameter
+		oTypeStkPushSymbol
+		% formal parameter must be a variable
+		% or a variable parameter
+		[ oSymbolStkChooseKind
+		    | syVariable:
+			% value parameter, actual should be an expression
+			@Expression
+			@CompareAndSwapTypes
+		    | syVarParameter:
+			@VariableActual
+		]
+		oSymbolStkPop  oTypeStkPop	% actual
+		oSymbolStkPop  oTypeStkPop	% formal
+		.tParmEnd
+	]}
+	% check for insufficient actual parameters supplied
+	[ oTypeStkCompareParameterCount
+	    | yes:
+	    | *:
+		#eInsufficientActuals
+	]
+	oCountPop;
+
+
+
+VariableActual :
+	% An actual variable parameter should be a variable.
+	% Compare actual and formal parameter objects for
+	% equal type names.  Check for the special case of a 
+	% packed array component which is illegal.
+
+	[
+	    | sIdentifier:
+		oSymbolStkPushIdentifier
+		@Variable
+		.tVarParm
+		[ oTypeStkCompareNames
+		    | yes:
+		    | *:
+			#eParameterTypeMismatch
+		]
+		[ oTypeStkChooseKind
+		    % MPM: 4th March: Change tpChar into tpString
+		    | tpInteger, tpSubrange, tpString, tpBoolean:
+			% Subscripted packed array variables are
+			% illegal as variable actual parameters
+			[ oTypeStkChoosePackedComponentFlag
+			    | yes:
+				#ePackedComponentByVar
+			    | *:
+			]
+		    | *:
+		]
+		% The actual parameter expression
+		% should consist of a single variable
+		[
+		    | sExpnEnd:
+		    | *:
+			#eParameterTypeMismatch
+			% Flush the rest of the expression
+			@Expression
+		]
+	    | *:
+		#eParameterTypeMismatch
+		% Flush the expression
+		@Expression
+	];
+
+IfStmt :
+	.tIfBegin
+	@BooleanControlExpression
+	sThen  .tIfThen
+	oFixPushForwardBranch
+	oEmitNullAddress		% false branch
+	@Statement
+	[
+	    | sElse:
+		.tIfMerge
+		oFixPushForwardBranch
+		oEmitNullAddress		% true branch
+		oFixSwap		% false branch back on top
+		oFixPopForwardBranch
+		@Statement
+	    | *:
+	]
+	.tIfEnd
+	oFixPopForwardBranch;
+
+% MPM 4th March: Remove the old While T-Code.
+%WhileStmt :
+%	.tWhileBegin
+%	oFixPushTargetAddress		% top-of-loop branch target
+%	@BooleanControlExpression
+%	.tWhileTest
+%	oFixPushForwardBranch
+%	oEmitNullAddress		% exit branch
+%	oFixSwap		% top-of-loop target back on top
+%	@Statement
+%	.tWhileEnd
+%	oFixPopTargetAddress
+%	oFixPopForwardBranch;
+
+% MPM 6th March: add handling of Loop.
+LoopStmt :
+	.tLoopBegin
+	oFixPushTargetAddress
+	@Statement
+
+	% if matched the LoopBreakWhen token, push a branch into the stack.
+	sLoopBreakWhen .tLoopBreakWhen 
+	@BooleanControlExpression
+	.tLoopTest
+	oFixPushForwardBranch
+	oEmitNullAddress
+
+	oFixSwap
+        @Statement
+ 	sLoopEnd .tLoopEnd
+	oFixPopTargetAddress
+	oFixPopForwardBranch;
+
+
+%RepeatStmt :
+%	.tRepeatBegin
+%	oFixPushTargetAddress		% top-of-loop branch target
+%	{[
+%%%%%%%% FIX LATER
+%	    | sRepeatEnd:
+%		>
+%	    | *:
+%		@Statement
+%	]}
+%	.tRepeatControl
+%	@BooleanControlExpression
+%	.tRepeatTest
+%	oFixPopTargetAddress;
+
+CaseStmt :
+	.tCaseBegin
+	@CaseSelectorExpression
+	oCasePushDisplay		% handle nested case statements
+	oCountPush (zero)	% count case alternative statements
+	.tCaseSelect
+	oFixPushForwardBranch
+	oEmitNullAddress		% address of case branch table
+	{[
+	    | sCaseEnd:
+		>
+	% MPM 11th March: Add handling of 'default' cases.
+	    | sDefault:
+		.tCaseElse
+		@Statement
+		.tCaseMerge
+		oFixPushForwardBranch
+		oEmitNullAddress
+		oFixSwap
+		oCountIncrement
+	    | *:
+		@CaseAlternative
+	]}
+	.tCaseEnd
+
+	oFixPopForwardBranch
+	oEmitCaseBranchTable
+	% emit merge branches for case alternatives
+	{[ oCountChoose		% number of case alternatives
+	    | zero:
+		>
+	    | *:
+		oFixPopForwardBranch
+		oCountDecrement
+	]}
+	oCasePopDisplay
+	oCountPop;
+
+CaseAlternative :
+	% A case alternative is a series of integer
+	% constant case labels followed by a statement.
+
+	{[
+	    | sLabelEnd:
+		>
+	    | sIdentifier:
+		oSymbolStkPushIdentifier
+		[ oSymbolStkChooseKind
+		    | syConstant:
+			oTypeStkPushSymbol
+			[ oTypeStkChooseKind
+			    | tpInteger:
+				oValuePushSymbol
+				[
+				    | sNegate:
+					oValueNegate
+				    | *:
+				]
+				[ oCaseLookupLabel
+				    | yes:
+					#eDuplicateLabel
+				    | *:
+					oCasePushLabel
+				]
+				oValuePop
+			    | *:
+				#eIntegerConstReqd
+				% no repair since effects are local
+			]
+			oTypeStkPop
+		    | syUndefined:
+			#eUndefinedIdentifier
+		    | *:
+			#eIntegerConstReqd
+		]
+		oSymbolStkPop
+	    | sInteger:
+		oValuePushInteger
+		[
+		    | sNegate:
+			oValueNegate
+		    | *:
+		]
+		[ oCaseLookupLabel
+		    | yes:
+			#eDuplicateLabel
+		    | *:
+			oCasePushLabel
+		]
+		oValuePop
+	]}
+	@Statement
+	.tCaseMerge
+	oFixPushForwardBranch
+	oEmitNullAddress		% merge branch at end of statement
+	oFixSwap			% keep case select branch on top
+	oCountIncrement;
+
+
+%%%%%%%%% MJM 10Mar16: New 'ReturnStmt' rule to handle 'return' statements.
+%%%%%%%%%              - This ensures that the return type is same as what
+%%%%%%%%%                was in the Function declaration.
+%%%%%%%%%              - This also checks to see if the sReturn was received
+%%%%%%%%%                within the context of a function.
+ReturnStmt :
+       [ oSymbolTblChooseCurrentScopeIsFunction
+           | yes:
+                .tFunctionResult
+                % Process expression in the 'return' statement
+                % and check to see if type matches what was 
+                % declared in the function header
+
+                % Expression will push symbol and type stack entries for
+                % the expression in the 'return' statement
+                @Expression
+
+                % CompareReturnTypes will generate an error if the top two
+                % typestack entries are mismatched.
+                % - Top stack entry is the result of the expression
+                %   in the 'return' statememt.
+                % - Second stack entry is the return function type
+                %   declared in the function header (still on the stack 
+                %   from before). 
+                @CompareReturnTypes
+
+                % Restore the type stack and the symbol stack such that 
+                % they just contain the entry for the function heading
+                % return type.
+
+                oTypeStkPop
+                oSymbolStkPop
+
+           | *:
+               #eInvalidExpn
+               >>
+       ]
+        ;
+
+
+Expression :
+	% Expressions have been converted to postfix form by the
+	% previous pass with the exceptions noted below. This rule
+	% pushes symbol and type table entries for the expression result.
+
+	{
+	    @Operand
+	    @UnaryOperator
+	    @BinaryOperator
+	    @TernaryOperator
+	    [
+		| sExpnEnd:
+		    >
+		| sParmBegin, sSubscript:
+		    #eInvalidExpn
+		    @FlushExpn
+		| *:
+	    ]
+	};
+
+Operand :
+	[
+	    | sIdentifier:
+		oSymbolStkPushIdentifier
+		[ oSymbolStkChooseKind
+		    | syUndefined:
+			#eUndefinedIdentifier
+		    | *:
+		]
+		[ oSymbolStkChooseKind
+		    | syConstant:
+			@ConstantOperand
+		    | syVariable, syVarParameter:
+			@Variable
+			@VariableOperand
+%%%%%%%% MJM 12Mar16: Add 'syPublicFunction' to case below.
+                    | syFunction, syPublicFunction:
+			@FunctionOperand
+		    | *:
+			#eExpnOperandReqd
+			oSymbolStkPop
+			@SymbolStkPushIntegerVariable
+			oTypeStkPushSymbol
+		]
+	    | sInteger:
+		oValuePushInteger
+		oSymbolStkPush(syExpression)
+		oTypeStkPush(tpInteger)
+		.tLiteralInteger
+		oEmitValue
+		oValuePop
+	    | sLiteral:
+%%%%%%%% MJM 26Mar16: Use instructor solution here
+                oSymbolStkPush(syExpression)
+                oTypeStkPush(tpString)
+                .tLiteralString
+                oValuePushStringLength
+                oEmitValue
+                oValuePop
+                oEmitString
+%%%%%%%% 
+	    | sFile:
+		@Expression
+		@FileOperand
+	    | *:
+	];
+
+UnaryOperator :
+	[
+	    %MPM 6th March: Add handling the string length operation. But how to test it?
+	    | sLength:
+		.tFetchString
+		.tLength
+		oTypeStkPush(tpInteger)
+	    | sNegate:
+		.tNegate
+		oTypeStkPush(tpInteger)	% result type
+	    | sNot:
+		.tNot
+		oTypeStkPush(tpBoolean)
+	    | *:
+		>>		% bypass type check
+	]
+	% If an operator is present the result is an expression
+	oSymbolStkSetKind(syExpression)
+	@CompareAndSwapTypes
+	oTypeStkPop;
+
+BinaryOperator :
+	% Choice should be ordered by frequency of occurrence of alternatives.
+	% Could make this a cycle (comment applies to UnaryOperator as well)
+	% but that would probably be less efficient on average.
+	[
+	    | sAdd:
+		% MPM 7th March: Add handling of string concatenation.
+		[ oTypeStkChooseKind
+		     | tpInteger:
+			.tAdd
+			oTypeStkPush(tpInteger)  % result type
+		     | tpString:
+			.tConcatenate
+			oTypeStkPush(tpString)
+		]
+		@CompareOperandAndResultTypes
+	    | sSubtract:
+		.tSubtract
+		oTypeStkPush(tpInteger)
+		@CompareOperandAndResultTypes
+	    | sInfixAnd:	% marker without semantic significance
+		.tInfixAnd
+	    | sAnd:
+		.tAnd
+		oTypeStkPush(tpBoolean)
+		@CompareOperandAndResultTypes
+	    | sInfixOr:
+		.tInfixOr
+	    | sOr:
+		.tOr
+		oTypeStkPush(tpBoolean)
+		@CompareOperandAndResultTypes
+	    | sEq:
+		.tEq
+		@CompareRelationalOperandTypes
+	    | sNE:
+		.tNE
+		@CompareRelationalOperandTypes
+	    | sGT:
+		.tGT
+		@CompareRelationalOperandTypes
+	    | sGE:
+		.tGE
+		@CompareRelationalOperandTypes
+	    | sLT:
+		.tLT
+		@CompareRelationalOperandTypes
+	    | sLE:
+		.tLE
+		@CompareRelationalOperandTypes
+	    | sMultiply:
+		.tMultiply
+		oTypeStkPush(tpInteger)
+		@CompareOperandAndResultTypes
+	    | sDivide:
+		.tDivide
+		oTypeStkPush(tpInteger)
+		@CompareOperandAndResultTypes
+	    | sModulus:
+		.tModulus
+		oTypeStkPush(tpInteger)
+		@CompareOperandAndResultTypes
+	    | *:
+	];
+% MPM 8th March: Add handling of ternary operators.
+TernaryOperator:
+	[
+	    | sSubString:
+		[
+		   oTypeStkChooseKind
+		   | tpInteger:
+		   | *:
+			#eTypeMismatch
+		]
+		oTypeStkPop
+		oSymbolStkPop
+		[
+                   oTypeStkChooseKind
+                   | tpInteger:
+                   | *:
+                        #eTypeMismatch
+                ]
+		oTypeStkPop
+		oSymbolStkPop
+
+		[
+		    oTypeStkChooseKind
+		    | tpString:
+		    | *:
+			#eTypeMismatch
+		]
+		oTypeStkPop
+
+		oTypeStkPush(tpString)
+		.tSubstring
+	    | *:
+	];
+
+%%%%%%%% MJM 10Mar16: CompareReturnTypes will generate an error if 
+%%%%%%%%              the top two typestack entries are mismatched.
+%%%%%%%%              - Top stack entry is the result of the expression
+%%%%%%%%                in the 'return' statememt.
+%%%%%%%%              - Second stack entry is the return function type
+%%%%%%%%                declared in the function header (still on the stack 
+%%%%%%%%                from before). 
+CompareReturnTypes :
+        [ oTypeStkChooseKind
+            | tpInteger:
+                oTypeStkSwap %swap to compare
+                [ oTypeStkChooseKind
+                    | tpInteger:
+                    | *:
+                        #eTypeMismatch
+                ]
+                oTypeStkSwap %swap back to restore state
+
+            | tpString:
+                oTypeStkSwap %swap to compare
+                [ oTypeStkChooseKind
+                    | tpString:
+                    | *:
+                        #eTypeMismatch
+                ]
+                oTypeStkSwap %swap back to restore state
+
+            | tpBoolean:
+                oTypeStkSwap %swap to compare
+                [ oTypeStkChooseKind
+                    | tpBoolean:
+                    | *:
+                        #eTypeMismatch
+                ]
+                oTypeStkSwap %swap back to restore state
+
+            | tpFile:
+                oTypeStkSwap %swap to compare
+                [ oTypeStkChooseKind
+                    | tpFile:
+                    | *:
+                        #eTypeMismatch
+                ]
+                oTypeStkSwap %swap back to restore state
+
+            % The following are never allowed:
+            | tpArray,
+              tpPackedArray,
+              tpSubrange:
+                #eTypeMismatch
+           | *:
+                #eTypeMismatch
+        ];
+
+
+CompareAndSwapTypes :
+	% Compare the top two type stack entries for assignment
+	% compatibility and switch their positions on the stack.
+	% Only the structure type is checked, so for example any
+	% two arrays will be considered matching.
+
+	[ oTypeStkChooseKind
+	    | tpInteger, tpSubrange:
+		oTypeStkSwap
+		[ oTypeStkChooseKind
+		    | tpInteger, tpSubrange:
+		    | *:
+			#eTypeMismatch
+		]
+	    % MPM: 4th March: Change tpChar into tpString
+	    | tpString:
+		oTypeStkSwap
+		[ oTypeStkChooseKind
+		    % MPM: 4th March: Change tpChar into tpString
+		    | tpString:
+		    | *:
+			#eTypeMismatch
+		]
+	    | tpBoolean:
+		oTypeStkSwap
+		[ oTypeStkChooseKind
+		    | tpBoolean:
+		    | *:
+			#eTypeMismatch
+		]
+	    | tpArray:
+		oTypeStkSwap
+		[ oTypeStkChooseKind
+		    | tpArray:
+		    | *:
+			#eTypeMismatch
+		]
+	    | tpPackedArray:
+		oTypeStkSwap
+		[ oTypeStkChooseKind
+		    | tpPackedArray:
+		    | *:
+			#eTypeMismatch
+		]
+	    | tpFile:
+		oTypeStkSwap
+		[ oTypeStkChooseKind
+		    | tpFile:
+		    | *:
+			#eTypeMismatch
+		]
+	];
+
+CompareOperandAndResultTypes :
+	% Compare the two operand types and the result type for assignment
+	% compatibility.  Pop the operand symbol and type stack entries
+	% leaving the result symbol and type stack entries.
+
+	@CompareAndSwapTypes
+	oTypeStkPop
+	@CompareAndSwapTypes
+	oTypeStkPop		% only result type remains
+	oSymbolStkPop
+	oSymbolStkSetKind(syExpression);
+
+CompareRelationalOperandTypes :
+	% Verify that the types of the two operands are assignment
+	% compatible and that they are valid relational expression
+	% operand types (char, integer or subrange).  Pop the
+	% operand symbol and type stack entries and push result
+	% symbol and type stack entries.
+
+	[ oTypeStkChooseKind
+	    | tpInteger, tpSubrange:
+		oTypeStkPop
+		[ oTypeStkChooseKind
+		    | tpInteger, tpSubrange:
+		    | *:
+			#eOperandOperatorTypeMismatch
+		]
+	    % MPM: 4th March: Change tpChar into tpString
+	    | tpString:
+		oTypeStkPop
+		[ oTypeStkChooseKind
+		    % MPM: 4th March: Change tpChar into tpString
+		    | tpString:
+		    | *:
+			#eOperandOperatorTypeMismatch
+		]
+	    | *:
+		#eOperandOperatorTypeMismatch
+		oTypeStkPop
+	]
+	oTypeStkPop
+	oTypeStkPush(tpBoolean)
+	oSymbolStkPop
+	oSymbolStkSetKind(syExpression);
+
+
+Variable :
+	% Emit code to place the address of a variable on the runtime
+	% expression stack, and push the variable's type onto the type stack.
+	% An identifier has just been accepted
+	% and a Symbol Stack entry has been pushed for it.
+
+	[ oSymbolStkChooseKind
+	    | syVariable:
+		.tLiteralAddress
+		oValuePushSymbol
+		oEmitValue
+		oValuePop
+	    | syVarParameter:
+		.tLiteralAddress
+		oValuePushSymbol
+		oEmitValue
+		oValuePop
+		.tFetchAddress
+	    | syUndefined:
+		#eUndefinedIdentifier
+		oSymbolStkPop
+		@SymbolStkPushIntegerVariable
+	    | *:
+		#eVariableReqd
+		oSymbolStkPop
+		@SymbolStkPushIntegerVariable
+	]
+	oTypeStkPushSymbol
+	@VariableExtension;
+
+VariableExtension :
+	% Process a subscript if it is present
+	[
+	    | sSubscript:
+		.tSubscriptBegin
+		@Expression
+		[ oTypeStkChooseKind
+		    | tpInteger, tpSubrange:
+		    | *:
+			#eIntegerExpnReqd
+		]
+		oSymbolStkPop
+		oTypeStkPop
+		[ oTypeStkChooseKind		% structure type
+		    % replace structure type with component type
+		    | tpArray:
+			oTypeStkPushComponent
+			oTypeStkSwap
+			oTypeStkPop
+			oTypeStkSetPackedComponentFlag(no)
+		    | *:
+			#eArrayVarReqd
+			oSymbolStkPop
+			oTypeStkPop
+			@SymbolStkPushIntegerVariable
+			oTypeStkPushSymbol
+			oTypeStkSetPackedComponentFlag(no)
+		]
+		[ oTypeStkChooseKind
+		    | tpInteger, tpSubrange:
+			.tSubscriptInteger
+		    % MPM: 4th March: Change tpChar into tpString
+		    | tpString:
+			% MPM 4th March: Change tStoreParmChar into tStoreParmString
+			.tSubscriptString
+		    | tpBoolean:
+			.tSubscriptBoolean
+		]
+	    | *:
+		[ oTypeStkChooseKind
+		    % MPM: 4th March: Change tpChar into tpString
+		    | tpInteger, tpSubrange, tpString, tpBoolean:
+			oTypeStkSetPackedComponentFlag(no)
+		    | *:
+		]
+	];
+
+ConstantOperand :
+	% Operand has just accepted an identifier and pushed  a
+	% symbol stack entry for it. Push a type stack entry for it.
+	oTypeStkPushSymbol
+	[ oTypeStkChooseKind
+	    | tpInteger, tpSubrange:
+		.tLiteralInteger
+	    % MPM: 4th March: Change tpChar into tpString
+	    | tpString:
+	        % MPM: 4th March: Change .tLiteralChar into .tLiteralString
+		.tLiteralString
+	    | tpBoolean:
+		.tLiteralBoolean
+	    % MPM 10th: remove redundant tStringDescriptor and comment out tpPackedArray
+	    %| tpPackedArray:	% always a named literal string
+		% .tStringDescriptor
+	]
+	oValuePushSymbol
+	oEmitValue
+	oValuePop;
+
+VariableOperand :
+	% The Variable rule has placed the address of the variable on the
+	% runtime expression stack and has created symbol and type stack
+	% entries for it.
+
+	[ oTypeStkChooseKind
+	    | tpInteger, tpSubrange, tpFile:
+		.tFetchInteger		% replace address with value
+	    % MPM: 4th March: Change tpChar into tpString
+	    | tpString:
+		% MPM 4th March: Change tFetchChar into tFetchString
+		.tFetchString
+	    | tpBoolean:
+		.tFetchBoolean
+	    % The caller is responsible for detecting illegal situations
+	    % such as operations on structured variables.
+	    | *:
+	];
+
+FunctionOperand :
+	% The Operand rule has just accepted an identifier and created a
+	% symbol stack entry for it.  Push a type stack entry for it.
+	% Function operands are not in postfix form because EOF and
+	% Eoln have optional operands.
+
+	oTypeStkPushSymbol
+	[ oSymbolStkChooseStandardRoutine
+	    | rtChr:
+		[
+		    | sParmBegin:
+			@Expression
+			[ oTypeStkChooseKind
+			    | tpInteger, tpSubrange:
+			    | *:
+				#eIntegerExpnReqd
+			]
+			sParmEnd
+			oSymbolStkPop	% Parameter expression
+			oTypeStkPop
+			.tChr
+		    | *:
+			#eInsufficientActuals
+		]
+		oSymbolStkPop	% Chr symbol
+		oTypeStkPop
+		oSymbolStkPush(syExpression)
+		% MPM: 4th March: Change tpChar into tpString
+		oTypeStkPush(tpString)
+	    | rtOrd:
+		[
+		    | sParmBegin:
+			@Expression
+			[ oTypeStkChooseKind
+			    % MPM: 4th March: Change tpChar into tpString
+			    | tpString:
+			    | *:
+				%MPM 5th March: considering to change eCharExpnReqd into eStringExpnReqd
+				#eStringExpnReqd
+			]
+			sParmEnd
+			oSymbolStkPop	% Parameter expression
+			oTypeStkPop
+			.tOrd
+		    | *:
+			#eInsufficientActuals
+		]
+		oSymbolStkPop	% Ord symbol
+		oTypeStkPop
+		oSymbolStkPush(syExpression)
+		oTypeStkPush(tpInteger)
+	    | rtEoln:
+		@StandardFunctionActual
+		.tEoln
+	    | rtEOF:
+		@StandardFunctionActual
+		.tEOF
+%%%%%%%%%% MJM 13Mar16: Handle the alternative routine type whereby   
+%%%%%%%%%%              a user function was defined, and therefore
+%%%%%%%%%%              we have to pass arguments to it, and return
+%%%%%%%%%%              another value to an assignment/expression.
+            | *:
+                .tCallBegin
+                [
+                    | sParmBegin:
+                        % oTypeStkPushSymbol % Not necessary
+
+                        @ActualParameters
+                        % sParmEnd   % Handled by @ActualParameters
+                    | *:
+                        #eInsufficientActuals
+                ]
+                .tCallEnd
+                oValuePushSymbol % resultant value from @ActualParameters
+                oEmitValue       % now output it
+                oValuePop        % clean up value stack
+                oSymbolStkPop   % Get rid of last one, and replace with below
+                oSymbolStkPush(syExpression)  % Result part of Expression
+	];
+
+StandardFunctionActual :
+	% Verify that the actual parameter is of proper type and push
+	% result symbol and type stack entries.
+
+	[
+	    | sParmBegin:
+		sIdentifier  oSymbolStkPushIdentifier	% file name
+		% This should be the end of the parameter list
+		[
+		    | sExpnEnd:
+		    | *:
+			#eFileVarReqd
+			@FlushActuals
+		]
+		[ oSymbolStkChooseKind
+		    | syVariable, syVarParameter:
+			oTypeStkPushSymbol
+			[ oTypeStkChooseKind
+			    | tpFile:
+				.tLiteralAddress
+				oValuePushSymbol
+				oEmitValue
+				oValuePop
+				[ oSymbolStkChooseKind
+				    | syVarParameter:
+					.tFetchAddress
+				    | *:
+				]
+			    | *:
+				#eFileVarReqd
+			]
+			oTypeStkPop
+		    | syUndefined:
+			#eUndefinedIdentifier
+		    | *:
+			#eFileVarReqd
+		]
+		sParmEnd
+	    | *:	% no file parameter, default is input
+		oSymbolStkPushStandardVariable(stdInput)
+		[ oSymbolStkChooseKind
+		    | syUndefined:
+			#eInputNotVisible
+		    | *:
+			.tLiteralAddress
+			oValuePushSymbol
+			oEmitValue
+			oValuePop
+		]
+	]
+	oSymbolStkPop	% File symbol
+	oTypeStkPop	% Eoln or Eof type
+	oSymbolStkSetKind(syExpression)
+	oTypeStkPush(tpBoolean);
+
+FileOperand :
+	% Handle a file stream conversion from integer or vice-versa
+	[ oTypeStkChooseKind
+	    | tpInteger, tpSubrange:
+		oTypeStkPop
+		oTypeStkPush(tpFile)
+	    | tpFile:
+		oTypeStkPop
+		oTypeStkPush(tpInteger)
+	    | *:
+		#eIntegerExpnReqd
+	];
+
+OpenProcedure :
+	% Accept a file variable actual parameter and emit
+	% pseudo code to open that file for reading or writing.
+
+	[
+	    | sIdentifier:	% file variable
+		oSymbolStkPushIdentifier
+		@Variable
+		[ oTypeStkChooseKind
+		    | tpFile:
+			[ oSymbolStkChooseKind
+			    | syVariable, syVarParameter:
+				% There should be only one actual parameter 
+				% expression and it should end here.
+				[
+				    | sExpnEnd:
+					[
+					    | sParmEnd:
+					    | *:
+						#eFileVarReqd
+						@FlushActuals
+					]
+				    | *:
+					#eFileVarReqd
+					@FlushActuals
+				]
+			    | *:
+				#eFileVarReqd
+				@FlushActuals
+			]
+		    | *:
+			#eFileVarReqd
+			@FlushActuals
+		]
+		oSymbolStkPop
+		oTypeStkPop
+		.tVarParm
+		.tParmEnd
+	    | *:
+		#eFileVarReqd
+		@FlushActuals
+	];
+
+AssignProcedure :
+	% Accept a file variable actual parameter and a string file name.
+	% Emit pseudo code to associate that file to the given file name.
+
+	[
+	    | sIdentifier:	% file variable
+		oSymbolStkPushIdentifier
+		@Variable
+		[ oTypeStkChooseKind
+		    | tpFile:
+			[ oSymbolStkChooseKind
+			    | syVariable, syVarParameter:
+				[
+				    | sExpnEnd:
+				    | *:
+					#eFileVarReqd
+					@FlushActuals
+					oSymbolStkPop
+					oTypeStkPop
+					>>
+				]
+			    | *:
+				#eFileVarReqd
+				@FlushActuals
+				oSymbolStkPop
+				oTypeStkPop
+				>>
+			]
+		    | *:
+			#eFileVarReqd
+			@FlushActuals
+			oSymbolStkPop
+			oTypeStkPop
+			>>
+		]
+		oSymbolStkPop
+		oTypeStkPop
+		.tVarParm
+		.tParmEnd
+		% next is the string file name
+		[
+		    | sParmEnd:
+			#eFileNameReqd
+		    | *:
+			@Expression
+			[ oTypeStkChooseKind
+			    | tpArray:
+				.tSubscriptBegin
+				.tLiteralInteger
+				oValuePush(one)
+				oEmitValue
+				oValuePop
+				% MPM 4th March: Change tStoreParmChar into tStoreParmString
+				.tSubscriptString
+				.tVarParm
+			    | *:
+			]
+			[ oTypeStkChooseKind
+			    | tpArray, tpPackedArray:	% must be a char array or literal string	
+				oTypeStkPushComponent
+				[ oTypeStkChooseKind
+				    % MPM: 4th March: Change tpChar into tpString
+				    | tpString:
+				    | *:
+					#eFileNameReqd
+				]
+				oTypeStkPop	% component type
+				oValuePushTypeStkLowerBound
+				[ oValueChoose
+				    | one:
+				    | *:	% string has lower bound one
+					#eFileNameReqd
+				]
+				oValuePop
+				.tParmEnd
+				% need length of string as well
+				.tLiteralInteger
+				oValuePushTypeStkUpperBound
+				[ oTypeStkChooseKind
+				    | tpPackedArray:	% a literal string	
+					oValueNegate	% mark as code segment	
+				    | tpArray:
+				]
+				oEmitValue
+				oValuePop
+				.tParmEnd
+				sParmEnd
+			    | *:
+				#eFileNameReqd
+				@FlushActuals
+			]
+			oSymbolStkPop
+			oTypeStkPop
+		]
+	    | *:
+		#eFileVarReqd
+		@FlushActuals
+	];
+
+WriteProcedure :
+	% The standard procedure write takes a variable number of
+	% parameters, the first of which may be a file variable.
+	% If the first parameter is not a file variable, standard
+	% output is assumed as the default file.
+
+	[
+	    | sIdentifier:
+		oSymbolStkPushIdentifier
+		oTypeStkPushSymbol
+		[ oTypeStkChooseKind
+		    | tpFile:
+			[
+			    | sExpnEnd:
+			    | *:
+				#eFileVarReqd
+				@FlushActuals
+				oSymbolStkPop
+				oTypeStkPop
+				>>
+			]
+			[ oSymbolStkChooseKind
+			    | syVariable, syVarParameter:
+				oTypeStkPushComponent
+				oValuePushSymbol	% file descriptor
+				[ oTypeStkChooseKind
+				    % MPM: 4th March: Change tpChar into tpString
+				    | tpString:
+					{
+					    .tTrapBegin
+					    .tLiteralAddress
+					    oEmitValue
+					    [ oSymbolStkChooseKind
+						| syVarParameter:
+						    .tFetchAddress
+						| *:
+					    ]
+					    .tVarParm
+					    .tParmEnd
+					    @Expression
+					    [ oTypeStkChooseKind
+						| tpArray:
+						    .tSubscriptBegin
+						    .tLiteralInteger
+						    oValuePush(one)
+						    oEmitValue
+						    oValuePop
+						    % MPM 4th March: Change tStoreParmChar into tStoreParmString
+						    .tSubscriptString
+						    .tVarParm
+						| *:
+					    ]
+					    .tParmEnd
+					    % MPM 5th March: Change WriteChar into WriteString
+					    @WriteString
+					    [
+						| sParmEnd:
+						    >
+						| *:
+					    ]
+					}
+				    | *:
+					{
+					    .tTrapBegin
+					    .tLiteralAddress
+					    oEmitValue
+					    [ oSymbolStkChooseKind
+						| syVarParameter:
+						    .tFetchAddress
+						| *:
+					    ]
+					    .tVarParm
+					    .tParmEnd
+					    @Expression
+					    .tParmEnd
+					    % MPM 5th March: Change WriteNonChar into WriteNonString
+					    @WriteNonString
+					    [
+						| sParmEnd:
+						    >
+						| *:
+					    ]
+					}
+				]
+				oValuePop
+				oTypeStkPop
+			    | *:
+				#eFileVarReqd
+				@FlushActuals
+			]
+			oSymbolStkPop	% File symbol
+			oTypeStkPop
+
+		    | *:
+			oTypeStkPop	% Identifier type
+
+			% Standard output
+			oSymbolStkPushStandardVariable(stdOutput)
+			[ oSymbolStkChooseKind
+			    | syUndefined:
+				#eOutputNotVisible
+				oValuePush(zero)
+			    | *:
+				oValuePushSymbol
+			]
+			oSymbolStkPop
+			.tTrapBegin
+			.tLiteralAddress
+			oEmitValue
+			.tVarParm
+			.tParmEnd
+			oValuePop
+
+			% Accept the rest of the first write expression.
+			[ oSymbolStkChooseKind
+			    | syUndefined:
+				#eUndefinedIdentifier
+			    | *:
+			]
+			[ oSymbolStkChooseKind
+			    | syConstant:
+				@ConstantOperand
+			    | syVariable, syVarParameter:
+				@Variable
+				@VariableOperand
+%%%%%%%% MJM 12Mar16: Add 'syPublicFunction' to case below.
+                            | syFunction, syPublicFunction:
+				@FunctionOperand
+			    | *:
+				#eExpnOperandReqd
+				oSymbolStkPop
+				@SymbolStkPushIntegerVariable
+				oTypeStkPushSymbol
+			]
+			@Expression
+			[ oTypeStkChooseKind
+			    | tpArray:
+				.tSubscriptBegin
+				.tLiteralInteger
+				oValuePush(one)
+				oEmitValue
+				oValuePop
+				% MPM 4th March: Change tSubscriptChar into tSubscriptString
+				.tSubscriptString
+				.tVarParm
+			    | *:
+			]
+			.tParmEnd
+			% MPM 5th March: Change WriteChar into WriteString
+			@WriteString
+			@WriteStandardExpnList
+		]
+	    | sParmEnd:
+		#eWriteExpn
+	    | *:
+		@WriteStandardExpnList
+	]
+	.tWriteEnd;
+
+WriteStandardExpnList :
+	oSymbolStkPushStandardVariable(stdOutput)
+	[ oSymbolStkChooseKind
+	    | syUndefined:
+		#eOutputNotVisible
+		oValuePush(zero)
+	    | *:
+		oValuePushSymbol
+	]
+	oSymbolStkPop
+	{[
+	    | sParmEnd:
+		>
+	    | *:
+		.tTrapBegin
+		.tLiteralAddress
+		oEmitValue
+		.tVarParm
+		.tParmEnd
+		@Expression
+		[ oTypeStkChooseKind
+		    | tpArray:
+			.tSubscriptBegin
+			.tLiteralInteger
+			oValuePush(one)
+			oEmitValue
+			oValuePop
+			% MPM 4th March: Change tSubscriptChar into tSubscriptString
+			.tSubscriptString
+			.tVarParm
+		    | *:
+		]
+		.tParmEnd
+		% MPM 5th March: Change WriteChar into WriteString
+		@WriteString
+	]}
+	oValuePop;
+
+% MPM 5th March: Change WriteChar into WriteString
+WriteString :
+	% Accept an optional field width specification, supplying
+	% a default field width if none is specified.  Verify that
+	% the expression to be written is of legal type.  The
+	% expression rule has just pushed symbol and type stack
+	% entries for the expression to be written.
+
+	[
+	    | sFieldWidth:
+		% Accept a field width specification
+		@Expression
+		[ oTypeStkChooseKind
+		    | tpInteger, tpSubrange:
+		    | *:
+			#eFieldWidth
+		]
+		oSymbolStkPop
+		oTypeStkPop
+		.tParmEnd
+	    | *:
+		% No field width specified, supply a default
+		.tLiteralInteger
+		[ oTypeStkChooseKind	% of expression being written
+		    | tpInteger, tpSubrange:
+			oValuePush(ten)
+		    % MPM: 4th March: Change tpChar into tpString
+		    | tpString:
+			oValuePush(one)
+		    | tpPackedArray:	% a literal string
+			oValuePushTypeStkUpperBound
+			oValueNegate	% mark as code segment
+		    | *:	% An error flagged below
+			oValuePush(zero)
+		]
+		oEmitValue
+		oValuePop
+		.tParmEnd
+	]
+	[ oTypeStkChooseKind
+	    % MPM: 4th March: Change tpChar into tpString
+	    | tpString:
+		.tTrap
+	    	% MPM: 4th March: Change trWriteChar into trWriteString
+		oEmitTrapKind(trWriteString)
+	    | tpInteger, tpSubrange:
+		.tTrap
+		oEmitTrapKind(trWriteInteger)
+	    | tpArray, tpPackedArray:	% must be a char array or literal string
+		oTypeStkPushComponent
+		[ oTypeStkChooseKind
+		    % MPM: 4th March: Change tpChar into tpString
+		    | tpString:
+		    | *:
+			#eWriteExpn
+		]
+		oTypeStkPop	% component type
+		oValuePushTypeStkLowerBound
+		[ oValueChoose
+		    | one:
+		    | *:	% string has lower bound one
+			#eWriteExpn
+		]
+		oValuePop
+		.tTrap
+		oEmitTrapKind(trWriteString)
+	    | *:
+		#eWriteExpn
+	]
+	oSymbolStkPop
+	oTypeStkPop;
+
+% MPM 5th March: Change WriteNonChar into WriteNonString
+WriteNonString :
+	% Check that the expression to be written matches the file type.
+	% The symbol and type stacks contain entries for the file
+	% variable and the expression to be written (expression on top).
+
+	[
+	    | sFieldWidth:
+		% No field-width specification is allowed for non-text files
+		#eWriteExpn
+		@FlushExpn
+	    | *:
+	]
+	[ oTypeStkChooseKind
+	    | tpInteger, tpSubrange:
+		oSymbolStkPop	% expression
+		oTypeStkPop
+		[ oTypeStkChooseKind	% file component kind
+		    | tpInteger, tpSubrange:
+			% number of bytes to write
+			oValuePush(wordSize)
+			.tLiteralInteger
+			oEmitValue
+			oValuePop
+			.tParmEnd
+			.tTrap
+			oEmitTrapKind(trWrite)
+		    | *:
+			#eWriteExpn
+		]
+	    | tpBoolean:
+		oSymbolStkPop	% expression
+		oTypeStkPop
+		[ oTypeStkChooseKind	% file component kind
+		    | tpBoolean:
+			oValuePush(byteSize)
+			.tLiteralAddress
+			oEmitValue
+			oValuePop
+			.tParmEnd
+			.tTrap
+			oEmitTrapKind(trWrite)
+		    | *:
+			#eWriteExpn
+		]
+	    | *:
+		#eWriteExpn
+		oSymbolStkPop
+		oTypeStkPop
+	];
+
+WritelnProcedure :
+	% This restricted version of writeln takes only one
+	% optional parameter, a text file variable.
+
+	[
+	    | sParmEnd:
+		% No parameter supplied, default is standard output
+		oSymbolStkPushStandardVariable(stdOutput)
+		[ oSymbolStkChooseKind
+		    | syUndefined:
+			#eOutputNotVisible
+		    | *:
+			oValuePushSymbol		% file descriptor
+			.tLiteralAddress
+			oEmitValue
+			oValuePop
+		]
+		oSymbolStkPop
+		.tVarParm
+		.tParmEnd
+	    | sIdentifier:
+		oSymbolStkPushIdentifier
+		@Variable
+		[ oTypeStkChooseKind
+		    | tpFile:
+			[ oSymbolStkChooseKind
+			    | syVariable, syVarParameter:
+				oValuePushSymbol	% file descriptor
+				oTypeStkPushComponent
+				% writeln applies only to text files
+				[ oTypeStkChooseKind
+				    % MPM: 4th March: Change tpChar into tpString
+				    | tpString:
+					% There should not be more parameters
+					[
+					    | sExpnEnd:
+						[
+						    | sParmEnd:
+						    | *:
+							%MPM 5th March: change eCharFileVarReqd into eStringFileVarReqd
+							#eStringFileVarReqd
+							@FlushActuals
+						]
+					    | *:
+						%MPM 5th March: change eCharFileVarReqd into eStringFileVarReqd
+						#eStringFileVarReqd
+						@FlushActuals
+					]
+				    | *:
+					%MPM 5th March: change eCharFileVarReqd into eStringFileVarReqd
+					#eStringFileVarReqd
+					@FlushActuals
+				]
+				oValuePop
+				oTypeStkPop
+			    | *:
+				%MPM 5th March: change eCharFileVarReqd into eStringFileVarReqd
+				#eStringFileVarReqd
+				@FlushActuals
+			]
+		    | *:
+			%MPM 5th March: change eCharFileVarReqd into eStringFileVarReqd
+			#eStringFileVarReqd
+			@FlushActuals
+		]
+		oTypeStkPop
+		oSymbolStkPop
+		.tVarParm
+		.tParmEnd
+	    | *:
+		%MPM 5th March: change eCharFileVarReqd into eStringFileVarReqd
+		#eStringFileVarReqd
+		@FlushActuals
+	];
+
+
+ReadProcedure :
+	% The standard procedure read takes a variable number of
+	% parameters, all parameters must be variables, the first
+	% may be a file variable.  Since the parser checks only
+	% that parameters are expressions, this routine must enforce
+	% the syntax restriction that only variables are allowed as
+	% parameters.
+
+	[
+	    | sIdentifier:
+		% This is either a file variable or
+		% the first variable to be read.
+		oSymbolStkPushIdentifier
+		oTypeStkPushSymbol
+		[ oTypeStkChooseKind
+		    | tpFile:
+			[
+			    | sExpnEnd:
+			    | *:
+				#eReadVar
+				@FlushActuals
+				oSymbolStkPop
+				oTypeStkPop
+				>>
+			]
+			[ oSymbolStkChooseKind
+			    | syVariable, syVarParameter:
+				oValuePushSymbol	% file descriptor
+				oTypeStkPushComponent
+				[ oTypeStkChooseKind
+				    % MPM: 4th March: Change tpChar into tpString
+				    | tpString:
+					% MPM 5th March: Change ReadCharParameterList into ReadStringParameterList
+					@ReadStringParameterList
+				    | *:
+					% MPM 5th March: Change ReadNonCharParameterList into ReadNonStringParameterList
+					@ReadNonStringParameterList
+				]
+				oValuePop
+				oTypeStkPop
+			    | *:
+				#eFileVarReqd
+				@FlushActuals
+			]
+			oSymbolStkPop	% File symbol
+			oTypeStkPop
+		    | *:	% default file is standard input
+			oSymbolStkPushStandardVariable(stdInput)
+			[ oSymbolStkChooseKind
+			    | syUndefined:
+				#eInputNotVisible
+				oValuePush(zero)	% dummy file descriptor
+			    | *:
+				oValuePushSymbol
+			]
+			oSymbolStkPop	% Standard input symbol
+			oTypeStkPop	% Identifier type
+			.tTrapBegin
+			.tLiteralAddress
+			oEmitValue	% File descriptor
+			.tVarParm
+			.tParmEnd
+			@Variable
+			[
+			    | sExpnEnd:
+			    | *:
+				#eReadVar
+				@FlushActuals
+				oSymbolStkPop
+				oTypeStkPop
+				>>
+			]
+			.tVarParm
+			.tParmEnd
+			% MPM 5th March: Change ReadChar into ReadString
+			@ReadString
+			% .tPopStack
+			% .tParmEnd
+			[
+			    | sParmEnd:
+			    | *:
+				% MPM 5th March: Change ReadCharParameterList into ReadStringParameterList
+				@ReadStringParameterList
+			]
+			oValuePop
+		]
+	    | *:
+		#eReadVar
+		@FlushActuals
+	]
+	.tReadEnd;
+
+% MPM 5th March: Change ReadCharParameterList into ReadStringParameterList
+ReadStringParameterList :
+	% Accept a list of actual parameter variables to be
+	% read from a file of characters.
+
+	{[
+	    | sIdentifier:
+		oSymbolStkPushIdentifier
+		.tTrapBegin
+		.tLiteralAddress
+		oEmitValue	% File descriptor
+		.tVarParm
+		.tParmEnd
+		@Variable
+		[
+		    | sExpnEnd:
+		    | *:
+			#eReadVar
+			@FlushActuals
+			>
+		]
+		.tVarParm
+		.tParmEnd
+		% MPM 5th March: Change ReadChar into ReadString
+		@ReadString
+		[ oSymbolStkChooseKind	% File symbol kind
+		    | syVarParameter:
+			.tFetchAddress
+		    | *:
+		]
+		% .tPopStack
+		% .tParmEnd
+		[
+		    | sParmEnd:
+			>
+		    | *:
+		]
+	    | *:
+		#eReadVar
+		@FlushActuals
+		>
+	]};
+
+% MPM 5th March: Change ReadNonCharParameterList into ReadNonStringParameterList
+ReadNonStringParameterList :
+	% Accept a list of actual parameter variables to be
+	% read from a non-text file.
+
+	{[
+	    | sIdentifier:
+		oSymbolStkPushIdentifier
+		.tTrapBegin
+		.tLiteralAddress
+		oEmitValue	% File descriptor
+		.tVarParm
+		.tParmEnd
+		@Variable
+		[
+		    | sExpnEnd:
+		    | *:
+			#eReadVar
+			@FlushActuals
+			>
+		]
+		.tVarParm
+		.tParmEnd
+		% MPM 5th March: Change ReadNonChar into ReadNonString
+		@ReadNonString
+		[ oSymbolStkChooseKind	% File symbol kind
+		    | syVarParameter:
+			.tFetchAddress
+		    | *:
+		]
+		% .tPopStack
+		% .tParmEnd
+		[
+		    | sParmEnd:
+			>
+		    | *:
+		]
+	    | *:
+		#eReadVar
+		@FlushActuals
+		>
+	]};
+% MPM 5th March: Change ReadChar into ReadString
+ReadString :
+	[ oTypeStkChooseKind
+	    % MPM: 4th March: Change tpChar into tpString
+	    | tpString:
+		.tTrap
+	    	% MPM: 4th March: Change tpChar into tpString
+		oEmitTrapKind(trReadString)
+	    | tpInteger, tpSubrange:
+		.tTrap
+		oEmitTrapKind(trReadInteger)
+	    | *:
+		#eReadVar
+	]
+	oSymbolStkPop	% variable being read
+	oTypeStkPop;
+
+% MPM 5th March: Change ReadNonChar into ReadNonString
+ReadNonString :
+	[ oTypeStkChooseKind
+	    | tpInteger, tpSubrange:
+		oTypeStkPop
+		[ oTypeStkChooseKind	% file component kind
+		    | tpInteger, tpSubrange:
+			% number of bytes to read
+			oValuePush(wordSize)
+			.tLiteralInteger
+			oEmitValue
+			oValuePop
+			.tParmEnd
+			.tTrap
+			oEmitTrapKind(trRead)
+		    | *:
+			#eReadVar
+		]
+	    | tpBoolean:
+		oTypeStkPop
+		[ oTypeStkChooseKind
+		    | tpBoolean:
+			oValuePush(byteSize)
+			.tLiteralInteger
+			oEmitValue
+			oValuePop
+			.tParmEnd
+			.tTrap
+			oEmitTrapKind(trRead)
+		    | *:
+			#eReadVar
+		]
+	    | *:
+		#eReadVar
+		oTypeStkPop
+	]
+	oSymbolStkPop;
+
+ReadlnProcedure :
+	% This restricted version of readln takes only one
+	% optional parameter, a text file variable.
+
+	[
+	    | sParmEnd:
+		% No parameter supplied, default is standard input
+		oSymbolStkPushStandardVariable(stdInput)
+		[ oSymbolStkChooseKind
+		    | syUndefined:
+			#eInputNotVisible
+		    | *:
+			oValuePushSymbol		% file descriptor
+			.tLiteralAddress
+			oEmitValue
+			oValuePop
+		]
+		oSymbolStkPop
+		.tVarParm
+		.tParmEnd
+	    | sIdentifier:
+		oSymbolStkPushIdentifier
+		@Variable
+		[ oTypeStkChooseKind
+		    | tpFile:
+			[ oSymbolStkChooseKind
+			    | syVariable, syVarParameter:
+				oTypeStkPushComponent
+				% readln applies only to text files
+				[ oTypeStkChooseKind
+				    % MPM: 4th March: Change tpChar into tpString
+				    | tpString:
+					% There should not be more parameters
+					[
+					    | sExpnEnd:
+						[
+						    | sParmEnd:
+						    | *:
+							%MPM 5th March: change eCharFileVarReqd into eStringFileVarReqd
+							#eStringFileVarReqd
+							@FlushActuals
+						]
+					    | *:
+						%MPM 5th March: change eCharFileVarReqd into eStringFileVarReqd
+						#eStringFileVarReqd
+						@FlushActuals
+					]
+				    | *:
+					%MPM 5th March: change eCharFileVarReqd into eStringFileVarReqd
+					#eStringFileVarReqd
+					@FlushActuals
+				]
+				oTypeStkPop
+			    | *:
+				%MPM 5th March: change eCharFileVarReqd into eStringFileVarReqd
+				#eStringFileVarReqd
+				@FlushActuals
+			]
+		    | *:
+			%MPM 5th March: change eCharFileVarReqd into eStringFileVarReqd
+			#eStringFileVarReqd
+			@FlushActuals
+		]
+		oTypeStkPop
+		oSymbolStkPop
+		.tVarParm
+		.tParmEnd
+	    | *:
+		%MPM 5th March: change eCharFileVarReqd into eStringFileVarReqd
+		#eStringFileVarReqd
+		@FlushActuals
+	];
+
+
+CaseSelectorExpression :
+	% A case selector is an integer expression
+	@Expression
+	[ oTypeStkChooseKind
+	    | tpInteger, tpSubrange:
+	    | *:
+		#eIntegerExpnReqd
+	]
+	oSymbolStkPop
+	oTypeStkPop;
+
+BooleanControlExpression :
+	% Boolean control expressions occur in IF, WHILE and REPEAT statements.
+
+	@Expression
+	[ oTypeStkChooseKind
+	    | tpBoolean:
+	    | *:
+		#eBooleanExpnReqd
+	]
+	oSymbolStkPop
+	oTypeStkPop;
+
+ValuePushValuePlusOne :
+	% Push a default upper bound for subrange error recovery.
+
+	oCountPushValue
+	oCountIncrement
+	oValuePushCount
+	oCountPop;
+
+CountCopy :
+	oValuePushCount
+	oCountPushValue
+	oValuePop;
+
+
+% The following four routines are used to push default
+% symbol stack entries for use in error recovery.
+
+SymbolStkPushIntegerConstant :
+	oSymbolStkPush(syConstant)
+	oValuePush(one)
+	oSymbolStkEnterValue
+	oValuePop
+	oSymbolStkLinkToStandardType(stdInteger);
+
+% MPM 5th March: Change SymbolStkPushCharConstant into SymbolStkPushStringConstant
+SymbolStkPushStringConstant :
+	oSymbolStkPush(syConstant)
+	oValuePush(zero)
+	oSymbolStkEnterValue
+	oValuePop
+	% MPM 4th March: Change stdChar into stdString
+	oSymbolStkLinkToStandardType(stdString);
+
+
+SymbolStkPushIntegerType :
+	oSymbolStkPush(syType)
+	oSymbolStkLinkToStandardType(stdInteger);
+
+
+SymbolStkPushIntegerVariable :
+	oSymbolStkPush(syVariable)
+	oValuePush(zero)
+	oSymbolStkEnterValue
+	oValuePop
+	oSymbolStkLinkToStandardType(stdInteger);
+
+
+FlushExpn :
+	% Delete part of an expression for semantic error recovery
+	{[
+	    | sExpnEnd:
+		>
+	    | sParmBegin, sSubscript:
+		% Handle nested expressions
+		@FlushExpn
+	    | *:
+		?
+	]};
+
+
+FlushActuals :
+	% Delete actual parameters for semantic error recovery
+	{[
+	    | sCallStmt:	% handle nested calls
+		@FlushActuals
+	    | sParmEnd:
+		>
+	    | *:
+		?
+	]};
+end

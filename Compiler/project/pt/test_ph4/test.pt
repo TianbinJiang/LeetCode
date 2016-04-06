@@ -1,0 +1,8 @@
+program testString(output) {
+   function test(a : string) {
+     var c : integer;
+     c = a;
+     write(c);
+   }
+   test("abc");
+}

@@ -1,0 +1,15 @@
+// print a triangle of stars
+program P (output) {
+
+    var stars: string;
+    var i: integer;
+
+    i = 1;
+    stars = "";
+    loop {
+	break when (i > 50);
+	stars = "*" + stars;
+	write (stars); writeln ();
+	i = i + 1;
+    }
+}

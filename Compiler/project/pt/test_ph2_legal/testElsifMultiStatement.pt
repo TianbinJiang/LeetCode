@@ -1,0 +1,13 @@
+program a(out) {
+	if(a == b) {
+	  c = d;
+	  e = f;
+	} elsif( e == f) {
+	  c = d;
+	  e = f;
+	} else {
+	  m = n;
+	}
+  Writeln( "Hello");
+  c=d;
+}

@@ -1,0 +1,13 @@
+// Test Function Declaration with Statements
+program Hello (output)
+{
+    var n: integer;
+    class TESTCLASS
+    {
+	let x = 7;
+	writeln( "in function");
+    } 
+    var n: integer;
+    writeln( "hello" );
+  }
+

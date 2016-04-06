@@ -1,0 +1,55 @@
+// this program determines the primes up to maxprimes using the sieve method
+program primes (output) {
+
+    let maxprimes = 100;
+    let maxfactor = 50;
+
+    let prime = true;
+    let notprime = false;
+
+    class flags {
+        var flagvector : array [1 .. maxprimes] of boolean;
+
+        public function testflag (f : integer, var set : boolean) {
+            set = flagvector [f];
+        }
+
+        public function flag (f : integer, var set : boolean) {
+            set = flagvector [f];
+        }
+
+        function flagset (f : integer, tf : boolean) {
+            flagvector [f] = tf;
+        }
+
+        // everything begins as prime
+        var i : integer;
+        i = 1;
+    }
+
+    function testfunc (f : integer) {
+        f = 4;
+    }
+
+
+    // pick out multiples of each prime factor and set these to notprime
+    var nextfactor : integer;
+    var multiple : integer;
+    var factor : integer;
+    var isprime : boolean;
+
+    multiple = 2;
+    factor = 2;
+    isprime = true;
+    i = 1; //should cause out-scope error
+
+    flagvector [2] = true; //should cause out-scope error
+
+    flagset (multiple, isprime); //should cause out-scope error
+
+    nextfactor = 2;
+    flag (nextfactor, isprime); //should be okay
+    testflag (nextfactor, isprime); //should be okay
+
+    testfunc( 4 );
+}

@@ -1,0 +1,33 @@
+program testSwitch(output) {
+    var a : integer;
+    var b : integer;
+    a = 1;
+    switch(a) 
+    {
+	case 1: case 2: case 3:
+	    b = b + 2;
+	    write("I am in case 1, 2, 3");
+            break;
+	case 4:
+	    b = b + 1;
+            write("I am in case 4");
+	    break;
+    }
+    writeln();
+
+    a = 2;
+    if(a == 1)
+	write("a equals to 1");
+    elsif(a == 2)
+	write("a equals to 2");
+    else
+	write("a neither equals to 1 or 2");
+
+    writeln();
+
+    if(a != 1)
+	write("a doesn't equal to 1");
+    else
+	write("a equals to 1");
+    writeln();
+}

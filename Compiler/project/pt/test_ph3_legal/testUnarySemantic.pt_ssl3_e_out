@@ -1,0 +1,17 @@
+   .tLiteralInteger
+   oEmitValue
+   .tLiteralAddress
+   oEmitDataAddress
+   .tFileDescriptor
+     .tAssignBegin
+      .tLiteralAddress
+      oEmitValue
+       oEmitNullAddress
+       .tLiteralString
+       oEmitValue
+       oEmitString
+       .tFetchString
+     .tAssignInteger
+ .tTrapBegin
+ .tTrap
+ oEmitTrapKind(trHalt)

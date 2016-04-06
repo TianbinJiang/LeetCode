@@ -1,0 +1,28 @@
+program primes (output) {
+    function test1 (var f: string):string {
+	var a : string;
+	a = f + "2";
+	return (a);
+    }
+
+    function test2(k : integer): integer {
+        var t : integer;
+	t = k + 1;
+	return (t + 1);
+    }
+
+   
+    var i : string;
+    var j : string;
+    var t : integer;
+    
+    i = "test";
+
+    j = test1(i);
+    write(j);
+    writeln();
+
+    t = test2(1);
+    write(t);
+    writeln();
+}

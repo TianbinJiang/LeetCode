@@ -1,0 +1,7 @@
+program a(output) {
+   var a : string;
+   a = "";
+   write(a);
+   write("abc");
+   write(" ");
+}

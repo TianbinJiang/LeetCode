@@ -1,0 +1,17 @@
+// Test Function Declaration with Statements
+program Hello (output)
+{
+    var n: integer;
+    public function r () : integer 
+    {
+        return (a+b);
+    }
+    public function s () : integer 
+    {
+        return (42);
+    }
+
+    var n: integer;
+    writeln( "hello" );
+  }
+

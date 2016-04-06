@@ -1,0 +1,25 @@
+program testclass(output)
+{
+	let maxVal = 99;
+	class simpleClass {
+	  var list : array [1 .. 10] of integer;
+	  var a : integer;
+	  public function swap(i : integer, j : integer) {
+		var tmp : integer;
+		tmp = i;
+		i = j;
+		j = tmp;
+	  }
+
+	  public function test( a : integer) {
+		write(a);
+		writeln();
+	  }
+
+	  list[1] = 61;
+	  list[2] = 61;
+	}
+	
+	test(3);
+	writeln();
+}

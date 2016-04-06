@@ -1,0 +1,8 @@
+#!/bin/sh
+
+ptc -o2 -t2 -L /cas/student/cisc458a/project/pt/lib/pt $1 > $1_ptc2_out
+
+ssltrace "ptc -o2 -t2 -L /cas/student/cisc458a/project/pt/lib/pt $1" /cas/student/cisc458a/project/pt/parser/parser.def -i > $1_ssl2_i_out
+
+ssltrace "ptc -o2 -t2 -L /cas/student/cisc458a/project/pt/lib/pt $1" /cas/student/cisc458a/project/pt/parser/parser.def -e > $1_ssl2_e_out
+

@@ -1,0 +1,15 @@
+program primes (output) {
+//   let test = 10;
+//	var boolvector : array [1 .. 10] of boolean;
+//	var stringvector : array [1 .. test] of string;
+
+//	boolvector [1] = true;
+
+
+	var stringvector : array [1 .. 10] of string;
+	stringvector [1] = "teststring";
+	stringvector [2] = "teststring";
+
+    }
+
+

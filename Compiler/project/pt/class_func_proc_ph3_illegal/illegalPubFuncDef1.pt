@@ -1,0 +1,8 @@
+program primes (output) {
+    class test {
+        public function test2 (var f: integer):boolean {
+  	    f =2;
+	    return( f ); //ERROR: type mismatch
+        }
+    }
+}

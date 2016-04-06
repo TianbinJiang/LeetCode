@@ -1,0 +1,10 @@
+#!/bin/sh
+
+ptc -o3 -t3 -L /cas/student/cisc458a/project/pt/lib/pt $1 > $1_ptc_out
+
+ssltrace "ptc -o3 -t3 -L /cas/student/cisc458a/project/pt/lib/pt $1" /cas/student/cisc458a/project/pt/semantic/semantic.def -m | egrep '^ *[\.o%]' > $1_ssl3_m_out
+
+ssltrace "ptc -o3 -t3 -L /cas/student/cisc458a/project/pt/lib/pt $1" /cas/student/cisc458a/project/pt/semantic/semantic.def -i > $1_ssl3_i_out
+ssltrace "ptc -o3 -t3 -L /cas/student/cisc458a/project/pt/lib/pt $1" /cas/student/cisc458a/project/pt/semantic/semantic.def -e > $1_ssl3_e_out
+
+

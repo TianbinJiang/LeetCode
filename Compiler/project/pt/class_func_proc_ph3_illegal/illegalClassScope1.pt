@@ -1,0 +1,30 @@
+program primes (output) {
+    //Global Declarations below
+    let maxprimes = 100;
+
+    class flags {
+	//Class Declarations below
+	var flagvector : boolean;
+
+	function test (f : integer, tf : boolean) {
+	    flagvector  = tf;
+	}
+	public function flagset (f : integer, tf : boolean) {
+	    flagvector  = tf;
+	}
+
+	var i : integer; 
+
+	//Class Statements below
+	i = 1;
+
+    }
+
+    var multiple : integer;
+
+    //Global Statements below
+    multiple = 2;
+    flagset( multiple, true );
+    test( 1, false);   //ERROR: procedure out of scope
+    i = 23;          //ERROR: variable out of scope
+}

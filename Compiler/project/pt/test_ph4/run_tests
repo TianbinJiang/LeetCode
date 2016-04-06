@@ -1,0 +1,19 @@
+#!/bin/sh
+
+
+#ssltrace "ptc -o3 -t3 -L /cas/student/cisc458a/project/pt/lib/pt $1" /cas/student/cisc458a/project/pt/semantic/semantic.def -m | egrep '^ *[\.o%]' > $1_ssl3_m_out
+
+#ssltrace "ptc -o3 -t3 -L /cas/student/cisc458a/project/pt/lib/pt $1" /cas/student/cisc458a/project/pt/semantic/semantic.def -i > $1_ssl3_i_out
+
+ssltrace "ptc -o3 -t3 -L /cas/student/cisc458a/project/pt/lib/pt $1" /cas/student/cisc458a/project/pt/semantic/semantic.def -e > $1_ssl3_e_out
+
+ssltrace "ptc -o4 -t4 -L /cas/student/cisc458a/project/pt/lib/pt $1" /cas/student/cisc458a/project/pt/coderlinux/coder.def > $1_ssl4_1_out
+
+ssltrace "ptc -o4 -t4 -L /cas/student/cisc458a/project/pt/lib/pt $1" /cas/student/cisc458a/project/pt/coderlinux/coder.def -i > $1_ssl4_i_out
+
+ssltrace "ptc -o4 -t4 -L /cas/student/cisc458a/project/pt/lib/pt $1" /cas/student/cisc458a/project/pt/coderlinux/coder.def -e > $1_ssl4_e_out
+
+ptc -o4 -t4 -L /cas/student/cisc458a/project/pt/lib/pt $1 > $1_ptc4_out
+
+ptc -L /cas/student/cisc458a/project/pt/lib/pt -S $1
+

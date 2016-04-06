@@ -1,0 +1,52 @@
+// Program to conjugate regular French verbs
+program P (input, output) {
+
+    var infinitive, root : string;
+
+    loop {
+	write("Please give me a regular French 'er' verb (end with 'arreter')"); writeln ();
+	read (infinitive);
+
+	write ("Thanks, here is the present conjugation"); writeln ();
+
+	root = infinitive @ 1:(#infinitive-2);
+	write ("The root of this verb is '", root, "'"); writeln ();
+
+	if (infinitive @ (#infinitive - 1) : #infinitive == "er") {
+	
+	    if ((root @ 1:1 == "a") or (root @ 1:1 == "e")
+		   or (root @ 1:1 == "i") or (root @ 1:1 == "o")
+		   or (root @ 1:1 == "u")) 
+		write ("J'" + root + "e");
+	    else
+		write ("Je " + root + "e");
+
+	    writeln ();
+
+	    write ("Tu " + root + "es"); writeln ();
+	    write ("Il ou elle " + root + "e"); writeln ();
+	    writeln ();
+
+	    if (root @ #root:#root == "g")
+		write ("Nous " + root + "eons");
+	    else
+		write ("Nous " + root + "ons");
+
+	    writeln ();
+
+	    write ("Vous " + root + "ez"); writeln ();
+	    write ("Ils ou elles " + root + "ent"); writeln ();
+	    writeln ();
+
+	} elsif (infinitive @ (#infinitive - 1) : #infinitive == "ir") {
+	    write ("I'm too tired to do an 'ir' verb"); writeln ();
+
+	} else {
+	    write ("I don't like the looks of this verb"); writeln ();
+	}
+
+	break when (infinitive == "arreter");
+
+	readln ();
+    }
+}

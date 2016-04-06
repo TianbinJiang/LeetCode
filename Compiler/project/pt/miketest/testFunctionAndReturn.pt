@@ -1,0 +1,28 @@
+// Test Function Declaration with Statements
+program Hello (output)
+{
+    var n: integer;
+    function i (var j:integer):integer
+    {
+        return (42);
+    }   
+    function TESTFUNC (var n: integer )
+    {
+	let x = 7;
+	writeln( "in function");
+    } 
+    function q()
+    {
+        let x = 7;
+        writeln( "in function");
+    }
+
+    public function r () : integer 
+    {
+        return (a+b);
+    }
+
+    var n: integer;
+    writeln( "hello" );
+  }
+

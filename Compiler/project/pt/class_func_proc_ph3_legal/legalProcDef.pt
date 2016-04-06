@@ -1,0 +1,6 @@
+program primes (output) {
+    function test2 (var f: integer) {
+  	    f =2;
+    }
+
+}
